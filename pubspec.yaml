@@ -1,0 +1,63 @@
+name: my_garage
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  intl: ^0.20.2
+  url_launcher: ^6.3.2
+  shared_preferences: ^2.2.2
+  package_info_plus: ^9.0.0
+  flutter_svg: ^2.2.4
+  image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  fl_chart: ^1.2.0
+  shimmer: ^3.0.0
+  provider: ^6.1.5+1
+  crypto: ^3.0.7
+  flutter_launcher_icons: ^0.14.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icon.png
+    - assets/cars/car_sedan.svg
+    - assets/cars/car_wagon.svg
+    - assets/cars/car_cabriolet.svg
+    - assets/cars/car_coupe.svg
+    - assets/cars/car_hatchback.svg
+    - assets/cars/car_minivan.svg
+    - assets/cars/car_suv.svg
+    - assets/cars/car_truck.svg
+    - assets/cars/car_van.svg
+    - assets/cars/car_sedan.png
+    - assets/cars/car_wagon.png
+    - assets/cars/car_cabriolet.png
+    - assets/cars/car_coupe.png
+    - assets/cars/car_hatchback.png
+    - assets/cars/car_minivan.png
+    - assets/cars/car_suv.png
+    - assets/cars/car_truck.png
+    - assets/cars/car_van.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true

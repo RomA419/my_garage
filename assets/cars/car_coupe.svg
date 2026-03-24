@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Купе: низкий, обтекаемый, плавная крыша -->
+  <path d="M14,60 L14,52 L20,48 L46,44 L74,42 L96,22 L104,18 L126,16 L136,18 L144,24 L150,34 L156,40 L172,42 L182,46 L188,52 L192,58 L192,60 L178,60 C176,48 158,48 156,60 L48,60 C46,48 28,48 26,60 Z" fill="currentColor"/>
+  <!-- Окно -->
+  <path d="M100,24 L108,20 L128,18 L136,20 L142,26 L148,34 L150,38 L98,38 Z" fill="currentColor" opacity="0.18"/>
+  <!-- Линия капота -->
+  <line x1="156" y1="40" x2="186" y2="48" stroke="currentColor" stroke-width="0.8" opacity="0.15"/>
+  <!-- Фара -->
+  <ellipse cx="190" cy="52" rx="3" ry="3" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь -->
+  <rect x="14" y="48" width="5" height="6" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="37" cy="64" r="13" fill="currentColor"/>
+  <circle cx="37" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="37" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+  <circle cx="167" cy="64" r="13" fill="currentColor"/>
+  <circle cx="167" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="167" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+</svg>
