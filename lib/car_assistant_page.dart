@@ -139,6 +139,195 @@ const _tipsGerman = <_Tip>[
   _Tip(icon: Icons.sync, text: 'DSG/S-Tronic нуждается в замене масла каждые 40–60 тыс. км — игнорирование ведёт к дорогому ремонту'),
 ];
 
+const _tipsAudi = <_Tip>[
+  _Tip(icon: Icons.build, text: 'При замене АКБ обязательна кодировка через VAG-COM/ODIS — иначе бортовая электроника не распознаёт новый аккумулятор'),
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло каждые 7 500 км — не ждите лампочки Service (интервал занижен для условий СНГ)'),
+  _Tip(icon: Icons.sync, text: 'DSG/S-Tronic требует замены масла каждые 40–60 тыс. км — игнорирование ведёт к дорогому ремонту мехатроника'),
+  _Tip(icon: Icons.local_fire_department, text: 'Регулярно проверяйте уровень ОЖ — патрубки системы охлаждения склонны к течам после 80 000 км'),
+];
+
+const _tipsMazda = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Двигатели Skyactiv требуют масла 0W-20 или 5W-30 — использование неправильной вязкости повышает расход'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте пыльники ШРУСа при каждом ТО — у Mazda 3/6 они склонны к трещинам при низких температурах'),
+  _Tip(icon: Icons.sync, text: 'Масло АКПП Skyactiv-Drive меняйте каждые 40–60 тыс. км — производитель говорит «навсегда», реальность иная'),
+  _Tip(icon: Icons.local_car_wash, text: 'Покрытие Soul Red Crystal красивое, но требует регулярной полировки с воском — слой лака тоньше среднего'),
+];
+
+const _tipsFord = <_Tip>[
+  _Tip(icon: Icons.sync, text: 'PowerShift DCT — меняйте масло каждые 40 000 км, иначе рывки при старте станут нормой'),
+  _Tip(icon: Icons.opacity, text: 'Двигатели EcoBoost требуют масла 5W-30 с допуском Ford WSS-M2C913 — не заменяйте более дешёвым'),
+  _Tip(icon: Icons.rotate_right, text: 'Ступичные подшипники на Focus/Mondeo — слабое место, проверяйте после 60 000 км'),
+  _Tip(icon: Icons.battery_charging_full, text: 'На авто с Auto Start/Stop аккумулятор деградирует быстрее — меняйте каждые 4 года'),
+];
+
+const _tipsVolvo = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло строго каждые 10 000 км (или раз в год) — двигатели Drive-E 2.0 чувствительны к качеству масла'),
+  _Tip(icon: Icons.settings, text: 'Ремень ГРМ T4/T5 — замена каждые 120 000 км вместе с помпой. Пропуск этой работы = капремонт двигателя'),
+  _Tip(icon: Icons.local_car_wash, text: 'Антикоррозийная обработка кузова раз в 2–3 года особенно важна для Volvo в условиях дорог СНГ'),
+  _Tip(icon: Icons.ac_unit, text: 'Антибактериальная чистка испарителя кондиционера раз в год — предотвращает запах и защищает систему климата'),
+];
+
+const _tipsRenault = <_Tip>[
+  _Tip(icon: Icons.sync, text: 'EDC (6DCT) двигателей 1.2 TCe / 1.4 TCe требует замены масла каждые 40 000 км — не откладывайте'),
+  _Tip(icon: Icons.opacity, text: 'Дизель K9K требует масла с допуском RN0720 или RN0700 — без совпадения допуска происходит закоксовка'),
+  _Tip(icon: Icons.settings, text: 'Ремень ГРМ K9K заменяйте каждые 60 000 км — инструкция «150 000 км» не применима к условиям СНГ'),
+  _Tip(icon: Icons.vibration, text: 'Проверяйте опоры двигателя каждые 60 000 км — на Duster/Logan/Kaptur они изнашиваются быстро'),
+];
+
+const _tipsSuzuki = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло каждые 5 000–7 500 км — небольшие атмосферники Suzuki требовательны к чистоте масла'),
+  _Tip(icon: Icons.sync, text: 'Масло в CVT меняйте каждые 40 000 км строго оригинальной жидкостью — это продлевает ресурс вариатора'),
+  _Tip(icon: Icons.settings, text: 'Ремень ГРМ на Vitara/Grand Vitara меняйте каждые 90 000 км — обрыв гнёт клапаны и ведёт к капремонту'),
+  _Tip(icon: Icons.rotate_right, text: 'Смазывайте крестовины карданных валов Jimny каждые 30 000 км — скрип и люфт появляется при недостатке смазки'),
+];
+
+const _tipsTesla = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Следите за здоровьем батареи — она деградирует 1–2% в год. При <10% обращайтесь в сервис'),
+  _Tip(icon: Icons.blur_on, text: 'Минимизируйте быструю зарядку (Supercharger) — 2–3 раза в неделю максимум. Предпочитайте домашнюю зарядку'),
+  _Tip(icon: Icons.settings, text: 'Обновления ПО приходят OTA — устанавливайте их сразу же для улучшения производительности и безопасности'),
+  _Tip(icon: Icons.ac_unit, text: 'Кондиционер и обогрев — главные враги батареи зимой. Используйте предварительный подогрев от розетки'),
+];
+
+const _tipsJaguar = <_Tip>[
+  _Tip(icon: Icons.link, text: 'Цепь ГРМ TJ V6 требует замены каждые 120 000 км — обрыв гарантирует капремонт'),
+  _Tip(icon: Icons.opacity, text: 'Двигатели Jaguar V6/V8 требуют масла с допуском XJ/XF — не экономьте на оригинале'),
+  _Tip(icon: Icons.airline_seat_recline_extra, text: 'Электрическая подвеска (F-Pace) — проверяйте каждые 60 000 км. Компрессор часто отказывает'),
+  _Tip(icon: Icons.sync, text: 'АКПП ZF 8HP нуждается в замене масла каждые 60 000 км для стабильной работы'),
+];
+
+const _tipsMini = <_Tip>[
+  _Tip(icon: Icons.settings, text: 'Ремень ГРМ EA888T менять каждые 90 000 км — MINI склонны к дорогому ремонту при обрыве'),
+  _Tip(icon: Icons.opacity, text: 'Масло 5W-30 с допуском BMW LL-04 — используйте только оригинальное, бюджетные аналоги не подойдут'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте подшипники ступиц каждые 60 000 км — на MINI они изнашиваются быстрее среднего'),
+  _Tip(icon: Icons.ac_unit, text: 'Кондиционер требует регулярной дезинсекции — запах появляется чаще, чем у больших авто'),
+];
+
+const _tipsFiat = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло каждые 7 500 км — двигатели FireFly требовательны к качеству'),
+  _Tip(icon: Icons.rotate_right, text: 'Ступичные подшипники Panda/Tipo — проверяйте после 80 000 км, ресурс невелик'),
+  _Tip(icon: Icons.settings, text: 'Дроссельная заслонка склонна к закоксовке — чистите каждые 60 000 км профилактически'),
+  _Tip(icon: Icons.local_car_wash, text: 'Немедленно обрабатывайте поверхность кузова воском — Fiat подвержены коррозии более других'),
+];
+
+const _tipsChery = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло каждые 5 000 км — недёшево, но необходимо для надёжности'),
+  _Tip(icon: Icons.settings, text: 'Требуется регулярная чистка дросселя — двигатели Chery склонны к нагару при городской езде'),
+  _Tip(icon: Icons.sync, text: 'КПП можно считать надёжной, но требует адаптации после замены масла через сканер'),
+  _Tip(icon: Icons.battery_charging_full, text: 'Диагностика сканером производится редко за пределами China — копите запчасти'),
+];
+
+const _tipsVAZ = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Меняйте масло каждые 5 000–7 500 км — ВАЗ требует частой смены масла в условиях СНГ'),
+  _Tip(icon: Icons.local_car_wash, text: 'Защита кузова от коррозии — ГЛАВНАЯ задача. Обработка воском каждые 6 месяцев обязательна'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте тормозные диски и колодки каждые 30 000 км — колодки быстро изнашиваются'),
+  _Tip(icon: Icons.settings, text: 'Карбюратор требует регулярной регулировки холостого хода (винты качества и количества)'),
+];
+
+const _tipsGreatWall = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло 5W-30 менять каждые 5 000–10 000 км в зависимости от стиля езды'),
+  _Tip(icon: Icons.settings, text: 'Двигатель требует регулярной чистки форсунок — топливо в СНГ дешёвое низкого качества'),
+  _Tip(icon: Icons.sync, text: 'Вариатор (на старых Haval H2/H6) требует замены жидкости каждые 40 000 км оригиналом'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте линии охлаждения двигателя каждые 50 000 км — они подвержены течам'),
+];
+
+const _tipsGeely = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло каждые 5 000 км оригинальное или Mobil 1 — Geely по качеству лучше Chery/Great Wall'),
+  _Tip(icon: Icons.settings, text: 'Дроссельная заслонка требует чистки каждые 60 000 км'),
+  _Tip(icon: Icons.battery_charging_full, text: 'На электрических Geely контролируйте состояние батареи — она менее надёжна чем Tesla'),
+  _Tip(icon: Icons.vibration, text: 'Звукоизоляция слабая — шум ветра/шин заметен. Это нормально для марки'),
+];
+
+const _tipsGenesis = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Премиум-масло каждые 7 500 км — мотор требует качества'),
+  _Tip(icon: Icons.settings, text: 'Электроника продвинутая — требует оригинальной диагностики Hyundai/Genesis'),
+  _Tip(icon: Icons.airline_seat_recline_extra, text: 'Пневмоподвеска регулируется по высоте — проверяйте давление каждые 30 000 км'),
+  _Tip(icon: Icons.sync, text: 'АКПП 8-ступ на Genesis GV70 требует адаптации после замены масла'),
+];
+
+const _tipsXPeng = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея — следите за её температурой зимой. Используйте предварительный подогрев'),
+  _Tip(icon: Icons.blur_on, text: 'Минимизируйте быструю зарядку — даже для премиального EV она деградирует батарею'),
+  _Tip(icon: Icons.settings, text: 'ПО обновляется OTA — устанавливайте обновления сразу, они улучшают управление батареей'),
+  _Tip(icon: Icons.ac_unit, text: 'Кондиционер в режиме охлаждения + обогрев салона зимой сильно снижают дальность поездки'),
+];
+
+const _tipsNio = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'NIO использует систему swap батарей — всегда проверяйте состояние новой батареи перед заменой'),
+  _Tip(icon: Icons.blur_on, text: 'Дальность зимой падает на 30–40% — планируйте маршруты с запасом'),
+  _Tip(icon: Icons.settings, text: 'Сервис в СНГ редок — залог успеха надёжность и профилактика'),
+  _Tip(icon: Icons.air, text: 'HEPA фильтры салона меняйте каждые 15 000 км — воздух в авто рекламируется как главное преимущество'),
+];
+
+const _tipsCitrogen = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло каждые 7 500 км — двигатели 1.2/1.6 THP требовательны'),
+  _Tip(icon: Icons.settings, text: 'Дроссель требует чистки каждые 60 000 км, иначе вибрация на холостом ходу'),
+  _Tip(icon: Icons.sync, text: 'Масло EAT6/ EAT8 в АКПП меняйте каждые 60 000 км оригинальным Elf Matic'),
+  _Tip(icon: Icons.vibration, text: 'Пневмоподвеска Hydropneumatic на старых C5 — регулируйте давление каждые 6 месяцев'),
+];
+
+const _tipsAlfa = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло каждые 7 500 км — итальянские моторы требуют качества и регулярности'),
+  _Tip(icon: Icons.settings, text: 'Система зажигания требует профилактики — свечи NGK каждые 30 000 км'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте рулевые наконечники каждые 80 000 км — разбалтываются быстро'),
+  _Tip(icon: Icons.local_car_wash, text: 'Кузов подвержен коррозии — необходима защита кузова и регулярная мойка, особенно зимой'),
+];
+
+const _tipsMG = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло 5W-30 каждые 5 000 км оригинальное — экономия на масле опасна'),
+  _Tip(icon: Icons.settings, text: 'Дроссельная заслонка нуждается в чистке каждые 60 000 км'),
+  _Tip(icon: Icons.rotate_right, text: 'Подшипники ступиц проверяйте после 80 000 км — слабое звено MG'),
+  _Tip(icon: Icons.ac_unit, text: 'Кондиционер требует регулярного обслуживания — запах появляется часто'),
+];
+
+const _tipsChangan = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло 5W-30 каждые 5 000 км оригинальное Changan — аналоги не протестированы'),
+  _Tip(icon: Icons.settings, text: 'Дроссельная заслонка требует чистки каждые 60 000 км профилактически'),
+  _Tip(icon: Icons.rotate_right, text: 'Проверяйте пыльники ШРУСов при каждом ТО — заводское качество оставляет желать лучшего'),
+  _Tip(icon: Icons.sync, text: 'МКПП и АКПП требуют адаптации после замены масла через сканер'),
+];
+
+const _tipsWuling = <_Tip>[
+  _Tip(icon: Icons.opacity, text: 'Масло 5W-30/10W-40 каждые 5 000 км — двигатели Wuling требовательны к качеству'),
+  _Tip(icon: Icons.settings, text: 'Требуется регулярная чистка форсунок каждые 40 000 км'),
+  _Tip(icon: Icons.vibration, text: 'Проверяйте опоры двигателя каждые 60 000 км — быстро изнашиваются'),
+  _Tip(icon: Icons.local_car_wash, text: 'Дёшевое покрытие кузова требует защиты воском каждые 6 месяцев'),
+];
+
+const _tipsLiAuto = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея Li Auto — контролируйте её здоровье через приложение каждый месяц'),
+  _Tip(icon: Icons.blur_on, text: 'Генератор диапазона (EREV система) требует обслуживания каждые 40 000 км'),
+  _Tip(icon: Icons.settings, text: 'ПО обновляется OTA — устанавливайте обновления для улучшения управления батареей'),
+  _Tip(icon: Icons.ac_unit, text: 'Кондиционер с тепловым секом — используйте эффективно зимой для экономии батареи'),
+];
+
+const _tipsAvatar = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея CATL — менее надёжна чем Tesla. Следите за её температурой'),
+  _Tip(icon: Icons.blur_on, text: 'Быстрая зарядка максимум 2 раза в неделю — батарея деградирует со временем'),
+  _Tip(icon: Icons.settings, text: 'Сенсорная панель требует периодической остановки системы для перезагрузки'),
+  _Tip(icon: Icons.opacity, text: 'Охлаждающая жидкость батареи требует замены каждые 2 года'),
+];
+
+const _tipsNeta = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея Neta — экранируйте от жары летом через приложение'),
+  _Tip(icon: Icons.blur_on, text: 'Дальность в холод падает на 30–40% — планируйте маршруты с этим фактором'),
+  _Tip(icon: Icons.settings, text: 'ПО нуждается в обновлениях для улучшения управления энергией'),
+  _Tip(icon: Icons.air, text: 'Воздушный фильтр салона меняйте каждые 20 000 км — фильтр тонкий'),
+];
+
+const _tipsLeapmotor = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея Leapmotor — избегайте полной разрядки ниже 5%'),
+  _Tip(icon: Icons.blur_on, text: 'Минимизируйте быструю зарядку — используйте домашнюю зарядку максимум'),
+  _Tip(icon: Icons.settings, text: 'Система охлаждения батареи требует проверки каждые 50 000 км'),
+  _Tip(icon: Icons.rotate_right, text: 'Тормозная система регенеративная — изнашивается медленнее, но требует калибровки'),
+];
+
+const _tipsPolestar = <_Tip>[
+  _Tip(icon: Icons.battery_charging_full, text: 'Батарея Polestar 3/4 — следите за её состоянием. Деградация минимальна, но контроль важен'),
+  _Tip(icon: Icons.blur_on, text: 'Быстрая зарядка максимум 2–3 раза в неделю для сохранения ресурса батареи'),
+  _Tip(icon: Icons.settings, text: 'ПО обновляется OTA — обновляйте сразу для улучшения управления электроникой'),
+  _Tip(icon: Icons.opacity, text: 'На электрических авто контролируйте состояние жидкости охлаждители батареи каждые 2 года'),
+];
+
 // ──────────────────────────────────────────────
 //  Knowledge database (brand / brand+model keys — lowercase)
 // ──────────────────────────────────────────────
@@ -677,6 +866,1642 @@ const _db = <String, _Knowledge>{
     tips: _tipsToyota,
   ),
 
+  // ─── Audi ───
+  'audi': _Knowledge(
+    about: 'Audi — немецкий премиум с легендарным Quattro AWD. Разделяет платформы с VW/Skoda/Seat. Отличная управляемость, но электроника требует специализированной диагностики.',
+    problems: [
+      _Problem(
+        icon: Icons.sync_problem, color: Color(0xFFF44336),
+        symptom: 'Рывки и вибрация DSG/S-Tronic при старте',
+        cause: 'Износ фрикционов сухого DQ200 или загрязнение масла мокрого DQ500',
+        solution: 'Обновление прошивки мехатроника у дилера. Замена масла DSG (оригинал VW/Audi). При сильном износе — ремонт мехатроника.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук из ГРМ при холодном пуске (2.0 TFSI)',
+        cause: 'Растяжение цепи ГРМ — болячка EA888 Gen1/Gen2',
+        solution: 'Замена цепи ГРМ, натяжителя и направляющих. Обязательно при пробеге >120 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Расход масла >0.5 л / 1000 км (2.0 TFSI)',
+        cause: 'Закоксовка маслосъёмных колец или износ колпачков',
+        solution: 'Промывка двигателя (Liqui Moly Engine Flush). При отсутствии эффекта — снятие ГБЦ и замена колпачков.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.trending_down, color: Color(0xFFFFC107),
+        symptom: 'Потеря мощности, свист турбины',
+        cause: 'Трещина в патрубке интеркулера или износ актуатора турбины',
+        solution: 'Проверить все воздуховоды. При норме — диагностика актуатора турбины через VAG-COM.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsAudi,
+  ),
+
+  'audi a4': _Knowledge(
+    about: 'Audi A4 (B8/B9) — бизнес-седан с двигателями 1.8/2.0 TFSI. Цепной ГРМ EA888 требует контроля, АКПП S-Tronic — плановой замены масла каждые 60 тыс. км.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук при холодном запуске (2.0 TFSI)',
+        cause: 'Износ цепи ГРМ — типичная болячка EA888 Gen1/Gen2',
+        solution: 'Срочная замена цепного привода ГРМ. Промедление ведёт к капремонту двигателя.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Масляный жор >1 л / 10 000 км',
+        cause: 'Закоксованные маслосъёмные кольца — ранняя болячка EA888.1',
+        solution: 'Промывка колец (Liqui Moly Motorspulung). При отсутствии эффекта — разборка ДВС.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки и пинки при переключении S-Tronic',
+        cause: 'Износ фрикционов 7DCT (DQ200)',
+        solution: 'Обновление прошивки мехатроника. При прогрессии — ремонт мехатроника с заменой фрикционов.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsAudi,
+  ),
+
+  'audi q5': _Knowledge(
+    about: 'Audi Q5 (8R/FY) — кроссовер бизнес-класса с полным приводом Quattro. Одна из лучших управляемостей в классе, но требовательный в обслуживании.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Течь масла под авто (2.0 TFSI)',
+        cause: 'Износ прокладки клапанной крышки или сальника коленвала',
+        solution: 'Замена прокладки клапанной крышки. При сальнике — совмещать с плановым обслуживанием.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук ГРМ при запуске (EA888)',
+        cause: 'Растяжение цепи ГРМ — актуально для Q5 FY 2017–2021 г.в.',
+        solution: 'Замена цепи ГРМ с сопутствующими элементами. Обязательно совмещать с заменой масла.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Шум при работе полного привода',
+        cause: 'Износ муфты Haldex или загрязнение масла',
+        solution: 'Замена масла муфты Haldex (ATF Haldex Gen4/5) каждые 40–60 тыс. км. При износе — замена муфты.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsAudi,
+  ),
+
+  // ─── Mazda ───
+  'mazda': _Knowledge(
+    about: 'Mazda — японский бренд с технологией Skyactiv. Атмосферные двигатели с высокой степенью сжатия — мощные и экономичные. Один из лучших в классе по надёжности.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Повышенный расход масла (2.0/2.5 Skyactiv-G)',
+        cause: 'Особенность высокой степени сжатия — нагар на кольцах при городской езде',
+        solution: 'Промывка двигателя Liqui Moly. Периодически проезжать трассу на 4 000+ об/мин для очистки колец.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFFC107),
+        symptom: 'Хруст при повороте руля (Mazda 3/CX-5)',
+        cause: 'Износ ШРУСа передней полуоси',
+        solution: 'Пыльник цел — набить смазку. При трещинах в пыльнике — немедленная замена ШРУСа.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Небольшие рывки АКПП Skyactiv-Drive',
+        cause: 'Загрязнение жидкости АКПП или сброс адаптаций',
+        solution: 'Замена жидкости АКПП (ATF-FZ или M-III). Сброс адаптаций через OBD2-диагностику.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsMazda,
+  ),
+
+  'mazda cx-5': _Knowledge(
+    about: 'Mazda CX-5 (KF) — один из самых популярных кроссоверов класса. Двигатель 2.5 Skyactiv-G надёжен. AWD простой и безотказный. Высший рейтинг безопасности NCAP.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Запотевание оптики фар',
+        cause: 'Потеря герметичности корпуса фары (LED/галоген)',
+        solution: 'Просушить фару феном. Заклеить вентиляционные отверстия силиконовым герметиком. При сильном — замена.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.local_gas_station, color: Color(0xFFFFC107),
+        symptom: 'Подёргивания при езде на малых оборотах',
+        cause: 'Закоксовка дроссельной заслонки или форсунок',
+        solution: 'Чистка дроссельной заслонки. Промывка форсунок. Использовать качественный бензин 95+.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на скорости 80–120 км/ч',
+        cause: 'Дисбаланс колёс или износ ступичных подшипников',
+        solution: 'Балансировка и стенд. При пробеге >100 000 км — проверка ступичных подшипников.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsMazda,
+  ),
+
+  'mazda 6': _Knowledge(
+    about: 'Mazda 6 (GJ/GL) — спортивный и практичный бизнес-седан/универсал. Двигатели 2.0/2.5 Skyactiv-G надёжны. Шасси настроено остро — лучшее в классе.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой расход масла',
+        cause: 'Особенность высокой степени сжатия Skyactiv-G',
+        solution: 'Контролировать уровень каждые 5 000 км. Масло 0W-20. Периодическая езда на трассе очищает кольца.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.disc_full, color: Color(0xFFFF9800),
+        symptom: 'Вибрация руля при торможении',
+        cause: 'Коробление тормозных дисков',
+        solution: 'Замена тормозных дисков и колодок. Рекомендуются диски Brembo или DBA.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsMazda,
+  ),
+
+  // ─── Skoda ───
+  'skoda': _Knowledge(
+    about: 'Skoda — чешский бренд группы VW. Лучшее соотношение цена/качество на платформе MQB. Разделяет двигатели и трансмиссии с VW/Audi/Seat.',
+    problems: [
+      _Problem(
+        icon: Icons.sync_problem, color: Color(0xFFF44336),
+        symptom: 'Рывки при старте (1.2/1.4 TSI + DSG7)',
+        cause: 'Износ фрикционов сухого DQ200 — болячка всей VW Group',
+        solution: 'Обновление прошивки мехатроника у дилера. При сильном износе — ремонт/замена мехатроника.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_gas_station, color: Color(0xFFFFC107),
+        symptom: 'Закоксовка впускных клапанов (1.4 TSI)',
+        cause: 'Прямой впрыск не омывает клапаны выхлопными газами',
+        solution: 'Чистка клапанов вальцовкой каждые 60–80 тыс. км. Использовать присадки для промывки.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Стук ГРМ при запуске (1.2 TSI)',
+        cause: 'Растяжение цепи ГРМ — критично для моторов CBZA/CBZB до 2014 г.в.',
+        solution: 'Замена цепного привода ГРМ. Срочно при пробеге >100 000 км.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  'skoda octavia': _Knowledge(
+    about: 'Skoda Octavia (A7/A8) — самый популярный автомобиль Восточной Европы. Практичный лифтбек/универсал с надёжными моторами 1.2/1.4/1.8/2.0 TSI.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки DSG при трогании в мороз',
+        cause: 'Особенность сухого DQ200 в холодную погоду — не прогретые фрикционы',
+        solution: 'Прогревать авто 5–10 минут перед движением. При износе — замена масла DSG + адаптация.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой расход масла 1.4 TSI',
+        cause: 'Особенность CZDA/CZEA — маслосъёмные колпачки',
+        solution: 'Контролировать уровень масла каждые 3 000 км. При >0.5 л / 1000 км — замена колпачков.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Renault ───
+  'renault': _Knowledge(
+    about: 'Renault — французский бренд с широкой гаммой. Duster и Logan — популярные бестселлеры СНГ. Простая конструкция Logan позволяет самостоятельный ремонт.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки/«пинки» роботизированной КПП EDC',
+        cause: 'Перегрев или износ фрикционов EDC (6DCT)',
+        solution: 'Обновление прошивки EDC. При сильном износе — ремонт мехатроника у специалистов Renault.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Стук ГРМ при запуске (дизель K9K)',
+        cause: 'Износ ремня ГРМ — ресурс в СНГ около 60 000 км',
+        solution: 'Срочная замена ремня ГРМ с роликами и помпой. Обрыв ремня K9K = капремонт или утиль.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация от подвески (Logan/Duster)',
+        cause: 'Износ передних стоек или сайлентблоков рычагов',
+        solution: 'Замена передних амортизаторных стоек и опорных подшипников. Доступная и несложная работа.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.ac_unit, color: Color(0xFF2196F3),
+        symptom: 'Не работает кондиционер (Duster/Logan)',
+        cause: 'Утечка фреона через резиновые уплотнения',
+        solution: 'Диагностика кондиционера, дозаправка хладагентом R134a с поиском места утечки.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsRenault,
+  ),
+
+  // ─── Ford ───
+  'ford': _Knowledge(
+    about: 'Ford — американский бренд с широкой гаммой от Focus до Ranger. Двигатели EcoBoost мощные, но требуют качественного масла и ТО каждые 7 500 км.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки/«пинки» PowerShift (роботизированная КПП)',
+        cause: 'Износ фрикционов или загрязнение масла DPS6 (сухой DCT)',
+        solution: 'Замена масла PowerShift. При сильном износе — ремонт/замена мехатроника. Программное обновление.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_fire_department, color: Color(0xFFF44336),
+        symptom: 'Перегрев двигателя 1.0 EcoBoost',
+        cause: 'Трещина прокладки ГБЦ — известный дефект 1.0 EcoBoost',
+        solution: 'Замена прокладки ГБЦ. Контролировать уровень ОЖ еженедельно и немедленно устранять утечки.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.trending_down, color: Color(0xFFFF9800),
+        symptom: 'Потеря мощности, свист из-под капота (1.5/1.6T)',
+        cause: 'Трещина в патрубке интеркулера или утечка системы наддува',
+        solution: 'Проверить патрубки интеркулера на трещины. При норме — диагностика турбокомпрессора.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Стук передней подвески (Focus, Mondeo)',
+        cause: 'Износ сайлентблоков переднего рычага',
+        solution: 'Замена сайлентблоков рычагов передней подвески. Недорогая, но важная работа.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsFord,
+  ),
+
+  // ─── Volvo ───
+  'volvo': _Knowledge(
+    about: 'Volvo — шведский бренд с приоритетом на безопасность и долговечность. Двигатели Drive-E 2.0 надёжны. Системы безопасности — лучшие в своём классе.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Стук ремня ГРМ (T4/T5, Drive-E 2.0)',
+        cause: 'Износ натяжного ролика или самого ремня ГРМ',
+        solution: 'Замена ремня ГРМ с роликами и помпой каждые 120 000 км. Обрыв = капремонт двигателя.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Подвеска «опускается» на стоянке',
+        cause: 'Износ пневмостоек или компрессора (XC90 II, XC60)',
+        solution: 'Замена пневмостоек (Continental или оригинал Volvo). Диагностика компрессора подвески.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Подтёк масла в районе двигателя',
+        cause: 'Прокладка масляного поддона или сальник коленвала (Drive-E)',
+        solution: 'Замена прокладок по месту течи. Силиконовый герметик не заменяет прокладку.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsVolvo,
+  ),
+
+  // ─── Land Rover ───
+  'land rover': _Knowledge(
+    about: 'Land Rover — британский бренд с легендарными внедорожными качествами. Discovery, Defender, Range Rover — одни из лучших вездеходов. Высокая стоимость обслуживания.',
+    problems: [
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFF44336),
+        symptom: 'Автомобиль оседает после стоянки',
+        cause: 'Износ пневмостоек или компрессора подвески (Range Rover)',
+        solution: 'Замена пневмостоек (Arnott или оригинал) и/или компрессора. Конвертация на пружины — бюджетный вариант.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_fire_department, color: Color(0xFFF44336),
+        symptom: 'Перегрев дизеля 3.0 TDV6/SDV6',
+        cause: 'Засорение системы охлаждения или износ водяной помпы',
+        solution: 'Замена помпы, термостата и промывка системы охлаждения. Профилактически каждые 80 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFF9800),
+        symptom: 'Пинки/зависания АКПП ZF 8HP',
+        cause: 'Загрязнение масла АКПП или износ гидроблока',
+        solution: 'Замена масла АКПП (ZF Lifeguard 8) каждые 60 000 км. При прогрессии — диагностика гидроблока.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Porsche ───
+  'porsche': _Knowledge(
+    about: 'Porsche — немецкий спортивный бренд. Невероятная надёжность при правильном обслуживании. Cayenne и Macan на платформе Audi — надёжны как японцы.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFF9800),
+        symptom: 'Стук подвески (Cayenne/Macan) на кочках',
+        cause: 'Износ сайлентблоков рычагов задней многорычажки',
+        solution: 'Замена сайлентблоков задней многорычажной подвески. Рекомендуется усиленный комплект MEYLE HD.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFFC107),
+        symptom: 'Вибрация/рывки PDK при старте',
+        cause: 'Загрязнение масла PDK или необходимость адаптации',
+        solution: 'Замена масла PDK оригинальным Porsche PDK Fluid каждые 40 000 км. Адаптация через Porsche PIWIS.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFF44336),
+        symptom: 'Расход масла (V6/V8 бензиновые моторы)',
+        cause: 'Характерная особенность спортивных двигателей — нагружены сильнее обычного',
+        solution: 'Контролировать уровень каждые 2 000 км. 0.5 л / 1000 км считается условно нормальным.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Jeep ───
+  'jeep': _Knowledge(
+    about: 'Jeep — американский внедорожный бренд (Stellantis). Grand Cherokee и Wrangler — культовые внедорожники. Простая конструкция, но требует регулярного ТО.',
+    problems: [
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Оседает пневмоподвеска (Grand Cherokee)',
+        cause: 'Износ пневмостоек или компрессора',
+        solution: 'Замена пневмостоек (Arnott или оригинал). Диагностика компрессора и осушителя.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Скрежет/гул раздаточной коробки',
+        cause: 'Износ подшипников или нехватка масла в раздатке',
+        solution: 'Замена масла раздатки каждые 60 000 км. При скрежете — диагностика подшипников.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_gas_station, color: Color(0xFFFFC107),
+        symptom: 'Повышенный расход топлива (3.6 Pentastar)',
+        cause: 'Загрязнение инжекторов или проблема клапана деактивации MDS',
+        solution: 'Промывка инжекторов. Проверка работы системы MDS (отключение цилиндров).',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsGeneral,
+  ),
+
+  // ─── Suzuki ───
+  'suzuki': _Knowledge(
+    about: 'Suzuki — японский бренд компактных и внедорожных автомобилей. Vitara и Swift — надёжные и экономичные. AllGrip AWD отлично работает в условиях СНГ.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFFC107),
+        symptom: 'Рывки вариатора CVT (Vitara, Swift)',
+        cause: 'Загрязнение жидкости CVT или начальный износ ремня',
+        solution: 'Замена жидкости CVT строго оригинальной Suzuki CVT Fluid Green 1 каждые 40 000 км.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Стук ремня ГРМ (Grand Vitara, Jimny)',
+        cause: 'Износ ролика или самого ремня ГРМ — ресурс 90 000 км',
+        solution: 'Замена ремня ГРМ с роликами и помпой. Обрыв гнёт клапаны — работа обязательна.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Люфт и скрип карданных валов (Jimny)',
+        cause: 'Износ крестовин или недостаток смазки',
+        solution: 'Смазка крестовин или их замена. Профилактическая смазка каждые 30 000 км.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsSuzuki,
+  ),
+
+  // ─── Opel ───
+  'opel': _Knowledge(
+    about: 'Opel (Stellantis) — немецкий бренд с доступным обслуживанием. Astra и Insignia — популярны в СНГ. Двигатели 1.4/1.6 Turbo надёжны при соблюдении ТО.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук цепи ГРМ при запуске (1.6 Turbo A16LET)',
+        cause: 'Растяжение цепи ГРМ — болячка 1.6T первых поколений',
+        solution: 'Замена цепного привода ГРМ. Профилактически при пробеге >100 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Стук передней подвески (Astra/Insignia)',
+        cause: 'Износ опорного подшипника стойки или сайлентблоков рычагов',
+        solution: 'Замена опорных подшипников + сайлентблоков передних рычагов.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Течь масла двигателя',
+        cause: 'Износ сальника коленвала или прокладки клапанной крышки',
+        solution: 'Замена сальников по месту течи + прокладки клапанной крышки. Доступные запчасти.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Peugeot ───
+  'peugeot': _Knowledge(
+    about: 'Peugeot (Stellantis) — французский бренд с динамичным дизайном. Двигатель 1.6 THP создан совместно с BMW. 2008, 3008 — успешные кроссоверы своего класса.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук цепи ГРМ (1.6 THP EP6)',
+        cause: 'Растяжение цепи ГРМ — известная проблема мотора Prince (совместный с BMW Mini)',
+        solution: 'Замена цепного привода ГРМ. Критично! Промедление = капремонт.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Расход масла (1.6 THP)',
+        cause: 'Закоксовка маслосъёмных колец или износ колпачков',
+        solution: 'Следить за уровнем масла каждые 2 000–3 000 км. Промывка, при отсутствии эффекта — ремонт ГБЦ.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Рывки роботизированной КПП EGS',
+        cause: 'Износ привода или необходимость обучить точку сцепления',
+        solution: 'Адаптация точки сцепления через диагностику. При износе — замена диска сцепления.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsRenault,
+  ),
+
+  // ─── Infiniti ───
+  'infiniti': _Knowledge(
+    about: 'Infiniti — премиальный бренд Nissan. Двигатели VQ35/VQ37 — одни из лучших V6 в мире по надёжности. FX, QX60, Q50 популярны в премиум-сегменте СНГ.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой масляный жор (VQ35)',
+        cause: 'Особенность двигателя VQ35DE — небольшой расход считается нормальным',
+        solution: 'Контролировать уровень каждые 5 000 км. 0.5 л / 5000 км — норма. При >1 л — диагностика.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Вибрация вариатора Xtronic (QX60/Q50)',
+        cause: 'Загрязнение жидкости CVT Jatco',
+        solution: 'Замена жидкости CVT оригинальной NS-3 каждые 30 000 км. Только оригинал.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Стук задней подвески (FX35/QX70)',
+        cause: 'Износ задних рычагов или стоек стабилизатора',
+        solution: 'Замена стоек стабилизатора + задних сайлентблоков. Распространённая работа.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsToyota,
+  ),
+
+  // ─── UAZ ───
+  'uaz': _Knowledge(
+    about: 'УАЗ — ульяновский внедорожник почти армейской конструкции. Простота обслуживания и высокая ремонтопригодность — главные достоинства. Проходимость — вне конкуренции.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Течь масла из двигателя',
+        cause: 'Большие допуски производства — у старых экземпляров уплотнения дают течь',
+        solution: 'Планомерная замена всех сальников и прокладок. Недорогие запчасти — самостоятельный ремонт вполне возможен.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Люфт рулевого управления',
+        cause: 'Износ рулевой трапеции или рулевого вала',
+        solution: 'Регулировка рулевого червяка. Замена рулевых наконечников. Обязательная сход-развал.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF9E9E9E),
+        symptom: 'Скрежет/гул раздаточной коробки',
+        cause: 'Износ подшипников или нехватка масла',
+        solution: 'Замена масла раздатки. Ревизия подшипников. Б/у запчасти доступны на любом рынке.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsGeneral,
+  ),
+
+  // ─── BMW X5 ───
+  'bmw x5': _Knowledge(
+    about: 'BMW X5 (E70/F15/G05) — флагманский кроссовер BMW. Мощные бензиновые и дизельные моторы. xDrive AWD — превосходен на зимней дороге. Дорог в обслуживании.',
+    problems: [
+      _Problem(
+        icon: Icons.local_fire_department, color: Color(0xFFF44336),
+        symptom: 'Течь ОЖ / перегрев (N63 4.4T biturbo)',
+        cause: 'Растрескивание пластиковых патрубков — известная болячка N63',
+        solution: 'Замена всех патрубков системы охлаждения. Профилактически при пробеге >80 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Характерный стук ГРМ при запуске',
+        cause: 'Растяжение двойной цепи ГРМ N63/N55/N57',
+        solution: 'Замена цепей ГРМ — дорогостоящая работа, но обязательная при пробеге >100 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Машина оседает после ночной стоянки',
+        cause: 'Износ пневмобаллонов или компрессора (опционная пневмоподвеска F15)',
+        solution: 'Замена пневмостоек или конвертация на стандартные пружины. Компрессор менять отдельно.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── BMW 3 series ───
+  'bmw 3': _Knowledge(
+    about: 'BMW 3 серии (F30/G20) — эталон бизнес-седана. Двигатели B48/N20 2.0T с надёжной цепью. Задний привод с отличными ходовыми качествами. Дороговат в обслуживании.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFFF9800),
+        symptom: 'Стук при запуске (N20 2.0T, F30)',
+        cause: 'Растяжение цепи ГРМ N20 — в отличие от B48, N20 склонен к растяжению',
+        solution: 'Замена цепи ГРМ. Профилактически при пробеге >100 000 км на N20.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_fire_department, color: Color(0xFFFFC107),
+        symptom: 'Течь ОЖ / запах антифриза',
+        cause: 'Растрескивание пластиковых соединений расширительного бачка',
+        solution: 'Замена расширительного бачка и патрубков СО. Профилактически при пробеге >80 000 км.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой расход масла',
+        cause: 'Особенность турбированных BMW — небольшое потребление масла турбиной',
+        solution: 'Контролировать уровень каждые 3 000 км. До 0.5 л / 5000 км — норма.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Kia Sportage ───
+  'kia sportage': _Knowledge(
+    about: 'Kia Sportage (QL/NQ5) — один из самых продаваемых кроссоверов СНГ. Двигатели G4FJ 1.6T и Smartstream 2.0 современные. АКПП 6AT надёжнее 7DCT для города.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки 7DCT при старте (1.6 Turbo)',
+        cause: 'Особенность сухого 7DCT в городском режиме — перегрев фрикционов',
+        solution: 'Обновление прошивки мехатроника у дилера. При износе — замена масла DCT + адаптация.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.ac_unit, color: Color(0xFF2196F3),
+        symptom: 'Запах при включении кондиционера',
+        cause: 'Бактерии и плесень на испарителе',
+        solution: 'Антибактериальная обработка испарителя + замена фильтра салона. Ежегодно.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Стук рулевого управления на кочках',
+        cause: 'Износ наконечников рулевых тяг или рулевой рейки',
+        solution: 'Замена рулевых наконечников. При прогрессии — диагностика электрорулевой рейки.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintKorean,
+    tips: _tipsKorean,
+  ),
+
+  // ─── Hyundai Tucson ───
+  'hyundai tucson': _Knowledge(
+    about: 'Hyundai Tucson (TL/NX4) — современный кроссовер с широкой гаммой моторов. 2.0 MPI надёжнее 1.6 T-GDI. AWD HTRAC обеспечивает хорошую управляемость.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки при старте (1.6 T-GDI + 7DCT)',
+        cause: 'Особенность сухого 7DCT — перегрев фрикционов в городских пробках',
+        solution: 'Eco-режим в пробках снижает нагрузку. Обновление прошивки DCT у дилера.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Небольшой расход масла (1.6 T-GDI)',
+        cause: 'Особенность прямовпрысковых турбодвигателей',
+        solution: 'Контролировать уровень каждые 3 000 км. Масло 0W-30 ACEA C3.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на скорости',
+        cause: 'Дисбаланс шин или износ ступичных подшипников',
+        solution: 'Балансировка + стенд. При пробеге >80 000 км — замена ступичных подшипников.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintKorean,
+    tips: _tipsKorean,
+  ),
+
+  // ─── Toyota Corolla ───
+  'toyota corolla': _Knowledge(
+    about: 'Toyota Corolla (E210) — самый продаваемый автомобиль в истории. Двигатели 1.6/2.0 Valvematic надёжны. Минимальные затраты на обслуживание в классе.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой масляный аппетит (2.0 M20A)',
+        cause: 'Характерная особенность ранних M20A — расход до 0.5 л/5000 км',
+        solution: 'Контролировать уровень каждые 3 000 км. Масло 0W-20 с допуском Toyota.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на холостом ходу',
+        cause: 'Загрязнение дроссельной заслонки или нагар на форсунках',
+        solution: 'Чистка дроссельной заслонки. Промывка форсунок. Замена свечей NGK (оригинал).',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.disc_full, color: Color(0xFFFF9800),
+        symptom: 'Вибрация руля при торможении',
+        cause: 'Коробление тормозных дисков — особенность ранних 2019–2021 г.в.',
+        solution: 'Замена тормозных дисков (TRD или SHW) + колодок. Проточка дисков не рекомендуется.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsToyota,
+  ),
+
+  // ─── Toyota Highlander ───
+  'toyota highlander': _Knowledge(
+    about: 'Toyota Highlander (XU50/XU70) — семейный кроссовер с 3-рядами сидений. Двигатели 3.5 V6 / 2.5 Hybrid. AWD Torsen — отличный для трассы и снега.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Вибрация при работе АКПП (2GR-FKS)',
+        cause: 'Загрязнение жидкости АКПП или нагар на дроссельной заслонке',
+        solution: 'Замена жидкости АКПП Toyota ATF WS. Чистка дроссельной заслонки.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFF9800),
+        symptom: 'Деградация гибридной батареи (Hybrid версия)',
+        cause: 'Постепенный износ NiMH/Li-ion ячеек после 150 000+ км',
+        solution: 'Восстановление или замена гибридного аккумулятора у специалистов по гибридам Toyota.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsToyota,
+  ),
+
+  // ─── VW Golf ───
+  'volkswagen golf': _Knowledge(
+    about: 'VW Golf (7/8 поколение) — эталон гольф-класса. Двигатели EA888 1.8/2.0 TSI + DSG. Надёжен при правильном обслуживании. Высокая ценность на вторичном рынке.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFF44336),
+        symptom: 'Рывки DSG7 (DQ200) при старте',
+        cause: 'Типичная болячка вся VW Group — износ фрикционов сухого DSG7',
+        solution: 'Обновление прошивки мехатроника. При износе — ремонт мехатроника + замена масла DSG.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.local_gas_station, color: Color(0xFFFFC107),
+        symptom: 'Закоксовка клапанов (2.0 TSI EA888)',
+        cause: 'Прямой впрыск не омывает впускные клапаны',
+        solution: 'Чистка впускных клапанов вальцовкой или промывкой каждые 60–80 тыс. км.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFF9800),
+        symptom: 'Расход масла 2.0 TSI',
+        cause: 'Закоксовка маслосъёмных колец — ранняя болячка EA888',
+        solution: 'Промывка колец (Liqui Moly). При отсутствии эффекта — замена колец/колпачков.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Mercedes C-Class ───
+  'mercedes c': _Knowledge(
+    about: 'Mercedes C-Class (W205/W206) — бизнес-седан с богатым оснащением. Двигатели OM651 (2.2 CDI) и M274 (2.0T) надёжны. Сложная электроника требует специализированной диагностики.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук при запуске дизеля OM651',
+        cause: 'Износ цепи ГРМ или натяжителя — известный дефект OM651 до 2014 г.в.',
+        solution: 'Замена цепного привода ГРМ — срочно. OM651 известен этой проблемой на ранних версиях.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Течь масла (M274 2.0 Turbo)',
+        cause: 'Износ прокладки клапанной крышки',
+        solution: 'Замена прокладки клапанной крышки. Доступная работа.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFFC107),
+        symptom: 'Скрипы из задней подвески (W205)',
+        cause: 'Износ сайлентблоков рычагов задней многорычажки',
+        solution: 'Замена сайлентблоков задних рычагов (MEYLE HD или оригинал). Необходима сход-развал.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Mercedes GLE ───
+  'mercedes gle': _Knowledge(
+    about: 'Mercedes GLE (W166/V167) — полноразмерный SUV с богатым оснащением и пневмоподвеской. Мощные двигатели дизель/бензин. Один из самых комфортных кроссоверов класса.',
+    problems: [
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFF44336),
+        symptom: 'Автомобиль оседает на одну сторону',
+        cause: 'Износ пневмобаллона или клапана Airmatic',
+        solution: 'Замена пневмостоек (оригинал или Continental). Диагностика компрессора Airmatic.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFF9800),
+        symptom: 'Толчки АКПП 7G-Tronic при переключении',
+        cause: 'Загрязнение масла АКПП или износ гидроблока',
+        solution: 'Замена масла 7G-Tronic (Shell M1375.4 или оригинал) каждые 60 000 км.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsGerman,
+  ),
+
+  // ─── Kia Rio ───
+  'kia rio': _Knowledge(
+    about: 'Kia Rio (FB/YB) — самый доступный и популярный К-car в СНГ. Двигатель G4FC 1.6 DOHC прост и надёжен. Механическая КПП надёжнее автомата на этой машине.',
+    problems: [
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на малых оборотах',
+        cause: 'Загрязнение дроссельной заслонки или засорение форсунок',
+        solution: 'Чистка дросселя снятием. Замена свечей. Промывка форсунок присадкой в бак.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.album, color: Color(0xFFFF9800),
+        symptom: 'Скрип тормозов',
+        cause: 'Износ тормозных колодок или окисление тормозных направляющих',
+        solution: 'Замена колодок. Смазка направляющих (медная смазка, не на рабочую поверхность).',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Стук ремня ГРМ (высокопробежные G4FC)',
+        cause: 'Износ ремня или ролика на пробеге >90 000 км',
+        solution: 'Замена ремня ГРМ с роликами и помпой. Обязательно каждые 90 000 км.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintKorean,
+    tips: _tipsKorean,
+  ),
+
+  // ─── MINI ───
+  'mini': _Knowledge(
+    about: 'MINI (BMW) — городской хетчбек с энергичным характером. Двигатель EA888T надёжен. Высокая стоимость запчастей как у BMW, но размеры авто компактны.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Стук цепи ГРМ из двигателя',
+        cause: 'Растяжение цепи EA888T — критично на пробеге >100 000 км',
+        solution: 'Замена цепного привода ГРМ. Огромная стоимость работы и запчастей даже для компактного MINI.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Течь масла из ГБЦ',
+        cause: 'Износ прокладки клапанной крышки',
+        solution: 'Замена прокладки. Доступна замена.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Люфт в рулевом управлении',
+        cause: 'Износ рулевых наконечников и втулок',
+        solution: 'Замена рулевых наконечников. Обязательна сход-развал.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsMini,
+  ),
+
+  // ─── Tesla ───
+  'tesla': _Knowledge(
+    about: 'Tesla — лидер электромобилей с уникальным ПО и батареей. Model 3/Y — бестселлеры EV. Зарядка от домашней розетки, минимальное ТО, рекуперативное торможение.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFF44336),
+        symptom: 'Батарея деградирует быстро / снижается дальность',
+        cause: 'Частая быстрая зарядка, экстремальные температуры',
+        solution: 'Используйте домашнюю зарядку 80% и минимизируйте Supercharger. Избегайте минус температур без прогрева.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Дальность упала на 10–15% в морозе',
+        cause: 'Батарея теряет мощность при низких температурах — нормально для LiPo',
+        solution: 'Используйте предварительный подогрев от розетки перед выездом. Избегайте агрессивного вождения.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Нестабильная работа Автопилота / Супер Крузер',
+        cause: 'Загрязнение камер или необходимо обновление ПО',
+        solution: 'Обновите ПО сразу (приходит OTA). Очистите камеры от пыли/грязи.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFFC107),
+        symptom: 'Вибрация на высоких скоростях (>150 км/ч)',
+        cause: 'Дисбаланс колёс или износ подшипников',
+        solution: 'Балансировка колёс и проверка подшипников. На Tesla редко требуется замена подшипников.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsTesla,
+  ),
+
+  'tesla model 3': _Knowledge(
+    about: 'Tesla Model 3 — самый продаваемый электрокар в мире. Две батареи: Standard/Long Range. Электромотор проще любого ДВС — почти вечный мотор при своевременной зарядке.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFF44336),
+        symptom: 'Быстрая деградация батареи первых лет',
+        cause: 'Производственный брак или частая DC зарядка при покупке',
+        solution: 'Проверить батарею диагностикой. Tesla часто заменяет батарею по гарантии на ранних версиях.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.disc_full, color: Color(0xFFFF9800),
+        symptom: 'Передние тормозные колодки ношены, задние идеальны',
+        cause: 'Рекуперативное торможение — задние тормоза почти не используются',
+        solution: 'Нормально для EV. Передние тормозные колодки менять реже, чем на ДВС авто.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Странные звуки из подвески на скорости',
+        cause: 'Люфт в рулевых тягах или амортизаторах',
+        solution: 'Диагностика подвески. На Model 3 обычно достаточно регулировки.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsTesla,
+  ),
+
+  // ─── Fiat ───
+  'fiat': _Knowledge(
+    about: 'Fiat — итальянский бренд с простыми, дешёвыми авто. Panda, Tipo, 500 — легенды роллинга. Компактные, экономичные, восприимчивы к коррозии.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Вибрация на холостом ходу (1.2/1.4)',
+        cause: 'Загрязнение дроссельной заслонки',
+        solution: 'Чистка дроссельной заслонки. Простая и дешёвая работа.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.local_car_wash, color: Color(0xFFF44336),
+        symptom: 'Коррозия кузова даже на молодых авто',
+        cause: 'Fiat известны слабой защитой кузова от ржавчины',
+        solution: 'Обработка кузова воском каждые 6 месяцев. Немедленный ремонт царапин.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Люфт рулевого управления',
+        cause: 'Износ втулок рулевых тяг',
+        solution: 'Замена рулевых наконечников и втулок. Недорого.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsFiat,
+  ),
+
+  'fiat panda': _Knowledge(
+    about: 'Fiat Panda (169/290/312) — легендарная малютка. Простота конструкции позволяет самостоятельный ремонт на парковке. Два литра на 100 км реально достижимы.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Слабая мощность двигателя',
+        cause: 'Засорение воздушного фильтра или форсунок (1.2i 8V)',
+        solution: 'Замена фильтра, промывка форсунок, сброс ошибок ЭБУ.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на малых оборотах',
+        cause: 'Изношены подушки двигателя',
+        solution: 'Замена подушек. Недорогие, доступные детали.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsFiat,
+  ),
+
+  // ─── Alfa Romeo ───
+  'alfa romeo': _Knowledge(
+    about: 'Alfa Romeo — итальянский премиум-бренд с душой спортсмена. Giulia, Stelvio — роскошные авто с динамичным характером. Требует качественного обслуживания.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Небольшой расход масла (2.0T)',
+        cause: 'Характер турбированного мотора — норма 0.5 л / 5000 км',
+        solution: 'Контролировать уровень каждые 3 000 км. Использовать масло Castrol Edge.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.local_fire_department, color: Color(0xFFFF9800),
+        symptom: 'Течь охлаждающей жидкости',
+        cause: 'Прокладка ГБЦ или патрубки системы',
+        solution: 'Диагностика. При прокладке — замена с новыми болтами.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.local_car_wash, color: Color(0xFFF44336),
+        symptom: 'Ржавчина на кузове, особенно в районе колёс',
+        cause: 'Alfa всегда были восприимчивы к коррозии',
+        solution: 'Обработка воском каждые полгода. Защита пороговых кромок.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsAlfa,
+  ),
+
+  // ─── Jaguar ───
+  'jaguar': _Knowledge(
+    about: 'Jaguar (JLR, Tata Motors) — британский премиум с богатой историей. XF, F-Pace — современные и элегантные. Дорогое обслуживание, но за качеством.',
+    problems: [
+      _Problem(
+        icon: Icons.link, color: Color(0xFFF44336),
+        symptom: 'Стук цепи ГРМ при запуске (3.0 V6)',
+        cause: 'Растяжение цепи ГРМ на пробеге 120+ 000 км',
+        solution: 'Замена цепного привода ГРМ. Дорогая работа — в цену входит 25–30% сметы работ.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Функция Air Suspension работает нестабильно (F-Pace)',
+        cause: 'Износ компрессора или клапанов подвески',
+        solution: 'Диагностика подвески. Замена компрессора или конвертация на пружины.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Течь масла из двигателя',
+        cause: 'Прокладка крышки ГБЦ или сальники',
+        solution: 'Замена по месту течи. Цены как на премиум-авто.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGerman,
+    tips: _tipsJaguar,
+  ),
+
+  // ─── Citroën ───
+  'citroen': _Knowledge(
+    about: 'Citroën — французский бренд с эксцентричным дизайном. C4, C5, Berlingo — практичны и комфортны. Пневматическая подвеска (старые модели) требует контроля.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFF44336),
+        symptom: 'Вибрация на холостом ходу 1.2 THP',
+        cause: 'Закоксовка дроссельной заслонки',
+        solution: 'Чистка дроссельной заслонки. Сброс адаптаций через диагностику.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Пневмоподвеска опускается (C5 старые)',
+        cause: 'Износ воздушных амортизаторов или клапанов',
+        solution: 'Замена пневмостоек или конвертация на пружины — дорого.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Расход масла 1.6 THP',
+        cause: 'Закоксовка маслосъёмных колец',
+        solution: 'Промывка (Liqui Moly). При отсутствии эффекта — замена колец.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsCitrogen,
+  ),
+
+  // ─── DS (Citroën premium line) ───
+  'ds': _Knowledge(
+    about: 'DS (Citroën Collection) — французский премиум-лайн. DS3, DS7 — роскошные с изысканным дизайном. Дорога обслуживаться, использует платформы от Citroën.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Расход масла (1.6 THP)',
+        cause: 'Особенность прямовпрыска',
+        solution: 'Контролировать уровень. При >0.5л/1000км — диагностика.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Рывки при переключении автомата',
+        cause: 'Загрязнение масла или необходима адаптация',
+        solution: 'Замена масла EAT6/EAT8 оригинальным Elf. Адаптация.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsCitrogen,
+  ),
+
+  // ─── MG (Chinese revival) ───
+  'mg': _Knowledge(
+    about: 'MG (Morris Garages) — возрождённая британская марка (SAIC, Китай). MG5, MG6 — доступные и современные. Ставят на азиатские платформы.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Требует частая замена масла',
+        cause: 'Двигатель требователен в СНГ условиях',
+        solution: 'Масло 5W-30 каждые 5 000 км. Контролировать уровень.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFFC107),
+        symptom: 'Рывки АКПП при старте на холоде',
+        cause: 'Особенность коробки в морозную погоду',
+        solution: 'Прогревать авто 5 минут перед движением. Обновление ПО.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Дроссель требует чистки',
+        cause: 'Топливо СНГ дешёвое низкого качества',
+        solution: 'Чистка дроссельной заслонки каждые 60 000 км.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsMG,
+  ),
+
+  // ─── Geely ───
+  'geely': _Knowledge(
+    about: 'Geely — китайский бренд (Volvo-Geely). Emgrand, Coolray — качественнее Great Wall/Chery. Дизайн привлекательный, технология развивается.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Требует качественное масло',
+        cause: 'Двигатели всё ещё требуют ухода',
+        solution: 'Масло 5W-30 оригинальное или Mobil 1 каждые 5 000 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Дроссельная заслонка частых закоксовок',
+        cause: 'Конструкция и качество топлива СНГ',
+        solution: 'Профилактическая чистка каждые 60 000 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFF9800),
+        symptom: 'Проблемы с гибридной батареей (если гибрид)',
+        cause: 'Система гибридизации Geely ещё недостаточно отработана',
+        solution: 'Диагностика у дилера. При гарантии — замена.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsGeely,
+  ),
+
+  // ─── Chery ───
+  'chery': _Knowledge(
+    about: 'Chery — китайский бренд (наравне с Geely). Tiggo, Arrizo — популярны в СНГ. Простая конструкция, доступные двигатели, но требуют тщательного ТО.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Требует частая замена масла',
+        cause: 'Двигатели чувствительны к качеству',
+        solution: 'Масло 5W-30 каждые 5 000 км. Проверять каждые 2 500 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Закоксовка форсунок и дроссельной заслонки',
+        cause: 'Топливо СНГ низкого качества',
+        solution: 'Промывка форсунок и чистка дроссельной заслонки каждые 60 000 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.vibration, color: Color(0xFFFFC107),
+        symptom: 'Хруст/скрип передней подвески',
+        cause: 'Быстрый износ сайлентблоков',
+        solution: 'Замена сайлентблоков рычагов передней подвески.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsChery,
+  ),
+
+  // ─── Great Wall / Haval ───
+  'haval': _Knowledge(
+    about: 'Haval (Great Wall Motors) — китайский SUV бренд. H6, H9 — популярные в СНГ. Конструкция простая, двигатели надёжны для цены.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Требует частая замена масла',
+        cause: 'Двигатель требует ухода',
+        solution: 'Масло 5W-30 каждые 5–10 000 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Требуется профилактическая чистка топливной системы',
+        cause: 'Топливо СНГ низкого качества засоряет форсунки',
+        solution: 'Промывка форсунок и очистка дроссельной заслонки каждые 60–80 тыс. км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFFC107),
+        symptom: 'Люфт в рулевом управлении',
+        cause: 'Износ рулевых тяг',
+        solution: 'Замена рулевых наконечников. Доступная работа.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsGreatWall,
+  ),
+
+  // ─── Genesis (Hyundai luxury line) ───
+  'genesis': _Knowledge(
+    about: 'Genesis (Hyundai Motor Group) — премиум-линия на платформе Н-车. G70, GV70 — роскошные седан и кроссовер. Электрическое оборудование продвинутое.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Требует премиум-масло и тщательное ТО',
+        cause: 'Премиум-позиционирование',
+        solution: 'Масло 5W-30/5W-40 оригинальное каждые 7 500 км. Только дилер для диагностики.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.airline_seat_recline_extra, color: Color(0xFFFF9800),
+        symptom: 'Пневмоподвеска требует регулировки',
+        cause: 'Система регуляции высоты требует контроля',
+        solution: 'Каждые 30 000 км проверять давление. По мере износа — замена пневмостоек.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFFC107),
+        symptom: 'Толчки АКПП 8-ступ при переключении',
+        cause: 'Необходимость адаптации или загрязнение масла',
+        solution: 'Замена масла 8-ступ с адаптацией. Только дилер.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintKorean,
+    tips: _tipsGenesis,
+  ),
+
+  // ─── XPeng (Chinese EV) ───
+  'xpeng': _Knowledge(
+    about: 'XPeng — китайский премиум-EV (Tesla конкурент). P7, P5 — стильные с продвинутым ПО. Батарея CATL, быстрая зарядка, Autopilot аналог включён.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFF44336),
+        symptom: 'Батарея быстро деградирует зимой',
+        cause: 'Температурные колебания и частая быстрая зарядка',
+        solution: 'Используйте домашнюю зарядку на 80%. Предварительно разогревайте батарею в мороз.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Дальность упала на 30–40% в холоде',
+        cause: 'Батарея теряет мощность при температурах ниже 0°C',
+        solution: 'Нормально для Li-ion. Планируйте маршруты с запасом. Используйте режим Eco.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Нестабильность Autopilot в сложных условиях',
+        cause: 'Загрязнение камер или нужно обновление ПО',
+        solution: 'Обновляйте ПО сразу (OTA). Очищайте камеры от грязи.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsXPeng,
+  ),
+
+  // ─── Nio (Premium Chinese EV) ───
+  'nio': _Knowledge(
+    about: 'Nio — премиальный китайский EV (конкурент Mercedes EQE). ES6, ES8 — люкс-класс. Система Battery Swap (замена батареи за 5 мин) уникальна. ПО создан совместно с Baidu.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFF9800),
+        symptom: 'Батарея деградирует после 150–200 000 км пути',
+        cause: 'При использовании Battery Swap батареи меняются — наработка суммируется',
+        solution: 'Это нормально для неё системы Nio. При сильной деградации — замена батареи.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Дальность зимой падает на 40–50%',
+        cause: 'Батарея, кондиционер салона, охлаждение прототипов',
+        solution: 'Используйте режим Eco и предварительный подогрев. Это нормально.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Сложности с обслуживанием вне Китая',
+        cause: 'Редкие сервис-центры Nio в СНГ',
+        solution: 'Требует профилактика. Запасные части сложно найти. Рекомендуется OEM запчасти.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsNio,
+  ),
+
+  // ─── Polestar (Volvo EV performance brand) ───
+  'polestar': _Knowledge(
+    about: 'Polestar — быстрая EV-линия Volvo (совместно с Geely). Polestar 3/4 — премиальные EV. Дизайн, производительность, безопасность на уровне кроме батареи.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFF9800),
+        symptom: 'Батарея деградирует заметнее на быстрой зарядке',
+        cause: 'Даже премиальные батареи теряют 1–2% в год с быстрой зарядкой',
+        solution: 'Минимизируйте Supercharger. Используйте домашнюю зарядку на 80%.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Требуется периодическая проверка жидкости охлаждения батареи',
+        cause: 'Батарея требует активного охлаждения в большем мотор-спорте',
+        solution: 'Проверка и долив охлаждающей жидкости каждые 2 года у дилера.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Производительность падает с нагревом батареи',
+        cause: 'Дроссель-система терморегуляции срабатывает на интенсивной езде',
+        solution: 'После агрессивного вождения дайте батарее остыть 30 минут перед зарядкой.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsPolestar,
+  ),
+
+  // ─── Acura (Honda luxury) ───
+  'acura': _Knowledge(
+    about: 'Acura — премиум-линия Honda (Япония/США). TLX, RDX, MDX — роскошные с надёжными двигателями. V6 / Turbo 2.0 — проверенные моторы Honda.',
+    problems: [
+      _Problem(
+        icon: Icons.sync, color: Color(0xFFFF9800),
+        symptom: 'Рывки седанов с CVT при старте',
+        cause: 'Характер вариатора на холоде',
+        solution: 'Прогревать авто 3–5 минут перед движением. Соблюдать интервалы замены масла CVT.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Небольшой расход масла (V6)',
+        cause: '0.5 л / 5000 км для V6 считается нормальным',
+        solution: 'Контролировать уровень каждые 3 000 км.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFFF9800),
+        symptom: 'Стук передней подвески после 80 000 км',
+        cause: 'Износ стоек стабилизатора',
+        solution: 'Замена стоек стабилизатора. Недорогая работа.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintJapanese,
+    tips: _tipsToyota,
+  ),
+
+  // ─── BYD (Chinese EV leader) ───
+  'byd': _Knowledge(
+    about: 'BYD — крупнейший китайский EV (больше Tesla по продажам). Qin, Song, Yuan — электрические и гибридные. Батареи LFP собственного производства надёжны.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFFC107),
+        symptom: 'Батарея LFP заряжается медленнее, чем NCA/NCM',
+        cause: 'Технология LFP имеет меньше плотность энергии',
+        solution: 'Нормально для LFP. Планируйте больше времени на зарядку.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Дальность зимой падает на 20–30%',
+        cause: 'Батарея LFP менее чувствительна к холоду, чем Li-ion',
+        solution: 'LFP держит дальность лучше других в мороз. Всё равно планируйте с запасом.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFFC107),
+        symptom: 'Редкие сервис-центры вне Китая',
+        cause: 'BYD относительно новый экспортёр',
+        solution: 'Требуется тщательная профилактика. Запасные части найти сложнее.',
+        urgency: 'medium',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsChery,
+  ),
+
+  // ─── Changan (Chinese mainstream) ───
+  'changan': _Knowledge(
+    about: 'Changan — крупный производитель в Китае с расширяющимся экспортом. Атмосферные и турбо двигатели рабоче-крестьянского класса.',
+    problems: [
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFF9800),
+        symptom: 'Вибрация на холостом ходу после 50 000 км',
+        cause: 'Закоксовка дроссельной заслонки',
+        solution: 'Чистка дроссельной заслонки через сканер. Замена воздушного фильтра.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF5722),
+        symptom: 'Пятна масла спереди под двигателем',
+        cause: 'Износ прокладок поддона картера',
+        solution: 'Замена прокладки поддона. Часто требуется повторная затяжка после 100 км.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.sync, color: Color(0xFF9E9E9E),
+        symptom: 'Рывки при разгоне с 1-й на 2-ю передачу',
+        cause: 'Требуется адаптация АКПП',
+        solution: 'Обновить ПО через сканер. Или: разъём OBD, ключ ON, ждать 10 сек.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsChangan,
+  ),
+
+  // ─── Wuling (Chinese budget) ───
+  'wuling': _Knowledge(
+    about: 'Wuling — бюджетный бренд SAIC-GM-Wuling. Мини-вэны и компактные авто со слабой шумоизоляцией но дешевого обслуживания.',
+    problems: [
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFF9800),
+        symptom: 'Быстрое появление нагара на форсунках',
+        cause: 'Качество топлива на АЗС СНГ ниже стандартов',
+        solution: 'Использовать присадки в топливо или периодическая чистка форсунок.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.rotate_right, color: Color(0xFFF44336),
+        symptom: 'Щелчки в районе ШРУСа при полном вывороте руля',
+        cause: 'Начальный износ внешних ШРУСов',
+        solution: 'Смазать шарниры через пыльник или заменить пыльник + шрус.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF9E9E9E),
+        symptom: 'Скрип резины подвески при повороте на месте',
+        cause: 'Недостаток смазки в шарнирах подвески',
+        solution: 'Смазка всех шарниров подвески регулярно (каждые 30 000 км).',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsWuling,
+  ),
+
+  // ─── Li Auto (Chinese EREV) ───
+  'li auto': _Knowledge(
+    about: 'Li Auto — производитель гибридов-расширителей (EREV). Двигатель включается только для генерации энергии — система сложна.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFFC107),
+        symptom: 'Неожиданное снижение батареи при парковке',
+        cause: 'Система управления теплом батареи работает в фоне',
+        solution: 'Проверить температуру батареи. Припаркуйте в тени. Контроль нормален.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Генератор включается слишком часто зимой',
+        cause: 'Холодная батарея требует подогрева от генератора',
+        solution: 'Нормально. Используйте предварительный подогрев от дома перед выездом.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF2196F3),
+        symptom: 'Вибрация при запуске двигателя генератора',
+        cause: 'Система EREV включает маленький турбо-двигатель для выработки энергии',
+        solution: 'Нормально. Виброизоляция слабая на Li Auto. Это особенность.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsLiAuto,
+  ),
+
+  // ─── Avatr (Chinese premium EV) ───
+  'avatr': _Knowledge(
+    about: 'Avatr — премиум-бренд с батареями CATL и сенсорной панелью во весь экран. Автопилот требует постоянного контроля.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFFC107),
+        symptom: 'Батарея CATL деградирует быстрее чем Tesla',
+        cause: 'CATL менее оптимизирована для длительной зарядки',
+        solution: 'Минимизируйте быструю зарядку. Используйте домашнюю — только она.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF2196F3),
+        symptom: 'Сенсорная панель зависает при навигации',
+        cause: 'Программный сбой ОС на основе базовой Android',
+        solution: 'Перезагрузить систему (долгое нажатие на кнопку). Обновить ПО.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Система адаптивного круиз-контроля теряет машину впереди',
+        cause: 'Камеры требуют калибровки при замене',
+        solution: 'Проведите калибровку камер через сервис.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsAvatar,
+  ),
+
+  // ─── Neta (Chinese budget EV) ───
+  'neta': _Knowledge(
+    about: 'Neta — бюджетный китайский EV от Hozon auto. Батарея CATL или собственной разработки. Быстро развивающаяся марка.',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFFC107),
+        symptom: 'Дальность в зимний период падает на 40–50%',
+        cause: 'Батарея теряет эффективность при холоде',
+        solution: 'Предварительный подогрев батареи перед выездом. Планируйте маршруты с запасом.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF2196F3),
+        symptom: 'Ошибка в системе управления батареей',
+        cause: 'Программный сбой BMS',
+        solution: 'Перезагрузить систему через ключ. Если не помогает — сервис.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Автомобиль не полностью заряжается на медленной зарядке',
+        cause: 'Ограничение BMS для защиты батареи',
+        solution: 'Используйте режим быстрой зарядки 1–2 раза в неделю. Нормально.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsNeta,
+  ),
+
+  // ─── Leapmotor (Chinese compact EV) ───
+  'leapmotor': _Knowledge(
+    about: 'Leapmotor — компактные электромобили с хорошей ёмкостью батареи. Быстро развивается (партнёр Geely-Volvo).',
+    problems: [
+      _Problem(
+        icon: Icons.battery_charging_full, color: Color(0xFFFFC107),
+        symptom: 'Батарея быстро деградирует при ежедневной быстрой зарядке',
+        cause: 'Частая быстрая зарядка — враг батареи',
+        solution: 'Минимизируйте быструю зарядку. Используйте 3.6-6.6 кВт домашнюю зарядку.',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.blur_on, color: Color(0xFFFF9800),
+        symptom: 'Мотор издаёт гудящий звук при разгоне',
+        cause: 'Нормальный звук для электромотора — высокие обороты',
+        solution: 'Это не дефект. Звезды стабилизируют звук. Сер.вис не требуется.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFF2196F3),
+        symptom: 'Система рекуперативного торможения становится мягче со временем',
+        cause: 'Адаптация системы к стилю вождения',
+        solution: 'Проведите переобучение системы через меню. Это нормально.',
+        urgency: 'low',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsLeapmotor,
+  ),
+
+  // ─── VAZ (Soviet & Russian classic cars) ───
+  'vaz': _Knowledge(
+    about: 'ВАЗ — легендарные советские и русские автомобили. 2101–2107 — карбюраторные бюджетные авто с простой конструкцией. 2109–2112 — инжекторные версии. Ремонт можно делать в гараже самостоятельно.',
+    problems: [
+      _Problem(
+        icon: Icons.local_car_wash, color: Color(0xFFF44336),
+        symptom: 'Ржавчина кузова — сквозные отверстия снизу или в углах дверей',
+        cause: 'Коррозия металла кузова при отсутствии защиты',
+        solution: 'Зачистить очаги ржавчины, загрунтовать, зашпатлевать. Обработка днища мастикой обязательна.',
+        urgency: 'high',
+      ),
+      _Problem(
+        icon: Icons.settings, color: Color(0xFFFF9800),
+        symptom: 'Нестабильный холостой ход (карбюратор)',
+        cause: 'Засорение жиклёров, дроссельной заслонки карбюратора',
+        solution: 'Регулировка винтов качества и количества смеси (заводской регулировщик или руководство). Промывка газо.',
+        urgency: 'low',
+      ),
+      _Problem(
+        icon: Icons.opacity, color: Color(0xFFFFC107),
+        symptom: 'Течь масла из-под поддона картера',
+        cause: 'Износ прокладки поддона или ослабление болтов',
+        solution: 'Замена прокладки поддона. Затяжка болтов по крутящему моменту (15–20 Нм).',
+        urgency: 'medium',
+      ),
+      _Problem(
+        icon: Icons.disc_full, color: Color(0xFFFF9800),
+        symptom: 'Тормоза «мягкие» или вибрируют при торможении',
+        cause: 'Воздух в тормозной системе или износ колодок/барабанов',
+        solution: 'Прокачка тормозной системы. Замена тормозных колодок (Ferodo, ATE). Если барабаны — проточка.',
+        urgency: 'high',
+      ),
+    ],
+    maint: _maintGeneric,
+    tips: _tipsVAZ,
+  ),
+
   // ─── Generic fallback ───
   '_generic': _Knowledge(
     about: 'Общие рекомендации по диагностике и обслуживанию автомобиля. Для точных данных добавьте марку и модель авто.',
@@ -715,6 +2540,319 @@ const _db = <String, _Knowledge>{
 };
 
 // ──────────────────────────────────────────────
+//  Brand aliases (Russian & common abbreviations → DB key)
+// ──────────────────────────────────────────────
+const _brandAliases = <String, String>{
+  // BMW
+  'бмв': 'bmw',
+  // Toyota
+  'тойота': 'toyota',
+  'тоёта': 'toyota',
+  // Mercedes
+  'мерседес': 'mercedes',
+  'мерс': 'mercedes',
+  'мерседес-бенц': 'mercedes',
+  'mercedes-benz': 'mercedes',
+  // Volkswagen
+  'фольксваген': 'volkswagen',
+  'фольцваген': 'volkswagen',
+  'vw': 'volkswagen',
+  // Hyundai
+  'хёндай': 'hyundai',
+  'хундай': 'hyundai',
+  'хуандай': 'hyundai',
+  'хендай': 'hyundai',
+  // Kia
+  'киа': 'kia',
+  // Nissan
+  'ниссан': 'nissan',
+  'нисан': 'nissan',
+  // Honda
+  'хонда': 'honda',
+  // Subaru
+  'субару': 'subaru',
+  // Lexus
+  'лексус': 'lexus',
+  // Mitsubishi
+  'митсубиши': 'mitsubishi',
+  'мицубиши': 'mitsubishi',
+  'митсубиси': 'mitsubishi',
+  // Chevrolet
+  'шевроле': 'chevrolet',
+  // Lada / VAZ
+  'лада': 'lada',
+  // Toyota models
+  'камри': 'toyota camry',
+  'рав4': 'toyota rav4',
+  'rav4': 'toyota rav4',
+  'land cruiser': 'toyota land cruiser',
+  'ленд крузер': 'toyota land cruiser',
+  'королла': 'toyota corolla',
+  'corolla': 'toyota corolla',
+  'хайлендер': 'toyota highlander',
+  'highlander': 'toyota highlander',
+  // Audi
+  'ауди': 'audi',
+  'audi a4': 'audi a4',
+  'ауди а4': 'audi a4',
+  'audi q5': 'audi q5',
+  'ауди q5': 'audi q5',
+  'ауди кю5': 'audi q5',
+  // Mazda
+  'мазда': 'mazda',
+  'cx-5': 'mazda cx-5',
+  'cx5': 'mazda cx-5',
+  'мазда сх5': 'mazda cx-5',
+  'мазда cx5': 'mazda cx-5',
+  // Skoda
+  'шкода': 'skoda',
+  'октавия': 'skoda octavia',
+  'octavia': 'skoda octavia',
+  // Renault
+  'рено': 'renault',
+  'рнаулт': 'renault',
+  'дастер': 'renault',
+  'duster': 'renault',
+  'логан': 'renault',
+  'logan': 'renault',
+  // Ford
+  'форд': 'ford',
+  // Volvo
+  'вольво': 'volvo',
+  // Land Rover
+  'ленд ровер': 'land rover',
+  'ренджровер': 'land rover',
+  'range rover': 'land rover',
+  'рэнджровер': 'land rover',
+  'дискавери': 'land rover',
+  'discovery': 'land rover',
+  // Porsche
+  'порше': 'porsche',
+  'кайен': 'porsche',
+  'cayenne': 'porsche',
+  // Jeep
+  'джип': 'jeep',
+  'grand cherokee': 'jeep',
+  'гранд чероки': 'jeep',
+  'вранглер': 'jeep',
+  'wrangler': 'jeep',
+  // Suzuki
+  'сузуки': 'suzuki',
+  'витара': 'suzuki',
+  'vitara': 'suzuki',
+  'джимни': 'suzuki',
+  'jimny': 'suzuki',
+  // Opel
+  'опель': 'opel',
+  'астра': 'opel',
+  'инсигния': 'opel',
+  // Peugeot
+  'пежо': 'peugeot',
+  'пэжо': 'peugeot',
+  // Infiniti
+  'инфинити': 'infiniti',
+  'инфинит': 'infiniti',
+  // UAZ
+  'уаз': 'uaz',
+  'patriot': 'uaz',
+  'патриот': 'uaz',
+  // Kia models
+  'спортейдж': 'kia sportage',
+  'спортаж': 'kia sportage',
+  'sportage': 'kia sportage',
+  'рио': 'kia rio',
+  'rio': 'kia rio',
+  // Hyundai models
+  'туксон': 'hyundai tucson',
+  'tucson': 'hyundai tucson',
+  'элантра': 'hyundai',
+  'elantra': 'hyundai',
+  'соната': 'hyundai',
+  // VW models
+  'гольф': 'volkswagen golf',
+  'golf': 'volkswagen golf',
+  'поло': 'volkswagen',
+  'polo': 'volkswagen',
+  // BMW models
+  'бмв х5': 'bmw x5',
+  'бмв x5': 'bmw x5',
+  // Cyrillic model letter aliases (for _getKnowledge model normalisation)
+  'х5': 'x5',
+  'х6': 'x6',
+  'х3': 'x3',
+  'х7': 'x7',
+  // Mercedes models
+  'mercedes c': 'mercedes c',
+  'мерседес с': 'mercedes c',
+  'мерс с': 'mercedes c',
+  'c-class': 'mercedes c',
+  'с-класс': 'mercedes c',
+  'mercedes gle': 'mercedes gle',
+  'мерседес гле': 'mercedes gle',
+  'gle': 'mercedes gle',
+  // MINI
+  'мини': 'mini',
+  'mini': 'mini',
+  // Tesla
+  'тесла': 'tesla',
+  'model 3': 'tesla model 3',
+  'модель 3': 'tesla model 3',
+  'model 3 performance': 'tesla model 3',
+  'model y': 'tesla',
+  // Fiat
+  'фиат': 'fiat',
+  'панда': 'fiat panda',
+  'panda': 'fiat panda',
+  'типо': 'fiat',
+  'tipo': 'fiat',
+  '500': 'fiat',
+  // Alfa Romeo
+  'альфа ромео': 'alfa romeo',
+  'альфа': 'alfa romeo',
+  'alfa': 'alfa romeo',
+  'альфа ромео джулия': 'alfa romeo',
+  'цельвая': 'alfa romeo',
+  // Jaguar
+  'ягуар': 'jaguar',
+  'джагуар': 'jaguar',
+  'экседф': 'jaguar',
+  'xf': 'jaguar',
+  'ф-пейс': 'jaguar',
+  'f-pace': 'jaguar',
+  // Citroën
+  'ситроен': 'citroen',
+  'citroen': 'citroen',
+  'си': 'citroen',
+  'c4': 'citroen',
+  'c5': 'citroen',
+  'берлинго': 'citroen',
+  // DS
+  'ds': 'ds',
+  'дс': 'ds',
+  // MG
+  'mg': 'mg',
+  'эмжи': 'mg',
+  'mg5': 'mg',
+  'mg6': 'mg',
+  // Geely
+  'гили': 'geely',
+  'геели': 'geely',
+  'emgrand': 'geely',
+  'эмгренд': 'geely',
+  'coolray': 'geely',
+  'кулрей': 'geely',
+  // Chery
+  'чери': 'chery',
+  'чери тиггоколя': 'chery',
+  'chery tiggo': 'chery',
+  'тиггo': 'chery',
+  'tiggo': 'chery',
+  'аррисо': 'chery',
+  'arrizo': 'chery',
+  // Great Wall / Haval
+  'грейт вол': 'haval',
+  'грет вол': 'haval',
+  'хавал': 'haval',
+  'haval': 'haval',
+  'h6': 'haval',
+  'h9': 'haval',
+  // Genesis
+  'генезис': 'genesis',
+  'genesis': 'genesis',
+  'генезис гв708': 'genesis',
+  'gv70': 'genesis',
+  // XPeng
+  'экспенг': 'xpeng',
+  'экспендж': 'xpeng',
+  'xpeng': 'xpeng',
+  'xpeng p7': 'xpeng',
+  'р7': 'xpeng',
+  // Nio
+  'нио': 'nio',
+  'nio': 'nio',
+  'es6': 'nio',
+  'эс6': 'nio',
+  'es8': 'nio',
+  'эс8': 'nio',
+  // Polestar
+  'полстар': 'polestar',
+  'polestar': 'polestar',
+  'полюстар': 'polestar',
+  // Acura
+  'акура': 'acura',
+  'acura': 'acura',
+  'tlx': 'acura',
+  'rdx': 'acura',
+  'mdx': 'acura',
+  // BYD
+  'byd': 'byd',
+  'бид': 'byd',
+  'qin': 'byd',
+  'song': 'byd',
+  'yuan': 'byd',
+  // Changan
+  'чанган': 'changan',
+  'changan': 'changan',
+  'cs35': 'changan',
+  'cs75': 'changan',
+  'cs95': 'changan',
+  'ч35': 'changan',
+  // Wuling
+  'вулинг': 'wuling',
+  'wuling': 'wuling',
+  'hongguang': 'wuling',
+  'хонгуанг': 'wuling',
+  // Li Auto
+  'ли ауто': 'li auto',
+  'li auto': 'li auto',
+  'лиауто': 'li auto',
+  'one': 'li auto',
+  'плюс': 'li auto',
+  'x90': 'li auto',
+  // Avatr
+  'аватр': 'avatr',
+  'avatr': 'avatr',
+  'авatar': 'avatr',
+  '11': 'avatr',
+  '12': 'avatr',
+  // Neta
+  'нета': 'neta',
+  'neta': 'neta',
+  'v': 'neta',
+  'u': 'neta',
+  'z': 'neta',
+  // Leapmotor
+  'лепмотор': 'leapmotor',
+  'leapmotor': 'leapmotor',
+  'лип': 'leapmotor',
+  't03': 'leapmotor',
+  's01': 'leapmotor',
+  // VAZ
+  'ваз': 'vaz',
+  'vaz': 'vaz',
+  'вазовский': 'vaz',
+  '2101': 'vaz',
+  '2102': 'vaz',
+  '2103': 'vaz',
+  '2105': 'vaz',
+  '2106': 'vaz',
+  '2107': 'vaz',
+  '2109': 'vaz',
+  '21099': 'vaz',
+  '2110': 'vaz',
+  '2112': 'vaz',
+  'девятка': 'vaz',
+  'десятка': 'vaz',
+};
+
+// Порядок приоритетов поиска:
+// 1. brandField as-is (lowercase) — в случае если уже написано "toyota camry"
+// 2. Полное поле brand нормализовано (алиасы применены к каждому слову)
+// 3. Первое слово + второе слово нормализованы (brand + model)
+// 4. Только первое слово нормализовано (brand-only)
+// 5. _generic
+
+// ──────────────────────────────────────────────
 //  Page
 // ──────────────────────────────────────────────
 class CarAssistantPage extends StatefulWidget {
@@ -744,9 +2882,52 @@ class _CarAssistantPageState extends State<CarAssistantPage>
 
   _Knowledge _getKnowledge(CarModel? car) {
     if (car == null) return _db['_generic']!;
-    final brandModel = '${car.brand} ${car.type}'.toLowerCase().trim();
-    final brand = car.brand.toLowerCase().trim();
-    return _db[brandModel] ?? _db[brand] ?? _db['_generic']!;
+
+    // car.brand — что ввёл пользователь: "BMW X5", "бмв х5", "Toyota Camry"
+    final raw = car.brand.toLowerCase().trim();
+    if (raw.isEmpty) return _db['_generic']!;
+
+    // 1. Прямое совпадение (например, "toyota camry", "bmw x5")
+    if (_db.containsKey(raw)) return _db[raw]!;
+
+    // 2. Алиас всей строки (например, "ленд крузер" → "toyota land cruiser")
+    if (_brandAliases.containsKey(raw)) {
+      final resolved = _brandAliases[raw]!;
+      if (_db.containsKey(resolved)) return _db[resolved]!;
+    }
+
+    final parts = raw.split(RegExp(r'\s+'));
+    final first = parts[0];
+    final normFirst = _brandAliases[first] ?? first;
+
+    if (parts.length >= 2) {
+      final secondRaw = parts[1];
+      // Нормализуем второе слово (кириллица → латиница, например "х5" → "x5")
+      final normSecond = _brandAliases[secondRaw] ?? secondRaw;
+
+      // 3a. normFirst + исходное второе слово ("bmw" + "x5")
+      final key1 = '$normFirst $secondRaw';
+      if (_db.containsKey(key1)) return _db[key1]!;
+
+      // 3b. normFirst + нормализованное второе слово ("bmw" + "x5" из "х5")
+      if (normSecond != secondRaw) {
+        final key2 = '$normFirst $normSecond';
+        if (_db.containsKey(key2)) return _db[key2]!;
+      }
+
+      // 3c. Попытка поиска через 3 слова (например, "toyota land cruiser")
+      if (parts.length >= 3) {
+        final key3 = '$normFirst $secondRaw ${parts[2]}';
+        if (_db.containsKey(key3)) return _db[key3]!;
+        final key3n = '$normFirst $normSecond ${parts[2]}';
+        if (_db.containsKey(key3n)) return _db[key3n]!;
+      }
+    }
+
+    // 4. Только нормализованная марка (например, "бмв" → "bmw")
+    if (_db.containsKey(normFirst)) return _db[normFirst]!;
+
+    return _db['_generic']!;
   }
 
   @override

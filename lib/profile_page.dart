@@ -7,6 +7,7 @@ import 'about_page.dart';
 import 'auth_provider.dart';
 import 'garage_provider.dart';
 import 'locale_service.dart';
+import 'login_page.dart';
 import 'main_screen.dart';
 import 'page_route.dart';
 import 'settings_page.dart';
@@ -347,6 +348,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       final authProv = context.read<AuthProvider>();
                       context.read<GarageProvider>().clear();
                       await authProv.logout();
+                      if (!mounted) return;
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                        (_) => false,
+                      );
                     },
                     leading: Container(
                       padding: const EdgeInsets.all(8),

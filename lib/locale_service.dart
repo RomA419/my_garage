@@ -187,6 +187,7 @@ class LocaleService {
 
     // --- Типы кузовов ---
     'sedan': 'Седан',
+    'crossover': 'Кроссовер',
     'wagon': 'Универсал',
     'cabriolet': 'Кабриолет',
     'coupe': 'Купе',
@@ -511,6 +512,7 @@ class LocaleService {
 
     // --- Body types ---
     'sedan': 'Sedan',
+    'crossover': 'Crossover',
     'wagon': 'Wagon',
     'cabriolet': 'Cabriolet',
     'coupe': 'Coupe',

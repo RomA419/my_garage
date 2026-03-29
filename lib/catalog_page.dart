@@ -1,6 +1,53 @@
 import 'package:flutter/material.dart';
 import 'locale_service.dart';
 
+// Перевод спецификаций авто (топливо, привод, кпп)
+String _translateSpec(String value) {
+  if (LocaleService.isRu) return value;
+  const _en = {
+    'бензин': 'Petrol',
+    'дизель': 'Diesel',
+    'электро': 'Electric',
+    'гибрид': 'Hybrid',
+    'АКПП': 'Automatic',
+    'МКПП': 'Manual',
+    'вариатор': 'CVT',
+    'авто': 'Auto',
+    'передний': 'FWD',
+    'полный': 'AWD',
+    'задний': 'RWD',
+  };
+  return _en[value] ?? value;
+}
+
+const _modelPhotoAssets = <String, String>{
+  'Toyota Camry': 'assets/cars/catalog/toyota_camry.webp',
+  'Toyota RAV4': 'assets/cars/catalog/toyota_rav4.webp',
+  'Toyota Land Cruiser 200': 'assets/cars/catalog/toyota_land_cruiser_200.webp',
+  'Toyota Land Cruiser Prado': 'assets/cars/catalog/toyota_land_cruiser_prado.webp',
+  'Kia K5': 'assets/cars/catalog/kia_k5.webp',
+  'Kia Sportage': 'assets/cars/catalog/kia_sportage.webp',
+  'Hyundai Tucson': 'assets/cars/catalog/hyundai_tucson.webp',
+  'Hyundai Sonata': 'assets/cars/catalog/hyundai_sonata.webp',
+  'Chevrolet Onix': 'assets/cars/catalog/chevrolet_onix.webp',
+  'Chevrolet Cobalt': 'assets/cars/catalog/chevrolet_cobalt.webp',
+  'Lada Vesta': 'assets/cars/lada_vesta.webp',
+  'BMW 3 Series': 'assets/cars/catalog/bmw_3_series.webp',
+  'Mercedes-Benz C-Class': 'assets/cars/catalog/mercedes_c_class.webp',
+  'Lexus RX 350': 'assets/cars/catalog/lexus_rx_350.webp',
+  'Nissan Qashqai': 'assets/cars/catalog/nissan_qashqai.webp',
+  'Honda CR-V': 'assets/cars/catalog/honda_cr_v.webp',
+  'Volkswagen Polo': 'assets/cars/catalog/volkswagen_polo.webp',
+  'Škoda Octavia': 'assets/cars/catalog/skoda_octavia.webp',
+  'Mitsubishi Outlander': 'assets/cars/catalog/mitsubishi_outlander.webp',
+  'Subaru Forester': 'assets/cars/catalog/subaru_forester.webp',
+  'Ford Explorer': 'assets/cars/catalog/ford_explorer.webp',
+  'Kia Carnival': 'assets/cars/catalog/kia_carnival.webp',
+  'Toyota Hilux': 'assets/cars/catalog/toyota_hilux.webp',
+  'Hyundai IONIQ 6': 'assets/cars/catalog/hyundai_ioniq_6.webp',
+  'BYD Seal': 'assets/cars/catalog/byd_seal.webp',
+};
+
 // ──────────────────────────────────────────────
 //  Модель автомобиля для каталога
 // ──────────────────────────────────────────────
@@ -46,16 +93,73 @@ class _Car {
     return '${priceFrom.toStringAsFixed(1)}–${priceTo.toStringAsFixed(1)} млн ₸';
   }
 
-  String get bodyLabel {
-    switch (body) {
-      case 'sedan': return 'Седан';
-      case 'crossover': return 'Кроссовер';
-      case 'suv': return 'Внедорожник';
-      case 'hatchback': return 'Хэтчбек';
-      case 'minivan': return 'Минивэн';
-      case 'pickup': return 'Пикап';
-      default: return body;
+  String get bodyLabel => LocaleService.tr(body);
+
+  String get photoAsset {
+    final exactAsset = _modelPhotoAssets[title];
+    if (exactAsset != null) {
+      return exactAsset;
     }
+
+    switch (body) {
+      case 'sedan':
+        return 'assets/cars/car_sedan.png';
+      case 'crossover':
+        return 'assets/cars/car_suv.png';
+      case 'suv':
+        return 'assets/cars/car_suv.png';
+      case 'hatchback':
+        return 'assets/cars/car_hatchback.png';
+      case 'minivan':
+        return 'assets/cars/car_minivan.png';
+      case 'pickup':
+        return 'assets/cars/car_truck.png';
+      default:
+        return 'assets/cars/car_sedan.png';
+    }
+  }
+}
+
+Widget _assetCarPhoto(_Car car) {
+  return Image.asset(
+    car.photoAsset,
+    fit: BoxFit.cover,
+    errorBuilder: (_, __, ___) => Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            car.color.withOpacity(0.85),
+            car.color.withOpacity(0.35),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          _fallbackBodyIcon(car.body),
+          size: 80,
+          color: Colors.white.withOpacity(0.35),
+        ),
+      ),
+    ),
+  );
+}
+
+IconData _fallbackBodyIcon(String body) {
+  switch (body) {
+    case 'suv':
+      return Icons.terrain;
+    case 'crossover':
+      return Icons.directions_car_filled;
+    case 'hatchback':
+      return Icons.electric_car;
+    case 'minivan':
+      return Icons.airport_shuttle;
+    case 'pickup':
+      return Icons.local_shipping;
+    default:
+      return Icons.directions_car_filled;
   }
 }
 
@@ -481,7 +585,7 @@ class _CatalogPageState extends State<CatalogPage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          entry.$2,
+                          LocaleService.tr(entry.$1),
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: selected ? FontWeight.w700 : FontWeight.normal,
@@ -583,45 +687,11 @@ class _CarCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            car.color.withOpacity(0.85),
-                            car.color.withOpacity(0.35),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
+                    Hero(
+                      tag: 'catalog-photo-${car.title}',
+                      child: _assetCarPhoto(car),
                     ),
-                    Positioned(
-                      right: -20, top: -20,
-                      child: Container(
-                        width: 100, height: 100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.1),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      left: -10, bottom: -30,
-                      child: Container(
-                        width: 120, height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.06),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Icon(
-                        _bodyIcon(car.body),
-                        size: 80,
-                        color: Colors.white.withOpacity(0.3),
-                      ),
-                    ),
+                    Container(color: Colors.black.withOpacity(0.16)),
                     Positioned(
                       top: 10, left: 10,
                       child: Container(
@@ -654,6 +724,28 @@ class _CarCard extends StatelessWidget {
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Material(
+                        color: Colors.black.withOpacity(0.35),
+                        borderRadius: BorderRadius.circular(20),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => _CarPhotoViewer(car: car),
+                              ),
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(Icons.fullscreen, size: 18, color: Colors.white),
                           ),
                         ),
                       ),
@@ -700,20 +792,10 @@ class _CarCard extends StatelessWidget {
     );
   }
 
-  static IconData _bodyIcon(String body) {
-    switch (body) {
-      case 'suv': return Icons.terrain;
-      case 'crossover': return Icons.directions_car_filled;
-      case 'hatchback': return Icons.electric_car;
-      case 'minivan': return Icons.airport_shuttle;
-      case 'pickup': return Icons.local_shipping;
-      default: return Icons.directions_car_filled;
-    }
-  }
-
   static String _engineLabel(_Car car) {
-    if (car.fuel == 'электро') return '${car.hp} л.с. • электро';
-    return '${car.engine} л • ${car.hp} л.с. • ${car.fuel}';
+    final hpUnit = LocaleService.isRu ? 'л.с.' : 'hp';
+    if (car.fuel == 'электро') return '${car.hp} $hpUnit • ${_translateSpec('электро')}';
+    return '${car.engine} л • ${car.hp} $hpUnit • ${_translateSpec(car.fuel)}';
   }
 }
 
@@ -750,89 +832,84 @@ class _CarDetailSheet extends StatelessWidget {
           ),
 
           // ── Photo header ──
-          SizedBox(
-            height: 165,
-            width: double.infinity,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [car.color, car.color.withOpacity(0.4)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => _CarPhotoViewer(car: car)),
+              );
+            },
+            child: SizedBox(
+              height: 165,
+              width: double.infinity,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Hero(
+                    tag: 'catalog-photo-${car.title}',
+                    child: _assetCarPhoto(car),
+                  ),
+                  Container(color: Colors.black.withOpacity(0.22)),
+                  Positioned(
+                    bottom: 14, left: 20, right: 90,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          car.title,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [Shadow(blurRadius: 8, color: Colors.black38)],
+                          ),
+                        ),
+                        Text(
+                          '${car.bodyLabel} • ${car.years}',
+                          style: const TextStyle(fontSize: 13, color: Colors.white70),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Positioned(
-                  right: -30, top: -30,
-                  child: Container(
-                    width: 150, height: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.08),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: -20, bottom: -40,
-                  child: Container(
-                    width: 170, height: 170,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.06),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: Icon(
-                    _CarCard._bodyIcon(car.body),
-                    size: 110,
-                    color: Colors.white.withOpacity(0.22),
-                  ),
-                ),
-                Positioned(
-                  bottom: 14, left: 20, right: 90,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        car.title,
+                  Positioned(
+                    top: 10, right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.35),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        car.priceLabel,
                         style: const TextStyle(
-                          fontSize: 22,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          shadows: [Shadow(blurRadius: 8, color: Colors.black38)],
                         ),
                       ),
-                      Text(
-                        '${car.bodyLabel} • ${car.years}',
-                        style: const TextStyle(fontSize: 13, color: Colors.white70),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 10, right: 10,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.35),
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(
-                      car.priceLabel,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.35),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.zoom_in, size: 14, color: Colors.white),
+                          SizedBox(width: 4),
+                          Text('Открыть фото', style: TextStyle(fontSize: 11, color: Colors.white)),
+                        ],
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -910,11 +987,12 @@ class _CarDetailSheet extends StatelessWidget {
   }
 
   Widget _buildSpecsGrid(ThemeData theme, bool isDark) {
+    final hpUnit = LocaleService.isRu ? 'л.с.' : 'hp';
     final specs = [
-      (Icons.speed, LocaleService.tr('catalogHp'), '${car.hp} л.с.'),
-      (Icons.local_gas_station, LocaleService.tr('catalogFuel'), car.fuel),
-      (Icons.settings, LocaleService.tr('catalogTransmission'), car.transmission),
-      (Icons.swap_horiz, LocaleService.tr('catalogDrive'), car.drive),
+      (Icons.speed, LocaleService.tr('catalogHp'), '${car.hp} $hpUnit'),
+      (Icons.local_gas_station, LocaleService.tr('catalogFuel'), _translateSpec(car.fuel)),
+      (Icons.settings, LocaleService.tr('catalogTransmission'), _translateSpec(car.transmission)),
+      (Icons.swap_horiz, LocaleService.tr('catalogDrive'), _translateSpec(car.drive)),
       if (car.fuel != 'электро')
         (Icons.opacity, LocaleService.tr('catalogEngine'), '${car.engine} л'),
     ];
@@ -957,6 +1035,34 @@ class _CarDetailSheet extends StatelessWidget {
           ],
         ),
       )).toList(),
+    );
+  }
+}
+
+class _CarPhotoViewer extends StatelessWidget {
+  final _Car car;
+
+  const _CarPhotoViewer({required this.car});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        title: Text(car.title),
+      ),
+      body: InteractiveViewer(
+        minScale: 1,
+        maxScale: 4,
+        child: Center(
+          child: Hero(
+            tag: 'catalog-photo-${car.title}',
+            child: _assetCarPhoto(car),
+          ),
+        ),
+      ),
     );
   }
 }

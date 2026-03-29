@@ -7,7 +7,22 @@ import 'garage_provider.dart';
 import 'locale_service.dart';
 import 'models.dart';
 
-/// Страница журнала технического обслуживания.
+String _trType(String type) {
+  if (LocaleService.isRu) return type;
+  const _en = {
+    'Замена масла': 'Oil change',
+    'Замена фильтра': 'Filter replacement',
+    'Замена тормозных колодок': 'Brake pad replacement',
+    'Замена свечей зажигания': 'Spark plug replacement',
+    'Замена ремня ГРМ': 'Timing belt replacement',
+    'Замена шин': 'Tire change',
+    'Плановое ТО': 'Scheduled service',
+    'Промывка инжектора': 'Injector flush',
+    'Диагностика': 'Diagnostics',
+    'Другое': 'Other',
+  };
+  return _en[type] ?? type;
+}
 class MaintenancePage extends StatefulWidget {
   const MaintenancePage({super.key});
 
@@ -84,7 +99,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
                         items: _types
                             .map((t) => DropdownMenuItem(
                                   value: t,
-                                  child: Text(t),
+                                  child: Text(_trType(t)),
                                 ))
                             .toList(),
                         onChanged: (v) {
@@ -315,7 +330,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                item.type,
+                                _trType(item.type),
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.bold),
                               ),

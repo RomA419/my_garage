@@ -5,6 +5,18 @@ import 'currency_service.dart';
 import 'garage_provider.dart';
 import 'locale_service.dart';
 
+String _trFuelTrip(String type) {
+  if (LocaleService.isRu) return type;
+  const _en = {
+    'АИ-92': 'AI-92',
+    'АИ-95': 'AI-95',
+    'АИ-98': 'AI-98',
+    'ДТ': 'Diesel',
+    'Газ': 'LPG',
+  };
+  return _en[type] ?? type;
+}
+
 // ──────────────────────────────────────────────
 //  Trip Calculator — Калькулятор поездки (v2)
 // ──────────────────────────────────────────────
@@ -200,7 +212,7 @@ class _TripCalculatorPageState extends State<TripCalculatorPage>
                                       : theme.dividerColor.withOpacity(0.2)),
                             ),
                             child: Text(
-                              '${_fuelTypes[i]}  ${_fuelPrices[i]}₸',
+                              '${_trFuelTrip(_fuelTypes[i])}  ${_fuelPrices[i]}₸',
                               style: TextStyle(
                                 color: sel ? Colors.white : theme.textTheme.bodyMedium?.color,
                                 fontWeight:

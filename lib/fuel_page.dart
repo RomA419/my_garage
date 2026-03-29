@@ -9,6 +9,27 @@ import 'garage_provider.dart';
 import 'locale_service.dart';
 import 'models.dart';
 
+String _trFuel(String type) {
+  if (LocaleService.isRu) return type;
+  const _en = {
+    'АИ-92': 'AI-92',
+    'АИ-95': 'AI-95',
+    'АИ-98': 'AI-98',
+    'Дизель': 'Diesel',
+    'Газ': 'LPG',
+    'Моторное масло 5W-30': 'Motor oil 5W-30',
+    'Трансмиссионное масло': 'Transmission oil',
+    'Масло для коробки': 'Gearbox oil',
+    'Летние шины': 'Summer tires',
+    'Зимние шины': 'Winter tires',
+    'Всесезонные шины': 'All-season tires',
+    'Базовая мойка': 'Basic wash',
+    'Комплексная мойка': 'Full wash',
+    'Химчистка салона': 'Interior cleaning',
+  };
+  return _en[type] ?? type;
+}
+
 class FuelPage extends StatefulWidget {
   const FuelPage({super.key});
 
@@ -268,7 +289,7 @@ class _FuelPageState extends State<FuelPage> {
                         items: fuelPrices.keys.map((String key) {
                           return DropdownMenuItem<String>(
                             value: key,
-                            child: Text("$key — ${CurrencyService.format(fuelPrices[key]!, currency)}/л"),
+                            child: Text("${_trFuel(key)} — ${CurrencyService.format(fuelPrices[key]!, currency)}/л"),
                           );
                         }).toList(),
                         onChanged: (val) => setState(() => _selectedSubType = val!),
@@ -321,7 +342,7 @@ class _FuelPageState extends State<FuelPage> {
                     isDense: true,
                     items: [
                       DropdownMenuItem(value: '', child: Text(LocaleService.tr('all'))),
-                      ...fuelPrices.keys.map((k) => DropdownMenuItem(value: k, child: Text(k))),
+                      ...fuelPrices.keys.map((k) => DropdownMenuItem(value: k, child: Text(_trFuel(k)))),
                     ],
                     onChanged: (v) => setState(() => _filterType = v ?? ''),
                   ),
@@ -460,7 +481,7 @@ class _FuelPageState extends State<FuelPage> {
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  "${item.station} • ${item.subType} • ${item.quantity} ${item.unit}",
+                                  "${item.station} • ${_trFuel(item.subType)} • ${item.quantity} ${item.unit}",
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
                                   ),

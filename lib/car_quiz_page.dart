@@ -20,11 +20,13 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
   final _rng = Random();
   late List<_QuizCar> _pool;
   late List<_QuizCar> _questions;
+  late List<String> _currentOptions;
   int _current = 0;
   int _score = 0;
   int _best = 0;
   int? _selectedIdx;
   bool _answered = false;
+  bool _isFinished = false;
   late AnimationController _shakeCtrl;
 
   @override
@@ -33,6 +35,7 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
     _shakeCtrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _pool = List.of(_allCars)..shuffle(_rng);
     _questions = _pool.take(10).toList();
+    _currentOptions = _buildOptions(_questions[_current]);
     _loadBest();
   }
 
@@ -76,11 +79,14 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
   void _next() {
     if (_current + 1 >= _questions.length) {
       _saveBest();
-      setState(() {});
+      setState(() {
+        _isFinished = true;
+      });
       return;
     }
     setState(() {
       _current++;
+      _currentOptions = _buildOptions(_questions[_current]);
       _answered = false;
       _selectedIdx = null;
     });
@@ -91,8 +97,10 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
       _pool.shuffle(_rng);
       _questions = _pool.take(10).toList();
       _current = 0;
+      _currentOptions = _buildOptions(_questions[_current]);
       _score = 0;
       _answered = false;
+      _isFinished = false;
       _selectedIdx = null;
     });
   }
@@ -108,8 +116,6 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final tr = LocaleService.tr;
-    final finished = _current >= _questions.length || _current >= _questions.length;
-
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -132,7 +138,7 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
           ),
         ],
       ),
-      body: finished && _answered
+      body: _isFinished
           ? _buildFinish(theme, isDark, tr)
           : _buildQuestion(theme, isDark, tr),
     );
@@ -140,7 +146,7 @@ class _CarQuizPageState extends State<CarQuizPage> with SingleTickerProviderStat
 
   Widget _buildQuestion(ThemeData theme, bool isDark, String Function(String) tr) {
     final q = _questions[_current];
-    final options = _buildOptions(q);
+    final options = _currentOptions;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),

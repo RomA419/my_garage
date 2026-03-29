@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'auth_provider.dart';
 import 'garage_provider.dart';
 import 'locale_service.dart';
+import 'login_page.dart';
 import 'theme_service.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -83,7 +84,11 @@ class _SettingsPageState extends State<SettingsPage> {
     final garage = context.read<GarageProvider>();
     garage.clear();
     await auth.deleteAccount();
-    // _AppGate автоматически покажет LoginPage
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (_) => false,
+    );
   }
 
   // --- Сброс данных ---

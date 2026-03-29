@@ -51,6 +51,8 @@ flutter:
     - assets/cars/car_suv.png
     - assets/cars/car_truck.png
     - assets/cars/car_van.png
+    - assets/cars/lada_vesta.webp
+    - assets/cars/catalog/
 
 flutter_launcher_icons:
   android: true

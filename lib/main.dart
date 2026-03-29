@@ -171,7 +171,7 @@ class _SplashView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('assets/icon.png', width: 120, height: 120),
+              Image.asset('assets/icon.png', width: 160, height: 160),
               const SizedBox(height: 16),
               Text(
                 LocaleService.tr('appName'),

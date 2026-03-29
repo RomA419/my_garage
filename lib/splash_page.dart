@@ -71,15 +71,15 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 120,
-                  height: 120,
+                  width: 300,
+                  height: 300,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.garage_rounded,
-                    size: 64,
+                    size: 180,
                     color: theme.colorScheme.primary,
                   ),
                 ),

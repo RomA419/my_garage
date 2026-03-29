@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('assets/icon.png', width: 120, height: 120),
+                Image.asset('assets/icon.png', width: 170, height: 170),
                 const SizedBox(height: 40),
 
                 // Поле Логин
