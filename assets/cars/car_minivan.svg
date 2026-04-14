@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Минивэн: высокий, округлый, наклонное лобовое -->
+  <path d="M12,60 L12,44 L16,36 L22,24 L36,12 Q42,6 52,8 L162,8 Q170,8 174,14 L182,30 L186,40 L190,48 L192,56 L192,60 L178,60 C176,48 158,48 156,60 L48,60 C46,48 28,48 26,60 Z" fill="currentColor"/>
+  <!-- Окна -->
+  <path d="M40,14 Q44,8 52,10 L80,10 L80,36 L24,36 L28,26 L36,16 Z" fill="currentColor" opacity="0.18"/>
+  <path d="M84,10 L126,10 L126,36 L84,36 Z" fill="currentColor" opacity="0.18"/>
+  <path d="M130,10 L160,10 Q166,10 170,16 L178,30 L180,36 L130,36 Z" fill="currentColor" opacity="0.18"/>
+  <!-- Линия сдвижной двери -->
+  <line x1="82" y1="36" x2="82" y2="56" stroke="currentColor" stroke-width="1" opacity="0.18"/>
+  <!-- Фара -->
+  <ellipse cx="190" cy="50" rx="3" ry="4" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь -->
+  <rect x="12" y="38" width="4" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="37" cy="64" r="13" fill="currentColor"/>
+  <circle cx="37" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="37" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+  <circle cx="167" cy="64" r="13" fill="currentColor"/>
+  <circle cx="167" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="167" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+</svg>
