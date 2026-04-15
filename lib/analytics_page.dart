@@ -7,6 +7,23 @@ import 'garage_provider.dart';
 import 'locale_service.dart';
 import 'models.dart';
 
+String _trType(String type) {
+  if (LocaleService.isRu) return type;
+  const _en = {
+    'Замена масла': 'Oil change',
+    'Замена фильтра': 'Filter replacement',
+    'Замена тормозных колодок': 'Brake pad replacement',
+    'Замена свечей зажигания': 'Spark plug replacement',
+    'Замена ремня ГРМ': 'Timing belt replacement',
+    'Замена шин': 'Tire change',
+    'Плановое ТО': 'Scheduled service',
+    'Промывка инжектора': 'Injector flush',
+    'Диагностика': 'Diagnostics',
+    'Другое': 'Other',
+  };
+  return _en[type] ?? type;
+}
+
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
 
@@ -47,6 +64,77 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   List<FuelRecordModel> get _sortedRecords {
     final list = List<FuelRecordModel>.from(_filteredRecords);
     list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return list;
+  }
+
+  List<MaintenanceRecord> get _filteredMaintenanceRecords {
+    final garage = context.read<GarageProvider>();
+    final currentCar = garage.currentCar;
+    if (currentCar == null || currentCar.number.isEmpty) {
+      return garage.maintenanceRecords.toList();
+    }
+    return garage.maintenanceRecords
+        .where((r) => r.carNumber == currentCar.number)
+        .toList();
+  }
+
+  List<MaintenanceRecord> get _sortedMaintenanceRecords {
+    final list = List<MaintenanceRecord>.from(_filteredMaintenanceRecords);
+    list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return list;
+  }
+
+  double get _maintenanceTotalCost {
+    return _sortedMaintenanceRecords.fold<double>(0, (sum, record) => sum + (double.tryParse(record.cost) ?? 0));
+  }
+
+  int get _maintenanceRecordCount {
+    return _sortedMaintenanceRecords.length;
+  }
+
+  double get _maintenanceAverageCost {
+    final count = _maintenanceRecordCount;
+    return count == 0 ? 0 : _maintenanceTotalCost / count;
+  }
+
+  List<MaintenanceRecord> get _topMaintenanceRecords {
+    final records = List<MaintenanceRecord>.from(_sortedMaintenanceRecords);
+    records.sort((a, b) => (double.tryParse(b.cost) ?? 0).compareTo(double.tryParse(a.cost) ?? 0));
+    return records.take(3).toList();
+  }
+
+  Map<String, double> get _maintenanceExpensesByType {
+    final records = _sortedMaintenanceRecords;
+    final map = <String, double>{};
+    for (final record in records) {
+      final cost = double.tryParse(record.cost) ?? 0;
+      map[record.type] = (map[record.type] ?? 0) + cost;
+    }
+    return map;
+  }
+
+  List<_MonthlyExpense> get _maintenanceMonthlyExpenses {
+    final records = _sortedMaintenanceRecords;
+    final map = <String, double>{};
+    for (final record in records) {
+      final dateParts = record.date.split('.');
+      if (dateParts.length == 3) {
+        final monthYear = '${dateParts[1]}.${dateParts[2]}';
+        final cost = double.tryParse(record.cost) ?? 0;
+        map[monthYear] = (map[monthYear] ?? 0) + cost;
+      }
+    }
+    final list = map.entries.map((e) => _MonthlyExpense(month: e.key, expense: e.value)).toList();
+    list.sort((a, b) {
+      final aParts = a.month.split('.');
+      final bParts = b.month.split('.');
+      final aYear = int.tryParse(aParts[1]) ?? 0;
+      final bYear = int.tryParse(bParts[1]) ?? 0;
+      final aMonth = int.tryParse(aParts[0]) ?? 0;
+      final bMonth = int.tryParse(bParts[0]) ?? 0;
+      if (aYear != bYear) return aYear.compareTo(bYear);
+      return aMonth.compareTo(bMonth);
+    });
     return list;
   }
 
@@ -163,11 +251,11 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              LocaleService.tr('fuelCalculator'),
+              LocaleService.tr('maintenanceAnalytics'),
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildCalculatorCard(theme, isDark, currency),
+            _buildMaintenanceDashboard(theme, currency),
             const SizedBox(height: 25),
             Text(
               LocaleService.tr('consumptionTrends'),
@@ -241,76 +329,241 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     );
   }
 
-  Widget _buildCalculatorCard(ThemeData theme, bool isDark, String currency) {
+  Widget _buildMaintenanceDashboard(ThemeData theme, String currency) {
+    final total = _maintenanceTotalCost;
+    final count = _maintenanceRecordCount;
+    final average = _maintenanceAverageCost;
+    final topRecords = _topMaintenanceRecords;
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.dividerColor.withOpacity(0.15)),
       ),
       padding: const EdgeInsets.all(18),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInputField(
-            theme,
-            controller: _distanceController,
-            label: LocaleService.tr('distanceKm'),
-            icon: Icons.straighten,
-            onChanged: (_) => _recalculate(),
-          ),
-          const SizedBox(height: 10),
-          _buildInputField(
-            theme,
-            controller: _consumptionController,
-            label: LocaleService.tr('consumptionPer100'),
-            icon: Icons.local_gas_station,
-            onChanged: (_) => _recalculate(),
-          ),
-          const SizedBox(height: 10),
-          _buildInputField(
-            theme,
-            controller: _litersController,
-            label: LocaleService.tr('litersRefueled'),
-            icon: Icons.opacity,
-            onChanged: (_) => _recalculate(),
-          ),
-          const SizedBox(height: 10),
-          _buildInputField(
-            theme,
-            controller: _priceController,
-            label: LocaleService.tr('pricePerLiter'),
-            icon: Icons.price_check,
-            onChanged: (_) => _recalculate(),
-          ),
-          const SizedBox(height: 16),
-          Row(
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
             children: [
-              Expanded(
-                child: _buildResultCard(
-                  theme,
-                  title: LocaleService.tr('fuelNeeded'),
-                  value: _fuelNeeded != null ? '${_format(_fuelNeeded!)} л' : '-',
-                ),
+              _buildMetricCard(
+                theme,
+                title: LocaleService.tr('totalMaintenanceCost'),
+                value: CurrencyService.format(total, currency),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _buildResultCard(
-                  theme,
-                  title: LocaleService.tr('tripCost'),
-                  value: _tripCost != null ? CurrencyService.format(_tripCost!, currency) : '-',
-                ),
+              _buildMetricCard(
+                theme,
+                title: LocaleService.tr('maintenanceCount'),
+                value: count.toString(),
+              ),
+              _buildMetricCard(
+                theme,
+                title: LocaleService.tr('averageMaintenanceCost'),
+                value: count > 0 ? CurrencyService.format(average, currency) : '-'.toString(),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          if (_computedConsumption != null)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '${LocaleService.tr('consumptionResult')}: ${_format(_computedConsumption!)} л/100 км',
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-              ),
+          const SizedBox(height: 18),
+          Text(
+            LocaleService.tr('topExpensiveServices'),
+            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
+          if (topRecords.isEmpty)
+            Text(
+              LocaleService.tr('noMaintenance'),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.6)),
+            )
+          else
+            Column(
+              children: topRecords.map((record) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: theme.scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: theme.dividerColor.withOpacity(0.15)),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _trType(record.type),
+                              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              record.date,
+                              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.6)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text(
+                        CurrencyService.format(double.tryParse(record.cost) ?? 0, currency),
+                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMaintenancePieChart(ThemeData theme, Map<String, double> expensesByType, String currency) {
+    final colors = [
+      Colors.redAccent,
+      Colors.blueAccent,
+      Colors.orangeAccent,
+      Colors.greenAccent,
+      Colors.purpleAccent,
+      Colors.tealAccent,
+      Colors.pinkAccent,
+      Colors.cyanAccent,
+    ];
+
+    final entries = expensesByType.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final grandTotal = entries.fold<double>(0, (s, e) => s + e.value);
+
+    final sections = <PieChartSectionData>[];
+    for (var i = 0; i < entries.length; i++) {
+      final e = entries[i];
+      final pct = grandTotal > 0 ? (e.value / grandTotal * 100) : 0;
+      sections.add(PieChartSectionData(
+        value: e.value,
+        title: '${pct.toStringAsFixed(0)}%',
+        color: colors[i % colors.length],
+        radius: 50,
+        titleStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
+      ));
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          child: PieChart(
+            PieChartData(
+              sections: sections,
+              centerSpaceRadius: 40,
+              sectionsSpace: 2,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 6,
+          children: List.generate(entries.length, (i) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: colors[i % colors.length],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${_trType(entries[i].key)} (${CurrencyService.format(entries[i].value, currency)})',
+                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+                ),
+              ],
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaintenanceBarChart(ThemeData theme, List<_MonthlyExpense> monthlyExpenses, String currency) {
+    if (monthlyExpenses.isEmpty) return const SizedBox.shrink();
+
+    final values = monthlyExpenses.map((e) => e.expense).toList();
+    final maxVal = values.reduce((a, b) => a > b ? a : b);
+    if (maxVal == 0) return const SizedBox.shrink();
+
+    final barGroups = <BarChartGroupData>[];
+    for (var i = 0; i < monthlyExpenses.length; i++) {
+      barGroups.add(
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: monthlyExpenses[i].expense,
+              color: theme.colorScheme.primary,
+              width: 18,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 200,
+      child: BarChart(
+        BarChartData(
+          barGroups: barGroups,
+          borderData: FlBorderData(show: false),
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  final index = value.toInt();
+                  if (index >= 0 && index < monthlyExpenses.length) {
+                    return Text(
+                      monthlyExpenses[index].month,
+                      style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
+                    );
+                  }
+                  return const Text('');
+                },
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    CurrencyService.format(value, currency),
+                    style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
+                  );
+                },
+              ),
+            ),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          ),
+          gridData: FlGridData(show: true, drawVerticalLine: false),
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  CurrencyService.format(rod.toY, currency),
+                  TextStyle(color: theme.colorScheme.onSurface),
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -340,6 +593,31 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   Widget _buildResultCard(ThemeData theme, {required String title, required String value}) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetricCard(ThemeData theme, {required String title, required String value}) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -1037,5 +1315,15 @@ class _FuelPricePoint {
     required this.timestamp,
     required this.date,
     required this.price,
+  });
+}
+
+class _MonthlyExpense {
+  final String month;
+  final double expense;
+
+  _MonthlyExpense({
+    required this.month,
+    required this.expense,
   });
 }

@@ -195,4 +195,18 @@ class GarageProvider extends ChangeNotifier {
       debugPrint('Delete maintenance error: $e');
     }
   }
+
+  Future<void> updateMaintenanceRecord(MaintenanceRecord record) async {
+    try {
+      await DatabaseService.updateMaintenanceRecord(record);
+      final index = _maintenanceRecords.indexWhere((r) => r.id == record.id);
+      if (index != -1) {
+        _maintenanceRecords[index] = record;
+        _maintenanceRecords.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('Update maintenance error: $e');
+    }
+  }
 }

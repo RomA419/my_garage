@@ -291,8 +291,160 @@ class _MaintenancePageState extends State<MaintenancePage> {
     );
   }
 
+  void _showEditDialog(MaintenanceRecord existingRecord) {
+    final costCtrl = TextEditingController(text: existingRecord.cost);
+    final odometerCtrl = TextEditingController(text: existingRecord.odometer);
+    final notesCtrl = TextEditingController(text: existingRecord.notes);
+    String selectedType = existingRecord.type;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        final theme = Theme.of(ctx);
+        final isDark = theme.brightness == Brightness.dark;
+        return StatefulBuilder(
+          builder: (ctx2, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: MediaQuery.of(ctx2).viewInsets.bottom + 24,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LocaleService.tr('editMaintenanceRecord'),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Тип работ — dropdown
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.black : Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: selectedType,
+                          isExpanded: true,
+                          dropdownColor: isDark
+                              ? Colors.grey.shade900
+                              : Colors.white,
+                          style: TextStyle(
+                            color: theme.textTheme.bodyLarge?.color,
+                            fontSize: 15,
+                          ),
+                          items: _types
+                              .map(
+                                (t) => DropdownMenuItem(
+                                  value: t,
+                                  child: Text(_trType(t)),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (v) {
+                            if (v != null) {
+                              setModalState(() => selectedType = v);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    _field(
+                      theme,
+                      costCtrl,
+                      LocaleService.tr('maintenanceCost'),
+                      Icons.payments_outlined,
+                      isNumber: true,
+                    ),
+                    const SizedBox(height: 14),
+
+                    _field(
+                      theme,
+                      odometerCtrl,
+                      LocaleService.tr('odometerKm'),
+                      Icons.speed,
+                      isNumber: true,
+                    ),
+                    const SizedBox(height: 14),
+
+                    _field(
+                      theme,
+                      notesCtrl,
+                      LocaleService.tr('maintenanceNotes'),
+                      Icons.notes,
+                    ),
+                    const SizedBox(height: 24),
+
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          minimumSize: const Size.fromHeight(50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final garage = context.read<GarageProvider>();
+                          final now = DateTime.now();
+                          final updatedRecord = existingRecord.copyWith(
+                            type: selectedType,
+                            cost: costCtrl.text.trim().isEmpty
+                                ? '0'
+                                : costCtrl.text.trim(),
+                            odometer: odometerCtrl.text.trim(),
+                            notes: notesCtrl.text.trim(),
+                            timestamp: now.millisecondsSinceEpoch,
+                            date: '${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}',
+                          );
+                          await garage.updateMaintenanceRecord(updatedRecord);
+                          if (!context.mounted) return;
+                          Navigator.pop(ctx);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                LocaleService.tr('maintenanceUpdated'),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          LocaleService.tr('save'),
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _showAddDialog() {
-    final typeCtrl = TextEditingController(text: _types.first);
     final costCtrl = TextEditingController();
     final odometerCtrl = TextEditingController();
     final notesCtrl = TextEditingController();
@@ -358,7 +510,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                           onChanged: (v) {
                             if (v != null) {
                               setModalState(() => selectedType = v);
-                              typeCtrl.text = v;
                             }
                           },
                         ),
@@ -524,6 +675,12 @@ class _MaintenancePageState extends State<MaintenancePage> {
               ),
             ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddDialog,
+        child: const Icon(Icons.add),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -739,15 +896,28 @@ class _MaintenancePageState extends State<MaintenancePage> {
                                     ],
                                   ),
                                 ),
-                                Text(
-                                  CurrencyService.format(
-                                    double.tryParse(item.cost) ?? 0,
-                                    currency,
-                                  ),
-                                  style: theme.textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.primary,
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.edit, size: 20),
+                                      onPressed: () => _showEditDialog(item),
+                                      color: theme.colorScheme.primary,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      CurrencyService.format(
+                                        double.tryParse(item.cost) ?? 0,
+                                        currency,
+                                      ),
+                                      style: theme.textTheme.titleSmall?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),

@@ -201,6 +201,15 @@ class DatabaseService {
     await _saveMaintenanceRecords(userId, records);
   }
 
+  static Future<void> updateMaintenanceRecord(MaintenanceRecord record) async {
+    final records = await getMaintenanceRecords(record.userId);
+    final index = records.indexWhere((r) => r.id == record.id);
+    if (index != -1) {
+      records[index] = record;
+      await _saveMaintenanceRecords(record.userId, records);
+    }
+  }
+
   static Future<void> _saveMaintenanceRecords(
       int userId, List<MaintenanceRecord> records) async {
     final prefs = await SharedPreferences.getInstance();
