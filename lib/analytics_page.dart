@@ -1,28 +1,15 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'auth_provider.dart';
+import 'car_compare_page.dart';
+import 'car_health_page.dart';
 import 'currency_service.dart';
+import 'expenses_page.dart';
 import 'garage_provider.dart';
 import 'locale_service.dart';
+import 'maintenance_page.dart';
 import 'models.dart';
-
-String _trType(String type) {
-  if (LocaleService.isRu) return type;
-  const _en = {
-    'Замена масла': 'Oil change',
-    'Замена фильтра': 'Filter replacement',
-    'Замена тормозных колодок': 'Brake pad replacement',
-    'Замена свечей зажигания': 'Spark plug replacement',
-    'Замена ремня ГРМ': 'Timing belt replacement',
-    'Замена шин': 'Tire change',
-    'Плановое ТО': 'Scheduled service',
-    'Промывка инжектора': 'Injector flush',
-    'Диагностика': 'Diagnostics',
-    'Другое': 'Other',
-  };
-  return _en[type] ?? type;
-}
 
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
@@ -32,1298 +19,678 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  final _distanceController = TextEditingController();
-  final _consumptionController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _litersController = TextEditingController();
-
-  double? _fuelNeeded;
-  double? _tripCost;
-  double? _computedConsumption;
+  static const _serviceIntervalsKm = {
+    'Замена масла': 10000,
+    'Замена фильтра': 15000,
+    'Замена тормозной жидкости': 40000,
+    'Замена тормозных колодок': 20000,
+    'Замена свечей зажигания': 30000,
+    'Замена ремня ГРМ': 60000,
+    'Замена шин': 12000,
+    'Плановое ТО': 10000,
+    'Промывка инжектора': 30000,
+    'Диагностика': 15000,
+    'Другое': 10000,
+  };
 
   @override
   void dispose() {
-    _distanceController.dispose();
-    _consumptionController.dispose();
-    _priceController.dispose();
-    _litersController.dispose();
     super.dispose();
   }
 
-  List<FuelRecordModel> get _filteredRecords {
-    final garage = context.read<GarageProvider>();
-    final currentCar = garage.currentCar;
-    if (currentCar == null || currentCar.number.isEmpty) {
-      return garage.fuelRecords.toList();
-    }
-    return garage.fuelRecords
-        .where((r) => r.carNumber == currentCar.number)
-        .toList();
-  }
-
-  List<FuelRecordModel> get _sortedRecords {
-    final list = List<FuelRecordModel>.from(_filteredRecords);
-    list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    return list;
-  }
-
-  List<MaintenanceRecord> get _filteredMaintenanceRecords {
-    final garage = context.read<GarageProvider>();
-    final currentCar = garage.currentCar;
-    if (currentCar == null || currentCar.number.isEmpty) {
-      return garage.maintenanceRecords.toList();
-    }
-    return garage.maintenanceRecords
-        .where((r) => r.carNumber == currentCar.number)
-        .toList();
-  }
-
-  List<MaintenanceRecord> get _sortedMaintenanceRecords {
-    final list = List<MaintenanceRecord>.from(_filteredMaintenanceRecords);
-    list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    return list;
-  }
-
-  double get _maintenanceTotalCost {
-    return _sortedMaintenanceRecords.fold<double>(0, (sum, record) => sum + (double.tryParse(record.cost) ?? 0));
-  }
-
-  int get _maintenanceRecordCount {
-    return _sortedMaintenanceRecords.length;
-  }
-
-  double get _maintenanceAverageCost {
-    final count = _maintenanceRecordCount;
-    return count == 0 ? 0 : _maintenanceTotalCost / count;
-  }
-
-  List<MaintenanceRecord> get _topMaintenanceRecords {
-    final records = List<MaintenanceRecord>.from(_sortedMaintenanceRecords);
-    records.sort((a, b) => (double.tryParse(b.cost) ?? 0).compareTo(double.tryParse(a.cost) ?? 0));
-    return records.take(3).toList();
-  }
-
-  Map<String, double> get _maintenanceExpensesByType {
-    final records = _sortedMaintenanceRecords;
-    final map = <String, double>{};
-    for (final record in records) {
-      final cost = double.tryParse(record.cost) ?? 0;
-      map[record.type] = (map[record.type] ?? 0) + cost;
-    }
-    return map;
-  }
-
-  List<_MonthlyExpense> get _maintenanceMonthlyExpenses {
-    final records = _sortedMaintenanceRecords;
-    final map = <String, double>{};
-    for (final record in records) {
-      final dateParts = record.date.split('.');
-      if (dateParts.length == 3) {
-        final monthYear = '${dateParts[1]}.${dateParts[2]}';
-        final cost = double.tryParse(record.cost) ?? 0;
-        map[monthYear] = (map[monthYear] ?? 0) + cost;
+  Map<String, int> _serviceIntervalsFromSettings(
+    Map<String, dynamic>? settings,
+  ) {
+    final result = Map<String, int>.from(_serviceIntervalsKm);
+    final raw = settings?['maintenanceTypeIntervals'];
+    if (raw is Map) {
+      for (final key in result.keys) {
+        final value = raw[key];
+        if (value is int && value > 0) {
+          result[key] = value;
+        }
       }
     }
-    final list = map.entries.map((e) => _MonthlyExpense(month: e.key, expense: e.value)).toList();
-    list.sort((a, b) {
-      final aParts = a.month.split('.');
-      final bParts = b.month.split('.');
-      final aYear = int.tryParse(aParts[1]) ?? 0;
-      final bYear = int.tryParse(bParts[1]) ?? 0;
-      final aMonth = int.tryParse(aParts[0]) ?? 0;
-      final bMonth = int.tryParse(bParts[0]) ?? 0;
-      if (aYear != bYear) return aYear.compareTo(bYear);
-      return aMonth.compareTo(bMonth);
-    });
-    return list;
+    return result;
   }
 
-  /// Преобразует значение к double, если это строка или число.
-  double? _toDouble(dynamic value) {
-    if (value == null) return null;
-    if (value is num) return value.toDouble();
-    if (value is String) {
-      return double.tryParse(value.replaceAll(',', '.'));
+  double? _currentMileage(
+    List<FuelRecordModel> fuelRecords,
+    List<MaintenanceRecord> maintenanceRecords,
+  ) {
+    double maxMileage = 0;
+    for (final record in fuelRecords) {
+      final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
+      if (mileage > maxMileage) maxMileage = mileage;
     }
-    return null;
+    for (final record in maintenanceRecords) {
+      final mileage = double.tryParse(record.odometer) ?? 0;
+      if (mileage > maxMileage) maxMileage = mileage;
+    }
+    return maxMileage > 0 ? maxMileage : null;
   }
 
-  List<_ConsumptionTrend> get _consumptionTrend {
-    final records = _sortedRecords;
-
-    final trend = <_ConsumptionTrend>[];
-    for (var i = 0; i < records.length - 1; i++) {
-      final current = records[i];
-      final previous = records[i + 1];
-
-      final currentOdo = _toDouble(current.odometer);
-      final previousOdo = _toDouble(previous.odometer);
-      final liters = _toDouble(current.quantity);
-
-      if (currentOdo == null || previousOdo == null || liters == null) continue;
-      final deltaKm = currentOdo - previousOdo;
-      if (deltaKm <= 0) continue;
-
-      final litersPer100km = liters / deltaKm * 100.0;
-      trend.add(_ConsumptionTrend(
-        date: current.date,
-        consumption: litersPer100km,
-        liters: liters,
-        km: deltaKm,
-      ));
-    }
-
-    return trend;
-  }
-
-  String _format(double value) {
-    return value.toStringAsFixed(1);
-  }
-
-  void _recalculate() {
-    final distance = double.tryParse(_distanceController.text.replaceAll(',', '.'));
-    final consumption = double.tryParse(_consumptionController.text.replaceAll(',', '.'));
-    final price = double.tryParse(_priceController.text.replaceAll(',', '.'));
-    final liters = double.tryParse(_litersController.text.replaceAll(',', '.'));
-
-    double? fuelNeeded;
-    double? tripCost;
-    double? computedConsumption;
-
-    // Расчет нужного топлива
-    if (distance != null && consumption != null) {
-      fuelNeeded = distance * consumption / 100.0;
-    }
-
-    // Расчет расхода на 100 км по литрам и расстоянию
-    if (distance != null && liters != null && distance > 0) {
-      computedConsumption = liters / distance * 100.0;
-    }
-
-    // Расчет стоимости поездки
-    if (price != null) {
-      if (fuelNeeded != null) {
-        tripCost = fuelNeeded * price;
-      } else if (liters != null) {
-        tripCost = liters * price;
+  Map<String, dynamic> _buildHealthSnapshot(
+    List<FuelRecordModel> fuelRecords,
+    List<MaintenanceRecord> maintenanceRecords,
+    String Function(String) tr,
+  ) {
+    final now = DateTime.now();
+    double maintenanceScore = 0;
+    if (maintenanceRecords.isNotEmpty) {
+      final lastMaintenance = maintenanceRecords
+          .map((r) => r.timestamp)
+          .reduce((a, b) => a > b ? a : b);
+      final daysSince = now
+          .difference(DateTime.fromMillisecondsSinceEpoch(lastMaintenance))
+          .inDays;
+      if (daysSince <= 30) {
+        maintenanceScore = 100;
+      } else if (daysSince <= 90) {
+        maintenanceScore = 80;
+      } else if (daysSince <= 180) {
+        maintenanceScore = 55;
+      } else if (daysSince <= 365) {
+        maintenanceScore = 30;
+      } else {
+        maintenanceScore = 10;
       }
     }
 
-    setState(() {
-      _fuelNeeded = fuelNeeded;
-      _tripCost = tripCost;
-      _computedConsumption = computedConsumption;
-    });
+    double fuelScore = 0;
+    if (fuelRecords.isNotEmpty) {
+      final lastFuel = fuelRecords
+          .map((r) => r.timestamp)
+          .reduce((a, b) => a > b ? a : b);
+      final daysSince = now
+          .difference(DateTime.fromMillisecondsSinceEpoch(lastFuel))
+          .inDays;
+      if (daysSince <= 14) {
+        fuelScore = 100;
+      } else if (daysSince <= 30) {
+        fuelScore = 80;
+      } else if (daysSince <= 60) {
+        fuelScore = 50;
+      } else {
+        fuelScore = 20;
+      }
+    }
+
+    final cutoff3m = now
+        .subtract(const Duration(days: 90))
+        .millisecondsSinceEpoch;
+    final recentFuel = fuelRecords.where((r) => r.timestamp >= cutoff3m).length;
+    final recentMaintenance = maintenanceRecords
+        .where((r) => r.timestamp >= cutoff3m)
+        .length;
+    final recentTotal = recentFuel + recentMaintenance;
+    final activityScore = recentTotal >= 8
+        ? 100.0
+        : recentTotal >= 4
+        ? 75.0
+        : recentTotal >= 2
+        ? 50.0
+        : recentTotal >= 1
+        ? 25.0
+        : 0.0;
+
+    final overall =
+        (maintenanceScore * 0.4 + fuelScore * 0.3 + activityScore * 0.3).clamp(
+          0.0,
+          100.0,
+        );
+
+    if (overall >= 80) {
+      return {
+        'score': overall,
+        'label': tr('healthExcellent'),
+        'color': Colors.green,
+        'icon': Icons.verified,
+      };
+    }
+    if (overall >= 55) {
+      return {
+        'score': overall,
+        'label': tr('healthGood'),
+        'color': Colors.lightGreen,
+        'icon': Icons.thumb_up,
+      };
+    }
+    if (overall >= 30) {
+      return {
+        'score': overall,
+        'label': tr('healthFair'),
+        'color': Colors.orange,
+        'icon': Icons.warning_amber_rounded,
+      };
+    }
+    return {
+      'score': overall,
+      'label': tr('healthPoor'),
+      'color': Colors.red,
+      'icon': Icons.error_outline,
+    };
+  }
+
+  List<String> _buildServiceRecommendations(
+    int currentMileage,
+    List<MaintenanceRecord> maintenanceRecords,
+    Map<String, int> intervals,
+    String Function(String) tr,
+  ) {
+    const trackedTypes = [
+      'Замена масла',
+      'Замена тормозной жидкости',
+      'Замена тормозных колодок',
+      'Замена фильтра',
+    ];
+
+    final lastMileageByType = <String, int>{};
+    for (final record in maintenanceRecords) {
+      if (lastMileageByType.containsKey(record.type)) continue;
+      final mileage = int.tryParse(record.odometer);
+      if (mileage != null && mileage > 0) {
+        lastMileageByType[record.type] = mileage;
+      }
+    }
+
+    final recommendations = <MapEntry<String, int>>[];
+    for (final type in trackedTypes) {
+      final interval = intervals[type] ?? 10000;
+      final lastMileage = lastMileageByType[type];
+      int remaining;
+      if (lastMileage != null) {
+        remaining = (lastMileage + interval) - currentMileage;
+      } else {
+        final remainder = currentMileage % interval;
+        remaining = remainder == 0 ? 0 : interval - remainder;
+      }
+      recommendations.add(MapEntry(type, remaining));
+    }
+    recommendations.sort((a, b) => a.value.compareTo(b.value));
+
+    return recommendations.take(3).map((entry) {
+      if (entry.value < 0) {
+        return tr('passportServiceOverdue')
+            .replaceAll('{service}', entry.key)
+            .replaceAll('{km}', '${entry.value.abs()}');
+      }
+      if (entry.value == 0) {
+        return tr('passportServiceNow').replaceAll('{service}', entry.key);
+      }
+      return tr(
+        'passportServiceInKm',
+      ).replaceAll('{service}', entry.key).replaceAll('{km}', '${entry.value}');
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bool isDark = theme.brightness == Brightness.dark;
-    final currency = context.watch<AuthProvider>().user?.settings['currency'] as String? ?? '₸';
+    final garage = context.watch<GarageProvider>();
+    final auth = context.watch<AuthProvider>();
+    final tr = LocaleService.tr;
+    final car = garage.currentCar;
 
-    final trend = _consumptionTrend;
-    final averageConsumption = trend.isNotEmpty
-        ? trend.map((e) => e.consumption).reduce((a, b) => a + b) / trend.length
-        : null;
-
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Builder(
-          builder: (context) {
-            final garage = context.watch<GarageProvider>();
-            final carTitle = garage.currentCar?.title;
-            return Text(
-              carTitle != null && carTitle.isNotEmpty
-                  ? '${LocaleService.tr('analytics')} • $carTitle'
-                  : LocaleService.tr('analytics'),
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            );
-          },
-        ),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        iconTheme: theme.appBarTheme.iconTheme,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              LocaleService.tr('maintenanceAnalytics'),
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            _buildMaintenanceDashboard(theme, currency),
-            const SizedBox(height: 25),
-            Text(
-              LocaleService.tr('consumptionTrends'),
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            if (trend.isEmpty) ...[
-              Text(
-                LocaleService.tr('trendHint1'),
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                LocaleService.tr('trendHint2'),
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-              ),
-            ] else ...[
-              if (averageConsumption != null) ...[
-                _buildStatCard(
-                  theme,
-                  title: LocaleService.tr('averageConsumption'),
-                  value: _format(averageConsumption),
-                  color: Colors.greenAccent,
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (trend.length >= 2) ...[
-                _buildConsumptionChart(theme, trend),
-                const SizedBox(height: 16),
-              ],
-              ...trend.map((item) => _buildTrendItem(theme, item)).toList(),
-            ],
-
-            // --- Monthly bar chart ---
-            if (_filteredRecords.isNotEmpty) ...[
-              const SizedBox(height: 30),
-              Text(
-                LocaleService.tr('monthlyChart'),
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              _buildMonthlyBarChart(theme, currency),
-            ],
-
-            // --- Fuel price dynamics ---
-            if (_fuelPriceTrend.isNotEmpty) ...[              
-              const SizedBox(height: 30),
-              Text(
-                LocaleService.tr('fuelPriceDynamics'),
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              _buildFuelPriceChart(theme, isDark, currency),
-            ],
-
-            // --- Pie chart: expenses by category ---
-            if (_filteredRecords.isNotEmpty) ...[
-              const SizedBox(height: 30),
-              Text(
-                LocaleService.tr('expensesByCategory'),
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              _buildExpensesPieChart(theme, currency),
-            ],
-
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMaintenanceDashboard(ThemeData theme, String currency) {
-    final total = _maintenanceTotalCost;
-    final count = _maintenanceRecordCount;
-    final average = _maintenanceAverageCost;
-    final topRecords = _topMaintenanceRecords;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.15)),
-      ),
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              _buildMetricCard(
-                theme,
-                title: LocaleService.tr('totalMaintenanceCost'),
-                value: CurrencyService.format(total, currency),
-              ),
-              _buildMetricCard(
-                theme,
-                title: LocaleService.tr('maintenanceCount'),
-                value: count.toString(),
-              ),
-              _buildMetricCard(
-                theme,
-                title: LocaleService.tr('averageMaintenanceCost'),
-                value: count > 0 ? CurrencyService.format(average, currency) : '-'.toString(),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            LocaleService.tr('topExpensiveServices'),
-            style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          if (topRecords.isEmpty)
-            Text(
-              LocaleService.tr('noMaintenance'),
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.6)),
-            )
-          else
-            Column(
-              children: topRecords.map((record) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: theme.scaffoldBackgroundColor,
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: theme.dividerColor.withOpacity(0.15)),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _trType(record.type),
-                              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              record.date,
-                              style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.6)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        CurrencyService.format(double.tryParse(record.cost) ?? 0, currency),
-                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMaintenancePieChart(ThemeData theme, Map<String, double> expensesByType, String currency) {
-    final colors = [
-      Colors.redAccent,
-      Colors.blueAccent,
-      Colors.orangeAccent,
-      Colors.greenAccent,
-      Colors.purpleAccent,
-      Colors.tealAccent,
-      Colors.pinkAccent,
-      Colors.cyanAccent,
-    ];
-
-    final entries = expensesByType.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    final grandTotal = entries.fold<double>(0, (s, e) => s + e.value);
-
-    final sections = <PieChartSectionData>[];
-    for (var i = 0; i < entries.length; i++) {
-      final e = entries[i];
-      final pct = grandTotal > 0 ? (e.value / grandTotal * 100) : 0;
-      sections.add(PieChartSectionData(
-        value: e.value,
-        title: '${pct.toStringAsFixed(0)}%',
-        color: colors[i % colors.length],
-        radius: 50,
-        titleStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
-      ));
-    }
-
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          child: PieChart(
-            PieChartData(
-              sections: sections,
-              centerSpaceRadius: 40,
-              sectionsSpace: 2,
+    if (car == null) {
+      return Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: Text(
+            tr('carPassport'),
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
           ),
+          backgroundColor: theme.appBarTheme.backgroundColor,
+          iconTheme: theme.appBarTheme.iconTheme,
         ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 12,
-          runSpacing: 6,
-          children: List.generate(entries.length, (i) {
-            return Row(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: colors[i % colors.length],
-                    shape: BoxShape.circle,
-                  ),
+                Icon(
+                  Icons.badge_outlined,
+                  size: 72,
+                  color: theme.iconTheme.color?.withOpacity(0.2),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(height: 16),
                 Text(
-                  '${_trType(entries[i].key)} (${CurrencyService.format(entries[i].value, currency)})',
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
+                  tr('passportNoCarTitle'),
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  tr('passportNoCarHint'),
+                  style: theme.textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
               ],
-            );
-          }),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMaintenanceBarChart(ThemeData theme, List<_MonthlyExpense> monthlyExpenses, String currency) {
-    if (monthlyExpenses.isEmpty) return const SizedBox.shrink();
-
-    final values = monthlyExpenses.map((e) => e.expense).toList();
-    final maxVal = values.reduce((a, b) => a > b ? a : b);
-    if (maxVal == 0) return const SizedBox.shrink();
-
-    final barGroups = <BarChartGroupData>[];
-    for (var i = 0; i < monthlyExpenses.length; i++) {
-      barGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: monthlyExpenses[i].expense,
-              color: theme.colorScheme.primary,
-              width: 18,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
             ),
-          ],
+          ),
         ),
       );
     }
 
-    return SizedBox(
-      height: 200,
-      child: BarChart(
-        BarChartData(
-          barGroups: barGroups,
-          borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  final index = value.toInt();
-                  if (index >= 0 && index < monthlyExpenses.length) {
-                    return Text(
-                      monthlyExpenses[index].month,
-                      style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
-                    );
-                  }
-                  return const Text('');
-                },
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    CurrencyService.format(value, currency),
-                    style: theme.textTheme.bodySmall?.copyWith(fontSize: 10),
-                  );
-                },
-              ),
-            ),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          gridData: FlGridData(show: true, drawVerticalLine: false),
-          barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  CurrencyService.format(rod.toY, currency),
-                  TextStyle(color: theme.colorScheme.onSurface),
-                );
-              },
-            ),
+    final fuelRecords =
+        garage.fuelRecords.where((r) => r.carNumber == car.number).toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final maintenanceRecords =
+        garage.maintenanceRecords
+            .where((r) => r.carNumber == car.number)
+            .toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+    final currency = auth.user?.settings['currency'] as String? ?? '₸';
+    final mileage = _currentMileage(fuelRecords, maintenanceRecords);
+    final monthlyFuelTotal = fuelRecords.fold<double>(0, (sum, item) {
+      final date = DateTime.fromMillisecondsSinceEpoch(item.timestamp);
+      final now = DateTime.now();
+      if (date.year == now.year && date.month == now.month) {
+        return sum + (double.tryParse(item.total) ?? 0);
+      }
+      return sum;
+    });
+    final monthlyMaintenanceTotal = maintenanceRecords.fold<double>(0, (
+      sum,
+      item,
+    ) {
+      final date = DateTime.fromMillisecondsSinceEpoch(item.timestamp);
+      final now = DateTime.now();
+      if (date.year == now.year && date.month == now.month) {
+        return sum + (double.tryParse(item.cost) ?? 0);
+      }
+      return sum;
+    });
+    final health = _buildHealthSnapshot(fuelRecords, maintenanceRecords, tr);
+    final intervals = _serviceIntervalsFromSettings(auth.user?.settings);
+    final recommendations = mileage == null
+        ? <String>[tr('passportNeedMileage')]
+        : _buildServiceRecommendations(
+            mileage.toInt(),
+            maintenanceRecords,
+            intervals,
+            tr,
+          );
+    final lastRefuel = fuelRecords.isNotEmpty ? fuelRecords.first.date : '-';
+    final lastMaintenance = maintenanceRecords.isNotEmpty
+        ? maintenanceRecords.first.date
+        : '-';
+
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          tr('carPassport'),
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
         ),
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        iconTheme: theme.appBarTheme.iconTheme,
       ),
-    );
-  }
-
-  Widget _buildInputField(
-    ThemeData theme, {
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required ValueChanged<String> onChanged,
-  }) {
-    final isDark = theme.brightness == Brightness.dark;
-    return TextField(
-      controller: controller,
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
-      style: TextStyle(color: theme.textTheme.bodyLarge?.color),
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 22),
-        labelText: label,
-        labelStyle: TextStyle(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-        filled: true,
-        fillColor: isDark ? Colors.black : Colors.grey.shade200,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-      ),
-    );
-  }
-
-  Widget _buildResultCard(ThemeData theme, {required String title, required String value}) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMetricCard(ThemeData theme, {required String title, required String value}) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatCard(ThemeData theme, {required String title, required String value, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
-      ),
-      child: Row(
+      body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.bar_chart, color: color),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.14),
+                  theme.cardColor,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.18),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  car.title,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (car.number.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    car.number,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.textTheme.bodySmall?.color?.withOpacity(
+                        0.75,
+                      ),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: (health['color'] as Color).withOpacity(0.14),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        health['icon'] as IconData,
+                        color: health['color'] as Color,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tr('passportStatus'),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.textTheme.bodySmall?.color
+                                  ?.withOpacity(0.7),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${(health['score'] as double).toInt()}% • ${health['label']}',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              color: health['color'] as Color,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _statCard(
+                  theme,
+                  tr('odometer'),
+                  mileage == null ? '-' : '${mileage.toInt()} ${tr('km')}',
+                  Icons.speed,
+                  const Color(0xFF3B82F6),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _statCard(
+                  theme,
+                  tr('monthExpenses'),
+                  CurrencyService.format(
+                    monthlyFuelTotal + monthlyMaintenanceTotal,
+                    currency,
+                  ),
+                  Icons.account_balance_wallet_rounded,
+                  const Color(0xFFF97316),
+                ),
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _statCard(
+                  theme,
+                  tr('lastRefuel'),
+                  lastRefuel,
+                  Icons.local_gas_station,
+                  const Color(0xFF06B6D4),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _statCard(
+                  theme,
+                  tr('maintenanceLog'),
+                  lastMaintenance,
+                  Icons.build_circle,
+                  const Color(0xFF8B5CF6),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _sectionCard(
+            theme,
+            title: tr('passportServiceTitle'),
+            child: Column(
+              children: recommendations
+                  .map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            item.contains(tr('passportServiceOverdueMarker'))
+                                ? Icons.error_outline
+                                : Icons.schedule,
+                            size: 18,
+                            color:
+                                item.contains(
+                                  tr('passportServiceOverdueMarker'),
+                                )
+                                ? Colors.red
+                                : theme.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: theme.textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          const SizedBox(height: 16),
+          _sectionCard(
+            theme,
+            title: tr('passportCostsTitle'),
+            child: Column(
+              children: [
+                _miniRow(
+                  theme,
+                  tr('expensesFuel'),
+                  CurrencyService.format(monthlyFuelTotal, currency),
+                ),
+                const SizedBox(height: 8),
+                _miniRow(
+                  theme,
+                  tr('expensesMaint'),
+                  CurrencyService.format(monthlyMaintenanceTotal, currency),
+                ),
+                const SizedBox(height: 8),
+                _miniRow(
+                  theme,
+                  tr('passportFuelCount'),
+                  '${fuelRecords.length}',
+                ),
+                const SizedBox(height: 8),
+                _miniRow(
+                  theme,
+                  tr('passportMaintCount'),
+                  '${maintenanceRecords.length}',
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          _sectionCard(
+            theme,
+            title: tr('passportActionsTitle'),
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _actionChip(
+                  context,
+                  theme,
+                  tr('expensesTitle'),
+                  Icons.account_balance_wallet_rounded,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ExpensesPage()),
+                  ),
+                ),
+                _actionChip(
+                  context,
+                  theme,
+                  tr('maintenanceLog'),
+                  Icons.build_circle_rounded,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MaintenancePage()),
+                  ),
+                ),
+                _actionChip(
+                  context,
+                  theme,
+                  tr('healthTitle'),
+                  Icons.favorite_rounded,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CarHealthPage()),
+                  ),
+                ),
+                _actionChip(
+                  context,
+                  theme,
+                  tr('compareTitle'),
+                  Icons.compare_arrows_rounded,
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CarComparePage()),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildConsumptionChart(ThemeData theme, List<_ConsumptionTrend> trend) {
-    // Reverse so oldest is on the left
-    final data = trend.reversed.toList();
-    final spots = <FlSpot>[];
-    for (var i = 0; i < data.length; i++) {
-      spots.add(FlSpot(i.toDouble(), double.parse(data[i].consumption.toStringAsFixed(1))));
-    }
-
-    final minY = spots.map((s) => s.y).reduce((a, b) => a < b ? a : b);
-    final maxY = spots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
-    final pad = (maxY - minY) * 0.25;
-
+  Widget _statCard(
+    ThemeData theme,
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
-      height: 200,
-      padding: const EdgeInsets.fromLTRB(0, 16, 16, 8),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
-      ),
-      child: LineChart(
-        LineChartData(
-          minY: (minY - pad).clamp(0, double.infinity),
-          maxY: maxY + pad,
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: ((maxY - minY) / 3).clamp(1, double.infinity),
-            getDrawingHorizontalLine: (value) => FlLine(
-              color: theme.dividerColor.withOpacity(0.15),
-              strokeWidth: 1,
-            ),
-          ),
-          titlesData: FlTitlesData(
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 28,
-                interval: 1,
-                getTitlesWidget: (value, meta) {
-                  final idx = value.toInt();
-                  if (idx < 0 || idx >= data.length) return const SizedBox.shrink();
-                  // Show short date
-                  final parts = data[idx].date.split('.');
-                  final label = parts.length >= 2 ? '${parts[0]}.${parts[1]}' : data[idx].date;
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      label,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 9,
-                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 40,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toStringAsFixed(0),
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              spots: spots,
-              isCurved: true,
-              curveSmoothness: 0.3,
-              color: theme.colorScheme.primary,
-              barWidth: 3,
-              isStrokeCapRound: true,
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
-                  radius: 4,
-                  color: theme.colorScheme.primary,
-                  strokeWidth: 2,
-                  strokeColor: theme.scaffoldBackgroundColor,
-                ),
-              ),
-              belowBarData: BarAreaData(
-                show: true,
-                color: theme.colorScheme.primary.withOpacity(0.1),
-              ),
-            ),
-          ],
-          lineTouchData: LineTouchData(
-            touchTooltipData: LineTouchTooltipData(
-              getTooltipItems: (touchedSpots) {
-                return touchedSpots.map((spot) {
-                  return LineTooltipItem(
-                    '${spot.y.toStringAsFixed(1)} л/100км',
-                    TextStyle(
-                      color: theme.colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTrendItem(ThemeData theme, _ConsumptionTrend item) {
-    final previous = _consumptionTrend;
-    final idx = previous.indexOf(item);
-    final nextValue = idx + 1 < previous.length ? previous[idx + 1].consumption : null;
-    final diff = nextValue != null ? item.consumption - nextValue : null;
-
-    final trendIcon = diff == null
-        ? null
-        : diff < 0
-            ? Icons.arrow_downward
-            : Icons.arrow_upward;
-
-    final trendColor = diff == null
-        ? theme.textTheme.bodySmall?.color
-        : diff < 0
-            ? Colors.greenAccent
-            : Colors.redAccent;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.date,
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '${_format(item.consumption)} л/100 км',
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  '${_format(item.liters)} л • ${_format(item.km)} км',
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
-                ),
-              ],
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 18, color: color),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
             ),
           ),
-          if (trendIcon != null)
-            Row(
-              children: [
-                Icon(trendIcon, size: 20, color: trendColor),
-                const SizedBox(width: 4),
-                Text(
-                  diff != null ? '${diff.abs().toStringAsFixed(1)}' : '',
-                  style: theme.textTheme.bodySmall?.copyWith(color: trendColor),
-                ),
-              ],
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildExpensesPieChart(ThemeData theme, String currency) {
-    final Map<String, double> categoryTotals = {};
-    for (final record in _filteredRecords) {
-      final cat = record.subType.isNotEmpty ? record.subType : record.category;
-      final total = double.tryParse(record.total) ?? 0;
-      categoryTotals[cat] = (categoryTotals[cat] ?? 0) + total;
-    }
-
-    final colors = [
-      Colors.redAccent,
-      Colors.blueAccent,
-      Colors.orangeAccent,
-      Colors.greenAccent,
-      Colors.purpleAccent,
-      Colors.tealAccent,
-      Colors.pinkAccent,
-      Colors.cyanAccent,
-    ];
-
-    final entries = categoryTotals.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    final grandTotal = entries.fold<double>(0, (s, e) => s + e.value);
-
-    final sections = <PieChartSectionData>[];
-    for (var i = 0; i < entries.length; i++) {
-      final e = entries[i];
-      final pct = grandTotal > 0 ? (e.value / grandTotal * 100) : 0;
-      sections.add(PieChartSectionData(
-        value: e.value,
-        title: '${pct.toStringAsFixed(0)}%',
-        color: colors[i % colors.length],
-        radius: 50,
-        titleStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
-      ));
-    }
-
-    return Column(
-      children: [
-        SizedBox(
-          height: 200,
-          child: PieChart(
-            PieChartData(
-              sections: sections,
-              centerSpaceRadius: 40,
-              sectionsSpace: 2,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 12,
-          runSpacing: 6,
-          children: List.generate(entries.length, (i) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: colors[i % colors.length],
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${entries[i].key} (${CurrencyService.format(entries[i].value, currency)})',
-                  style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
-                ),
-              ],
-            );
-          }),
-        ),
-      ],
-    );
-  }
-
-  /// Returns last 6 months totals as a map {"YYYY-MM": total}
-  Map<String, double> get _monthlyTotals {
-    final Map<String, double> totals = {};
-    for (final r in _filteredRecords) {
-      final dt = DateTime.fromMillisecondsSinceEpoch(r.timestamp);
-      final key = '${dt.year}-${dt.month.toString().padLeft(2, '0')}';
-      final amount = double.tryParse(r.total) ?? 0;
-      totals[key] = (totals[key] ?? 0) + amount;
-    }
-    return totals;
-  }
-
-  Widget _buildMonthlyBarChart(ThemeData theme, String currency) {
-    final now = DateTime.now();
-    final months = List.generate(6, (i) {
-      final date = DateTime(now.year, now.month - (5 - i), 1);
-      return '${date.year}-${date.month.toString().padLeft(2, '0')}';
-    });
-    final totals = _monthlyTotals;
-    final values = months.map((m) => totals[m] ?? 0.0).toList();
-    final maxVal = values.reduce((a, b) => a > b ? a : b);
-    if (maxVal == 0) {
-      return Center(
-        child: Text(
-          LocaleService.tr('noRecords'),
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-          ),
-        ),
-      );
-    }
-
-    final barGroups = <BarChartGroupData>[];
-    for (var i = 0; i < months.length; i++) {
-      barGroups.add(
-        BarChartGroupData(
-          x: i,
-          barRods: [
-            BarChartRodData(
-              toY: values[i],
-              color: theme.colorScheme.primary,
-              width: 18,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final monthLabels = months.map((m) {
-      final parts = m.split('-');
-      const names = ['', 'янв', 'фев', 'мар', 'апр', 'май', 'июн',
-                     'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-      final monthIdx = int.tryParse(parts[1]) ?? 0;
-      return monthIdx < names.length ? names[monthIdx] : parts[1];
-    }).toList();
-
+  Widget _sectionCard(
+    ThemeData theme, {
+    required String title,
+    required Widget child,
+  }) {
     return Container(
-      height: 200,
-      padding: const EdgeInsets.fromLTRB(4, 16, 16, 8),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
-      ),
-      child: BarChart(
-        BarChartData(
-          maxY: maxVal * 1.3,
-          barGroups: barGroups,
-          gridData: FlGridData(
-            show: true,
-            drawVerticalLine: false,
-            horizontalInterval: (maxVal / 3).clamp(1, double.infinity),
-            getDrawingHorizontalLine: (v) => FlLine(
-              color: theme.dividerColor.withOpacity(0.15),
-              strokeWidth: 1,
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(
-            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 24,
-                getTitlesWidget: (value, meta) {
-                  final idx = value.toInt();
-                  if (idx < 0 || idx >= monthLabels.length) {
-                    return const SizedBox.shrink();
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      monthLabels[idx],
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        fontSize: 10,
-                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.6),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                reservedSize: 44,
-                getTitlesWidget: (v, meta) => Text(
-                  v >= 1000 ? '${(v / 1000).toStringAsFixed(0)}k' : v.toStringAsFixed(0),
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 9,
-                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  CurrencyService.format(rod.toY, currency),
-                  TextStyle(
-                    color: theme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ─── Fuel price trend (price per liter computed from total/quantity) ───
-  /// Groups fuel records by subType. For each record computes price/liter.
-  /// Returns a map: subType → list of _FuelPricePoint, sorted by timestamp.
-  Map<String, List<_FuelPricePoint>> get _fuelPriceTrend {
-    final result = <String, List<_FuelPricePoint>>{};
-    for (final r in _filteredRecords) {
-      if (r.category != 'Топливо') continue;
-      final qty = double.tryParse(r.quantity.replaceAll(',', '.'));
-      final total = double.tryParse(r.total.replaceAll(',', '.'));
-      if (qty == null || total == null || qty <= 0) continue;
-      final pricePerLiter = total / qty;
-      result.putIfAbsent(r.subType, () => []);
-      result[r.subType]!.add(_FuelPricePoint(
-        timestamp: r.timestamp,
-        date: r.date,
-        price: pricePerLiter,
-      ));
-    }
-    for (final list in result.values) {
-      list.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    }
-    return result;
-  }
-
-  Widget _buildFuelPriceChart(ThemeData theme, bool isDark, String currency) {
-    final trendMap = _fuelPriceTrend;
-    if (trendMap.isEmpty) return const SizedBox.shrink();
-
-    final lineColors = [
-      Colors.redAccent,
-      Colors.blueAccent,
-      Colors.orangeAccent,
-      Colors.greenAccent,
-      Colors.purpleAccent,
-      Colors.tealAccent,
-    ];
-
-    // Flatten to find global min/max for Y axis
-    double globalMin = double.infinity;
-    double globalMax = 0;
-    for (final entry in trendMap.values) {
-      for (final p in entry) {
-        final converted = CurrencyService.convert(p.price, currency);
-        if (converted < globalMin) globalMin = converted;
-        if (converted > globalMax) globalMax = converted;
-      }
-    }
-    if (globalMax == 0) return const SizedBox.shrink();
-    final yPad = (globalMax - globalMin) * 0.15;
-    final minY = (globalMin - yPad).clamp(0.0, double.infinity);
-    final maxY = globalMax + yPad;
-
-    // Build one LineChartBarData per subType
-    int colorIdx = 0;
-    final lineBars = <LineChartBarData>[];
-    final legendEntries = <MapEntry<String, Color>>[];
-
-    for (final entry in trendMap.entries) {
-      if (entry.value.length < 2) continue; // need at least 2 points for a line
-      final color = lineColors[colorIdx % lineColors.length];
-      colorIdx++;
-      legendEntries.add(MapEntry(entry.key, color));
-
-      final spots = <FlSpot>[];
-      for (int i = 0; i < entry.value.length; i++) {
-        final converted = CurrencyService.convert(entry.value[i].price, currency);
-        spots.add(FlSpot(i.toDouble(), converted));
-      }
-
-      lineBars.add(LineChartBarData(
-        spots: spots,
-        isCurved: true,
-        curveSmoothness: 0.25,
-        color: color,
-        barWidth: 2.5,
-        isStrokeCapRound: true,
-        dotData: FlDotData(
-          show: true,
-          getDotPainter: (spot, pct, bar, idx) => FlDotCirclePainter(
-            radius: 3.5,
-            color: color,
-            strokeWidth: 1.5,
-            strokeColor: theme.scaffoldBackgroundColor,
-          ),
-        ),
-        belowBarData: BarAreaData(
-          show: true,
-          color: color.withOpacity(0.08),
-        ),
-      ));
-    }
-
-    if (lineBars.isEmpty) return const SizedBox.shrink();
-
-    // Use the longest series for X-axis labels
-    final longestSeries = trendMap.values.reduce((a, b) => a.length >= b.length ? a : b);
-    final priceUnitLabel = LocaleService.tr('pricePerUnit');
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(4, 16, 16, 8),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Legend
-          Padding(
-            padding: const EdgeInsets.only(left: 12, bottom: 12),
-            child: Wrap(
-              spacing: 14,
-              runSpacing: 6,
-              children: legendEntries.map((e) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(width: 10, height: 10, decoration: BoxDecoration(color: e.value, shape: BoxShape.circle)),
-                  const SizedBox(width: 5),
-                  Text(e.key, style: theme.textTheme.bodySmall?.copyWith(fontSize: 11)),
-                ],
-              )).toList(),
+          Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
-            height: 200,
-            child: LineChart(
-              LineChartData(
-                minY: minY,
-                maxY: maxY,
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: ((maxY - minY) / 4).clamp(1, double.infinity),
-                  getDrawingHorizontalLine: (v) => FlLine(
-                    color: theme.dividerColor.withOpacity(0.15),
-                    strokeWidth: 1,
-                  ),
-                ),
-                borderData: FlBorderData(show: false),
-                titlesData: FlTitlesData(
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 24,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) {
-                        final i = value.toInt();
-                        if (i < 0 || i >= longestSeries.length) return const SizedBox.shrink();
-                        // Show limited labels to avoid overlap
-                        final step = (longestSeries.length / 5).ceil().clamp(1, 100);
-                        if (i % step != 0 && i != longestSeries.length - 1) return const SizedBox.shrink();
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            longestSeries[i].date,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              fontSize: 8,
-                              color: theme.textTheme.bodySmall?.color?.withOpacity(0.55),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 44,
-                      getTitlesWidget: (v, meta) => Text(
-                        v.toStringAsFixed(0),
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          fontSize: 9,
-                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                lineTouchData: LineTouchData(
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipItems: (touchedSpots) {
-                      return touchedSpots.map((spot) {
-                        final seriesIdx = lineBars.indexOf(spot.bar);
-                        final label = seriesIdx >= 0 && seriesIdx < legendEntries.length
-                            ? legendEntries[seriesIdx].key
-                            : '';
-                        return LineTooltipItem(
-                          '$label\n${spot.y.toStringAsFixed(1)} $priceUnitLabel',
-                          TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                ),
-                lineBarsData: lineBars,
-              ),
-            ),
-          ),
+          const SizedBox(height: 12),
+          child,
         ],
       ),
     );
   }
-}
 
-class _ConsumptionTrend {
-  final String date;
-  final double consumption;
-  final double liters;
-  final double km;
+  Widget _miniRow(ThemeData theme, String label, String value) {
+    return Row(
+      children: [
+        Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
+        Text(
+          value,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
 
-  _ConsumptionTrend({
-    required this.date,
-    required this.consumption,
-    required this.liters,
-    required this.km,
-  });
-}
-
-class _FuelPricePoint {
-  final int timestamp;
-  final String date;
-  final double price; // KZT per liter (base currency)
-
-  _FuelPricePoint({
-    required this.timestamp,
-    required this.date,
-    required this.price,
-  });
-}
-
-class _MonthlyExpense {
-  final String month;
-  final double expense;
-
-  _MonthlyExpense({
-    required this.month,
-    required this.expense,
-  });
+  Widget _actionChip(
+    BuildContext context,
+    ThemeData theme,
+    String label,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return ActionChip(
+      avatar: Icon(icon, size: 18, color: theme.colorScheme.primary),
+      label: Text(label),
+      onPressed: onTap,
+      backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+      side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.14)),
+    );
+  }
 }

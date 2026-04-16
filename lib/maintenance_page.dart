@@ -12,6 +12,7 @@ String _trType(String type) {
   const _en = {
     'Замена масла': 'Oil change',
     'Замена фильтра': 'Filter replacement',
+    'Замена тормозной жидкости': 'Brake fluid replacement',
     'Замена тормозных колодок': 'Brake pad replacement',
     'Замена свечей зажигания': 'Spark plug replacement',
     'Замена ремня ГРМ': 'Timing belt replacement',
@@ -35,6 +36,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
   static const _types = [
     'Замена масла',
     'Замена фильтра',
+    'Замена тормозной жидкости',
     'Замена тормозных колодок',
     'Замена свечей зажигания',
     'Замена ремня ГРМ',
@@ -45,250 +47,199 @@ class _MaintenancePageState extends State<MaintenancePage> {
     'Другое',
   ];
 
-  static const _engineTypes = [
-    '1.2L',
-    '1.6L',
-    '2.0L',
-    '2.4L',
-    '3.0L',
-    'Другое',
-  ];
+  static const _serviceIntervalsKm = {
+    'Замена масла': 10000,
+    'Замена фильтра': 15000,
+    'Замена тормозной жидкости': 40000,
+    'Замена тормозных колодок': 20000,
+    'Замена свечей зажигания': 30000,
+    'Замена ремня ГРМ': 60000,
+    'Замена шин': 12000,
+    'Плановое ТО': 10000,
+    'Промывка инжектора': 30000,
+    'Диагностика': 15000,
+    'Другое': 10000,
+  };
 
-  static const _smartChecklistItems = [
-    'Замена масла',
-    'Замена масляного фильтра',
-    'Замена воздушного фильтра',
-    'Замена салонного фильтра',
-    'Замена свечей зажигания',
-    'Проверка тормозной системы',
-    'Проверка жидкостей и утечек',
-    'Осмотр ремня ГРМ и приводных ремней',
-    'Проверка шин и давления',
-  ];
+  Map<String, int> _serviceIntervalsFromSettings(
+    Map<String, dynamic>? settings,
+  ) {
+    final result = Map<String, int>.from(_serviceIntervalsKm);
+    final raw = settings?['maintenanceTypeIntervals'];
+    if (raw is Map) {
+      for (final key in result.keys) {
+        final value = raw[key];
+        if (value is int && value > 0) {
+          result[key] = value;
+        }
+      }
+    }
+    return result;
+  }
 
-  void _showSmartMaintenanceDialog() {
-    final garage = context.read<GarageProvider>();
-    final auth = context.read<AuthProvider>();
-    final cars = garage.cars;
-    if (cars.isEmpty) return;
+  List<MapEntry<String, int>> _buildMileageRecommendations(
+    int mileageKm,
+    Map<String, int> typeIntervals,
+    List<MaintenanceRecord> carRecords,
+  ) {
+    final recommendationIntervals = <String, int>{
+      'Замена масла': typeIntervals['Замена масла'] ?? 10000,
+      'Замена тормозной жидкости':
+          typeIntervals['Замена тормозной жидкости'] ?? 40000,
+      'Замена тормозных колодок':
+          typeIntervals['Замена тормозных колодок'] ?? 20000,
+      'Замена фильтра': typeIntervals['Замена фильтра'] ?? 15000,
+    };
 
-    int selectedCarIndex = garage.currentCarIndex.clamp(0, cars.length - 1);
-    String selectedEngine = _engineTypes.first;
-    final odometerCtrl = TextEditingController();
-    final checklist = List<bool>.filled(_smartChecklistItems.length, false);
+    final lastMileageByType = <String, int>{};
+    for (final record in carRecords) {
+      if (lastMileageByType.containsKey(record.type)) continue;
+      final value = int.tryParse(record.odometer);
+      if (value != null && value > 0) {
+        lastMileageByType[record.type] = value;
+      }
+    }
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        final theme = Theme.of(ctx);
-        final isDark = theme.brightness == Brightness.dark;
-        return StatefulBuilder(
-          builder: (ctx2, setModalState) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 24,
-                right: 24,
-                top: 24,
-                bottom: MediaQuery.of(ctx2).viewInsets.bottom + 24,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      LocaleService.tr('smartMaintenance'),
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      LocaleService.tr('smartMaintenanceHint'),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.textTheme.bodySmall?.color?.withOpacity(
-                          0.7,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+    final result = <MapEntry<String, int>>[];
+    for (final entry in recommendationIntervals.entries) {
+      final interval = entry.value;
+      if (interval <= 0) continue;
+      final lastMileage = lastMileageByType[entry.key];
+      int remainingKm;
+      if (lastMileage != null) {
+        final delta = (lastMileage + interval) - mileageKm;
+        remainingKm = delta;
+      } else {
+        final remainder = mileageKm % interval;
+        remainingKm = remainder == 0 ? 0 : interval - remainder;
+      }
+      result.add(MapEntry(entry.key, remainingKm));
+    }
 
-                    // Авто
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.black : Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<int>(
-                          value: selectedCarIndex,
-                          isExpanded: true,
-                          dropdownColor: isDark
-                              ? Colors.grey.shade900
-                              : Colors.white,
-                          style: TextStyle(
-                            color: theme.textTheme.bodyLarge?.color,
-                            fontSize: 15,
-                          ),
-                          items: List.generate(
-                            cars.length,
-                            (index) => DropdownMenuItem(
-                              value: index,
-                              child: Text(cars[index].title),
-                            ),
-                          ),
-                          onChanged: (value) {
-                            if (value == null) return;
-                            setModalState(() => selectedCarIndex = value);
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 14),
+    result.sort((a, b) => a.value.compareTo(b.value));
+    return result;
+  }
 
-                    // Двигатель
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.black : Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedEngine,
-                          isExpanded: true,
-                          dropdownColor: isDark
-                              ? Colors.grey.shade900
-                              : Colors.white,
-                          style: TextStyle(
-                            color: theme.textTheme.bodyLarge?.color,
-                            fontSize: 15,
-                          ),
-                          items: _engineTypes
-                              .map(
-                                (e) =>
-                                    DropdownMenuItem(value: e, child: Text(e)),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) return;
-                            setModalState(() => selectedEngine = value);
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 14),
+  // Регламент ТО с правильными интервалами
+  static const _maintenanceSchedule = {
+    'ТО-1 (10,000 км)': {
+      'km': 10000,
+      'services': [
+        'Замена масла',
+        'Замена масляного фильтра',
+        'Проверка уровней жидкостей',
+        'Проверка тормозной системы',
+      ],
+    },
+    'ТО-2 (20,000 км)': {
+      'km': 20000,
+      'services': [
+        'Замена масла',
+        'Замена масляного фильтра',
+        'Замена воздушного фильтра',
+        'Замена свечей зажигания',
+        'Проверка подвески',
+        'Проверка системы охлаждения',
+      ],
+    },
+    'ТО-3 (30,000 км)': {
+      'km': 30000,
+      'services': [
+        'Замена масла',
+        'Замена масляного фильтра',
+        'Замена топливного фильтра',
+        'Замена тормозных колодок',
+        'Проверка электрооборудования',
+      ],
+    },
+    'ТО-4 (40,000 км)': {
+      'km': 40000,
+      'services': [
+        'Замена масла',
+        'Замена масляного фильтра',
+        'Замена ремня ГРМ',
+        'Замена шин',
+        'Диагностика двигателя',
+      ],
+    },
+    'ТО-5 (50,000 км)': {
+      'km': 50000,
+      'services': [
+        'Замена масла',
+        'Замена масляного фильтра',
+        'Замена антифриза',
+        'Замена тормозной жидкости',
+        'Полная диагностика',
+      ],
+    },
+  };
 
-                    _field(
-                      theme,
-                      odometerCtrl,
-                      LocaleService.tr('odometerKm'),
-                      Icons.speed,
-                      isNumber: true,
-                    ),
-                    const SizedBox(height: 20),
+  // Получить текущий пробег автомобиля
+  double? _getCurrentMileage(GarageProvider garage) {
+    final currentCar = garage.currentCar;
+    if (currentCar == null) return null;
+    // Собираем все odometer из fuel records и maintenance records
+    final fuelRecords = garage.fuelRecords
+        .where((r) => r.carNumber == currentCar.number)
+        .toList();
+    final maintenanceRecords = garage.maintenanceRecords
+        .where((r) => r.carNumber == currentCar.number)
+        .toList();
 
-                    Text(
-                      LocaleService.tr('checklistTitle'),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ...List.generate(
-                      _smartChecklistItems.length,
-                      (index) => CheckboxListTile(
-                        value: checklist[index],
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(_smartChecklistItems[index]),
-                        activeColor: theme.colorScheme.primary,
-                        onChanged: (value) {
-                          setModalState(() {
-                            checklist[index] = value ?? false;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        onPressed: () async {
-                          final selectedItems = _smartChecklistItems
-                              .asMap()
-                              .entries
-                              .where((entry) => checklist[entry.key])
-                              .map((entry) => entry.value)
-                              .toList();
-                          if (selectedItems.isEmpty) {
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  LocaleService.tr('selectChecklistItems'),
-                                ),
-                              ),
-                            );
-                            return;
-                          }
+    double maxMileage = 0;
 
-                          final car = cars[selectedCarIndex];
-                          final now = DateTime.now();
-                          final record = MaintenanceRecord(
-                            userId: auth.userId!,
-                            carId: car.id,
-                            carTitle: car.title,
-                            carNumber: car.number,
-                            type: 'Плановое ТО',
-                            date:
-                                '${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}',
-                            timestamp: now.millisecondsSinceEpoch,
-                            cost: '0',
-                            odometer: odometerCtrl.text.trim(),
-                            notes:
-                                'Двигатель: $selectedEngine\nЧеклист:\n• ${selectedItems.join('\n• ')}',
-                          );
-                          await garage.addMaintenanceRecord(record);
-                          if (!context.mounted) return;
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                LocaleService.tr('maintenanceAdded'),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          LocaleService.tr('createServiceRecord'),
-                          style: TextStyle(
-                            color: theme.colorScheme.onPrimary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
+    // Из fuel records
+    for (final record in fuelRecords) {
+      final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
+      if (mileage > maxMileage) maxMileage = mileage;
+    }
+
+    // Из maintenance records
+    for (final record in maintenanceRecords) {
+      final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
+      if (mileage > maxMileage) maxMileage = mileage;
+    }
+
+    return maxMileage > 0 ? maxMileage : null;
+  }
+
+  // Получить рекомендации
+  List<String> _getRecommendations(GarageProvider garage) {
+    final mileage = _getCurrentMileage(garage);
+    if (mileage == null)
+      return ['Добавьте записи о заправках для расчета пробега'];
+
+    final recommendations = <String>[];
+    String? nextTO;
+    int? nextKm;
+
+    for (final entry in _maintenanceSchedule.entries) {
+      final km = entry.value['km'] as int;
+      if (mileage >= km) {
+        // Уже пора было делать это ТО
+        nextTO = entry.key;
+        nextKm = km;
+      } else {
+        // Следующее ТО
+        if (nextTO == null) {
+          nextTO = entry.key;
+          nextKm = km;
+        }
+        break;
+      }
+    }
+
+    if (nextTO != null && nextKm != null) {
+      final remainingKm = nextKm - mileage.toInt();
+      recommendations.add('Следующее $nextTO через $remainingKm км');
+      final services =
+          _maintenanceSchedule[nextTO]!['services'] as List<String>;
+      recommendations.addAll(services);
+    } else {
+      recommendations.add('Все регламентные ТО пройдены');
+    }
+
+    return recommendations;
   }
 
   void _showEditDialog(MaintenanceRecord existingRecord) {
@@ -411,7 +362,8 @@ class _MaintenancePageState extends State<MaintenancePage> {
                             odometer: odometerCtrl.text.trim(),
                             notes: notesCtrl.text.trim(),
                             timestamp: now.millisecondsSinceEpoch,
-                            date: '${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}',
+                            date:
+                                '${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}',
                           );
                           await garage.updateMaintenanceRecord(updatedRecord);
                           if (!context.mounted) return;
@@ -604,6 +556,257 @@ class _MaintenancePageState extends State<MaintenancePage> {
     );
   }
 
+  Widget _buildMaintenanceStatusCard(ThemeData theme) {
+    final garage = context.watch<GarageProvider>();
+    final auth = context.watch<AuthProvider>();
+    final tr = LocaleService.tr;
+    final typeIntervals = _serviceIntervalsFromSettings(auth.user?.settings);
+    final mileage = _getCurrentMileage(garage);
+    final currentCar = garage.currentCar;
+    final carRecords =
+        garage.maintenanceRecords
+            .where((r) => r.carNumber == currentCar?.number)
+            .toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+    final lastRecord = carRecords.isNotEmpty ? carRecords.first : null;
+
+    int previousKm = 0;
+    String? nextLabel;
+    int? nextKm;
+    List<String> nextServices = const [];
+
+    if (mileage != null) {
+      for (final entry in _maintenanceSchedule.entries) {
+        final km = entry.value['km'] as int;
+        if (mileage <= km) {
+          nextLabel = entry.key;
+          nextKm = km;
+          nextServices = List<String>.from(entry.value['services'] as List);
+          break;
+        }
+        previousKm = km;
+      }
+    }
+
+    int? distanceToService;
+    int? overdueBy;
+    final serviceIntervalKm = typeIntervals[lastRecord?.type] ?? 10000;
+    if (mileage != null) {
+      final lastMaintenanceMileage = lastRecord != null
+          ? double.tryParse(lastRecord.odometer)
+          : null;
+      final baseMileage =
+          lastMaintenanceMileage != null && lastMaintenanceMileage > 0
+          ? lastMaintenanceMileage
+          : 0;
+      final dueMileage = baseMileage + serviceIntervalKm;
+      final delta = (dueMileage - mileage).round();
+      if (delta >= 0) {
+        distanceToService = delta;
+      } else {
+        overdueBy = delta.abs();
+      }
+    }
+
+    final progress = () {
+      if (mileage == null || nextKm == null || nextKm == previousKm) return 0.0;
+      final value = (mileage - previousKm) / (nextKm - previousKm);
+      return value.clamp(0.0, 1.0);
+    }();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.15)),
+      ),
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            tr('maintenanceNearestTitle'),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          if (mileage == null) ...[
+            Text(
+              tr('maintenanceNeedMileageForProgress'),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Icon(
+                  overdueBy != null ? Icons.warning_amber_rounded : Icons.flag,
+                  color: overdueBy != null ? Colors.red : Colors.orange,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    overdueBy != null
+                        ? tr(
+                            'maintenanceOverdueByKm',
+                          ).replaceAll('{km}', '${overdueBy ?? 0}')
+                        : tr(
+                            'maintenanceDueInKm',
+                          ).replaceAll('{km}', '${distanceToService ?? 0}'),
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: overdueBy != null ? Colors.red : Colors.orange,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.primary,
+              backgroundColor: theme.dividerColor.withValues(alpha: 0.18),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              nextLabel != null
+                  ? tr('maintenanceRegulationProgress')
+                        .replaceAll('{label}', nextLabel)
+                        .replaceAll('{current}', '${mileage.toInt()}')
+                        .replaceAll('{target}', '${nextKm ?? 0}')
+                  : tr('maintenanceRegulationFallback'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              tr(
+                'maintenanceByLastTypeInterval',
+              ).replaceAll('{km}', '$serviceIntervalKm'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.65),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              tr('maintenanceMileageRecommendationsTitle'),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ..._buildMileageRecommendations(
+                  mileage.toInt(),
+                  typeIntervals,
+                  carRecords,
+                )
+                .take(4)
+                .map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          item.value <= 0
+                              ? Icons.notification_important
+                              : Icons.schedule,
+                          size: 15,
+                          color: item.value <= 0
+                              ? Colors.red
+                              : theme.colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            item.value < 0
+                                ? tr('maintenanceRecommendOverdueByKm')
+                                      .replaceAll(
+                                        '{service}',
+                                        _trType(item.key),
+                                      )
+                                      .replaceAll('{km}', '${item.value.abs()}')
+                                : item.value == 0
+                                ? tr(
+                                    'maintenanceRecommendNow',
+                                  ).replaceAll('{service}', _trType(item.key))
+                                : tr('maintenanceRecommendInKm')
+                                      .replaceAll(
+                                        '{service}',
+                                        _trType(item.key),
+                                      )
+                                      .replaceAll('{km}', '${item.value}'),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+          ],
+          const SizedBox(height: 14),
+          if (lastRecord != null)
+            Text(
+              tr('maintenanceLastService')
+                  .replaceAll('{type}', _trType(lastRecord.type))
+                  .replaceAll(
+                    '{odometer}',
+                    lastRecord.odometer.isEmpty
+                        ? tr('maintenanceNoOdometerMark')
+                        : '${lastRecord.odometer} ${tr('km')}',
+                  )
+                  .replaceAll('{date}', lastRecord.date),
+              style: theme.textTheme.bodySmall,
+            )
+          else
+            Text(
+              tr('maintenanceNoCarRecords'),
+              style: theme.textTheme.bodySmall,
+            ),
+          if (nextServices.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            ...nextServices
+                .take(3)
+                .map(
+                  (service) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.blue,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            service,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+          ],
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _showAddDialog,
+              icon: const Icon(Icons.playlist_add),
+              label: Text(tr('maintenanceWriteNow')),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _field(
     ThemeData theme,
     TextEditingController ctrl,
@@ -686,22 +889,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.auto_fix_high),
-                label: Text(tr('smartMaintenance')),
-                onPressed: garage.hasCars ? _showSmartMaintenanceDialog : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  minimumSize: const Size.fromHeight(52),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
-            ),
+            _buildMaintenanceStatusCard(theme),
             const SizedBox(height: 16),
             Expanded(
               child: records.isEmpty
@@ -912,10 +1100,11 @@ class _MaintenancePageState extends State<MaintenancePage> {
                                         double.tryParse(item.cost) ?? 0,
                                         currency,
                                       ),
-                                      style: theme.textTheme.titleSmall?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: theme.colorScheme.primary,
-                                      ),
+                                      style: theme.textTheme.titleSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: theme.colorScheme.primary,
+                                          ),
                                     ),
                                   ],
                                 ),

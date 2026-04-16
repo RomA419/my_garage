@@ -13,7 +13,8 @@ class LocaleService {
 
   static bool get isRu => locale.value.languageCode == 'ru';
 
-  static String tr(String key) => _strings[locale.value.languageCode]?[key] ?? key;
+  static String tr(String key) =>
+      _strings[locale.value.languageCode]?[key] ?? key;
 
   static final Map<String, Map<String, String>> _strings = {
     'ru': _ru,
@@ -49,7 +50,8 @@ class LocaleService {
     'onboard3Title': 'Аналитика и графики',
     'onboard3Body': 'Наглядные отчёты, статистика\nи ежемесячные диаграммы',
     'onboard4Title': 'Каталог и помощник',
-    'onboard4Body': 'Просматривайте модели авто\nи получайте советы от ИИ-помощника',
+    'onboard4Body':
+        'Просматривайте модели авто\nи получайте советы от ИИ-помощника',
     'onboard5Title': 'Всё готово!',
     'onboard5Body': 'Настройте тему, язык и валюту.\nВаш гараж ждёт вас!',
     'getStarted': 'Начать',
@@ -176,7 +178,8 @@ class LocaleService {
     'dataSection': 'Данные',
     'resetData': 'Сбросить данные',
     'resetDataSubtitle': 'Удалить машины и заправки',
-    'resetDataConfirm': 'Машины и история заправок будут удалены. Аккаунт останется.',
+    'resetDataConfirm':
+        'Машины и история заправок будут удалены. Аккаунт останется.',
     'resetDataQuestion': 'Сбросить данные?',
     'dataReset': 'Данные сброшены',
     'deleteAccount': 'Удалить аккаунт',
@@ -229,6 +232,7 @@ class LocaleService {
 
     // --- Аналитика ---
     'analytics': 'Аналитика',
+    'carPassport': 'Паспорт авто',
     'fuelCalculator': 'Калькулятор топлива',
     'consumptionTrends': 'Тренды расхода',
     'distanceKm': 'Дистанция, км',
@@ -239,8 +243,10 @@ class LocaleService {
     'tripCost': 'Стоимость поездки',
     'consumptionResult': 'Расход',
     'averageConsumption': 'Средний расход (л/100км)',
-    'trendHint1': 'Для отображения трендов укажите пробег при заправке в разделе "Заправки".',
-    'trendHint2': 'После 2-х записей с пробегом вы сможете увидеть изменение расхода.',
+    'trendHint1':
+        'Для отображения трендов укажите пробег при заправке в разделе "Заправки".',
+    'trendHint2':
+        'После 2-х записей с пробегом вы сможете увидеть изменение расхода.',
 
     // --- Дополнительные ---
     'deleteRecord': 'Удалить запись?',
@@ -283,6 +289,30 @@ class LocaleService {
     'maintenanceUpdated': 'Запись обновлена',
     'maintenanceBanner': 'Пора пройти ТО',
     'maintenanceBannerSub': 'Откройте журнал обслуживания',
+    'maintenanceNearestTitle': 'Ближайшее ТО',
+    'maintenanceNeedMileageForProgress':
+        'Добавьте пробег в записи, чтобы увидеть прогресс до ТО',
+    'maintenanceOverdueByKm': 'Просрочено на {km} км',
+    'maintenanceDueInKm': 'До ТО {km} км',
+    'maintenanceRegulationProgress': '{label} ({current} / {target} км)',
+    'maintenanceRegulationFallback':
+        'Пробег выше базового регламента. Ориентируйтесь на последнее ТО.',
+    'maintenanceByLastTypeInterval':
+        'Интервал по последнему типу: каждые {km} км',
+    'maintenanceLastService': 'Последнее ТО: {type}, {odometer}, {date}',
+    'maintenanceNoOdometerMark': '-',
+    'maintenanceNoCarRecords': 'Пока нет записей ТО для текущего автомобиля',
+    'maintenanceWriteNow': 'Записать ТО сейчас',
+    'maintenanceTypeIntervalsTitle': 'Интервалы по типам работ',
+    'maintenanceTypeIntervalsHint':
+        'Настройте, через сколько км повторять каждый тип обслуживания',
+    'maintenanceTypeIntervalFor': 'Интервал для: {type}',
+    'maintenanceCustomIntervalHint': 'Например: 12500',
+    'maintenanceIntervalInvalid': 'Введите число больше 0',
+    'maintenanceMileageRecommendationsTitle': 'Рекомендации по пробегу',
+    'maintenanceRecommendInKm': '{service}: рекомендуется через {km} км',
+    'maintenanceRecommendNow': '{service}: рекомендуется сейчас',
+    'maintenanceRecommendOverdueByKm': '{service}: просрочено на {km} км',
     'monthlyExpenses': 'Расходы по месяцам',
     'fuelPriceDynamics': 'Динамика цен на топливо',
     'pricePerUnit': 'цена/л',
@@ -351,6 +381,25 @@ class LocaleService {
     'healthTipMaint': 'Давно не было ТО. Запланируйте обслуживание.',
     'healthTipFuel': 'Добавьте заправки для точной оценки.',
     'healthTipGreat': 'Всё отлично! Продолжайте следить за авто.',
+    'passportNoCarTitle': 'Сначала добавьте автомобиль',
+    'passportNoCarHint':
+        'После этого здесь появятся статус, пробег, расходы и рекомендации.',
+    'passportStatus': 'Состояние машины',
+    'passportServiceTitle': 'Что сделать дальше',
+    'passportCostsTitle': 'Кратко по расходам',
+    'passportActionsTitle': 'Быстрые действия',
+    'passportNeedMileage':
+        'Добавьте пробег в записи, чтобы увидеть точные рекомендации.',
+    'passportServiceInKm': '{service} через {km} км',
+    'passportServiceNow': '{service} рекомендуется сейчас',
+    'passportServiceOverdue': '{service} просрочено на {km} км',
+    'passportServiceOverdueMarker': 'просрочено',
+    'passportFuelCount': 'Заправок всего',
+    'passportMaintCount': 'Записей ТО',
+    'compareTitle': 'Сравнение авто',
+    'compareNeedTwoCars': 'Для сравнения нужно минимум 2 машины',
+    'compareNeedTwoCarsHint':
+        'Добавьте ещё один автомобиль в гараж, и здесь появится сравнение.',
   };
 
   // =============== ENGLISH ===============
@@ -384,7 +433,8 @@ class LocaleService {
     'onboard4Title': 'Catalog & Assistant',
     'onboard4Body': 'Browse car models\nand get tips from the AI assistant',
     'onboard5Title': "You're All Set!",
-    'onboard5Body': 'Customize theme, language & currency.\nYour garage awaits!',
+    'onboard5Body':
+        'Customize theme, language & currency.\nYour garage awaits!',
     'getStarted': 'Get Started',
 
     // --- Login / Register ---
@@ -462,7 +512,8 @@ class LocaleService {
     'editAuto': 'Edit car',
     'deleteAuto': 'Delete car',
     'deleteCar': 'Delete car?',
-    'deleteCarConfirm': 'Are you sure you want to remove this car from the garage?',
+    'deleteCarConfirm':
+        'Are you sure you want to remove this car from the garage?',
 
     // --- Add car ---
     'addCarTitle': 'New car',
@@ -562,6 +613,7 @@ class LocaleService {
 
     // --- Analytics ---
     'analytics': 'Analytics',
+    'carPassport': 'Car Passport',
     'fuelCalculator': 'Fuel calculator',
     'consumptionTrends': 'Consumption trends',
     'distanceKm': 'Distance, km',
@@ -573,7 +625,8 @@ class LocaleService {
     'consumptionResult': 'Consumption',
     'averageConsumption': 'Avg consumption (l/100km)',
     'trendHint1': 'Enter odometer readings when refueling to see trends.',
-    'trendHint2': 'After 2 records with mileage you will see consumption changes.',
+    'trendHint2':
+        'After 2 records with mileage you will see consumption changes.',
 
     // --- Extra ---
     'deleteRecord': 'Delete record?',
@@ -600,6 +653,30 @@ class LocaleService {
     'maintenanceUpdated': 'Record updated',
     'maintenanceBanner': 'Maintenance due',
     'maintenanceBannerSub': 'Open your maintenance log',
+    'maintenanceNearestTitle': 'Upcoming Service',
+    'maintenanceNeedMileageForProgress':
+        'Add odometer values to records to see service progress',
+    'maintenanceOverdueByKm': 'Overdue by {km} km',
+    'maintenanceDueInKm': 'Service in {km} km',
+    'maintenanceRegulationProgress': '{label} ({current} / {target} km)',
+    'maintenanceRegulationFallback':
+        'Mileage is above baseline schedule. Use last service as a reference.',
+    'maintenanceByLastTypeInterval':
+        'Interval by last service type: every {km} km',
+    'maintenanceLastService': 'Last service: {type}, {odometer}, {date}',
+    'maintenanceNoOdometerMark': '-',
+    'maintenanceNoCarRecords': 'No service records for the current car yet',
+    'maintenanceWriteNow': 'Log Service Now',
+    'maintenanceTypeIntervalsTitle': 'Intervals by Service Type',
+    'maintenanceTypeIntervalsHint':
+        'Set how many kilometers between each service type',
+    'maintenanceTypeIntervalFor': 'Interval for: {type}',
+    'maintenanceCustomIntervalHint': 'Example: 12500',
+    'maintenanceIntervalInvalid': 'Enter a number greater than 0',
+    'maintenanceMileageRecommendationsTitle': 'Mileage-Based Recommendations',
+    'maintenanceRecommendInKm': '{service}: recommended in {km} km',
+    'maintenanceRecommendNow': '{service}: recommended now',
+    'maintenanceRecommendOverdueByKm': '{service}: overdue by {km} km',
     'monthlyExpenses': 'Monthly expenses',
     'fuelPriceDynamics': 'Fuel Price Dynamics',
     'pricePerUnit': 'price/l',
@@ -678,5 +755,24 @@ class LocaleService {
     'healthTipMaint': 'No recent maintenance. Schedule a service.',
     'healthTipFuel': 'Add refueling records for accurate assessment.',
     'healthTipGreat': 'Everything is great! Keep it up.',
+    'passportNoCarTitle': 'Add a car first',
+    'passportNoCarHint':
+        'This screen will show status, mileage, costs and recommendations.',
+    'passportStatus': 'Vehicle status',
+    'passportServiceTitle': 'What to do next',
+    'passportCostsTitle': 'Costs overview',
+    'passportActionsTitle': 'Quick actions',
+    'passportNeedMileage':
+        'Add mileage to records to get accurate recommendations.',
+    'passportServiceInKm': '{service} in {km} km',
+    'passportServiceNow': '{service} recommended now',
+    'passportServiceOverdue': '{service} overdue by {km} km',
+    'passportServiceOverdueMarker': 'overdue',
+    'passportFuelCount': 'Total refuels',
+    'passportMaintCount': 'Maintenance records',
+    'compareTitle': 'Car Comparison',
+    'compareNeedTwoCars': 'At least 2 cars are required for comparison',
+    'compareNeedTwoCarsHint':
+        'Add another car to the garage and comparison will appear here.',
   };
 }

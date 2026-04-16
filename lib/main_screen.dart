@@ -54,7 +54,12 @@ class MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: theme.dividerColor.withOpacity(0.3), width: 0.5)),
+          border: Border(
+            top: BorderSide(
+              color: theme.dividerColor.withOpacity(0.3),
+              width: 0.5,
+            ),
+          ),
         ),
         child: NavigationBar(
           selectedIndex: _currentIndex,
@@ -66,28 +71,58 @@ class MainScreenState extends State<MainScreen> {
           height: 68,
           destinations: [
             NavigationDestination(
-              icon: Icon(Icons.garage_outlined, color: theme.textTheme.bodySmall?.color?.withOpacity(0.45)),
-              selectedIcon: Icon(Icons.garage, color: theme.colorScheme.primary),
+              icon: Icon(
+                Icons.garage_outlined,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.45),
+              ),
+              selectedIcon: Icon(
+                Icons.garage,
+                color: theme.colorScheme.primary,
+              ),
               label: LocaleService.tr('garage'),
             ),
             NavigationDestination(
-              icon: Icon(Icons.local_gas_station_outlined, color: theme.textTheme.bodySmall?.color?.withOpacity(0.45)),
-              selectedIcon: Icon(Icons.local_gas_station, color: theme.colorScheme.primary),
+              icon: Icon(
+                Icons.local_gas_station_outlined,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.45),
+              ),
+              selectedIcon: Icon(
+                Icons.local_gas_station,
+                color: theme.colorScheme.primary,
+              ),
               label: LocaleService.tr('fuel'),
             ),
             NavigationDestination(
-              icon: Icon(Icons.analytics_outlined, color: theme.textTheme.bodySmall?.color?.withOpacity(0.45)),
-              selectedIcon: Icon(Icons.analytics, color: theme.colorScheme.primary),
-              label: LocaleService.tr('analytics'),
+              icon: Icon(
+                Icons.analytics_outlined,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.45),
+              ),
+              selectedIcon: Icon(
+                Icons.analytics,
+                color: theme.colorScheme.primary,
+              ),
+              label: LocaleService.tr('carPassport'),
             ),
             NavigationDestination(
-              icon: Icon(Icons.build_circle_outlined, color: theme.textTheme.bodySmall?.color?.withOpacity(0.45)),
-              selectedIcon: Icon(Icons.build_circle, color: theme.colorScheme.primary),
+              icon: Icon(
+                Icons.build_circle_outlined,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.45),
+              ),
+              selectedIcon: Icon(
+                Icons.build_circle,
+                color: theme.colorScheme.primary,
+              ),
               label: LocaleService.tr('maintenanceLog'),
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outlined, color: theme.textTheme.bodySmall?.color?.withOpacity(0.45)),
-              selectedIcon: Icon(Icons.person, color: theme.colorScheme.primary),
+              icon: Icon(
+                Icons.person_outlined,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.45),
+              ),
+              selectedIcon: Icon(
+                Icons.person,
+                color: theme.colorScheme.primary,
+              ),
               label: LocaleService.tr('profile'),
             ),
           ],
