@@ -25,6 +25,48 @@ String _trType(String type) {
   return _en[type] ?? type;
 }
 
+class _MileageRecommendation {
+  const _MileageRecommendation({
+    required this.type,
+    required this.remainingKm,
+    required this.startMileage,
+    required this.dueMileage,
+    required this.intervalKm,
+  });
+
+  final String type;
+  final int remainingKm;
+  final int startMileage;
+  final int dueMileage;
+  final int intervalKm;
+}
+
+class _ScopedMaintenanceStatus {
+  const _ScopedMaintenanceStatus({
+    required this.carTitle,
+    required this.mileage,
+    required this.lastRecord,
+    required this.nearestRecommendation,
+    required this.nextServices,
+  });
+
+  final String carTitle;
+  final double mileage;
+  final MaintenanceRecord? lastRecord;
+  final _MileageRecommendation nearestRecommendation;
+  final List<String> nextServices;
+}
+
+class _RecommendationDisplayItem {
+  const _RecommendationDisplayItem({
+    required this.recommendation,
+    required this.serviceLabel,
+  });
+
+  final _MileageRecommendation recommendation;
+  final String serviceLabel;
+}
+
 class MaintenancePage extends StatefulWidget {
   const MaintenancePage({super.key});
 
@@ -33,6 +75,11 @@ class MaintenancePage extends StatefulWidget {
 }
 
 class _MaintenancePageState extends State<MaintenancePage> {
+  static const _showAllCarsSettingsKey = 'maintenanceShowAllCars';
+
+  bool _showAllCars = false;
+  bool _scopeLoadedFromSettings = false;
+
   static const _types = [
     'Замена масла',
     'Замена фильтра',
@@ -61,6 +108,26 @@ class _MaintenancePageState extends State<MaintenancePage> {
     'Другое': 10000,
   };
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_scopeLoadedFromSettings) return;
+
+    final settings = context.read<AuthProvider>().user?.settings;
+    final savedScope = settings?[_showAllCarsSettingsKey];
+    _showAllCars = savedScope is bool ? savedScope : false;
+    _scopeLoadedFromSettings = true;
+  }
+
+  Future<void> _setShowAllCars(bool value) async {
+    if (_showAllCars == value) return;
+
+    setState(() => _showAllCars = value);
+    await context.read<AuthProvider>().updateSettings({
+      _showAllCarsSettingsKey: value,
+    });
+  }
+
   Map<String, int> _serviceIntervalsFromSettings(
     Map<String, dynamic>? settings,
   ) {
@@ -77,7 +144,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
     return result;
   }
 
-  List<MapEntry<String, int>> _buildMileageRecommendations(
+  List<_MileageRecommendation> _buildMileageRecommendations(
     int mileageKm,
     Map<String, int> typeIntervals,
     List<MaintenanceRecord> carRecords,
@@ -93,30 +160,45 @@ class _MaintenancePageState extends State<MaintenancePage> {
 
     final lastMileageByType = <String, int>{};
     for (final record in carRecords) {
-      if (lastMileageByType.containsKey(record.type)) continue;
       final value = int.tryParse(record.odometer);
       if (value != null && value > 0) {
-        lastMileageByType[record.type] = value;
+        final previousValue = lastMileageByType[record.type];
+        if (previousValue == null || value > previousValue) {
+          lastMileageByType[record.type] = value;
+        }
       }
     }
 
-    final result = <MapEntry<String, int>>[];
+    final result = <_MileageRecommendation>[];
     for (final entry in recommendationIntervals.entries) {
       final interval = entry.value;
       if (interval <= 0) continue;
       final lastMileage = lastMileageByType[entry.key];
-      int remainingKm;
+      late final int remainingKm;
+      late final int startMileage;
+      late final int dueMileage;
       if (lastMileage != null) {
-        final delta = (lastMileage + interval) - mileageKm;
-        remainingKm = delta;
+        dueMileage = lastMileage + interval;
+        startMileage = lastMileage;
+        remainingKm = dueMileage - mileageKm;
       } else {
         final remainder = mileageKm % interval;
-        remainingKm = remainder == 0 ? 0 : interval - remainder;
+        startMileage = (mileageKm ~/ interval) * interval;
+        dueMileage = remainder == 0 ? mileageKm : startMileage + interval;
+        remainingKm = dueMileage - mileageKm;
       }
-      result.add(MapEntry(entry.key, remainingKm));
+      result.add(
+        _MileageRecommendation(
+          type: entry.key,
+          remainingKm: remainingKm,
+          startMileage: startMileage,
+          dueMileage: dueMileage,
+          intervalKm: interval,
+        ),
+      );
     }
 
-    result.sort((a, b) => a.value.compareTo(b.value));
+    result.sort((a, b) => a.remainingKm.compareTo(b.remainingKm));
     return result;
   }
 
@@ -174,72 +256,220 @@ class _MaintenancePageState extends State<MaintenancePage> {
     },
   };
 
-  // Получить текущий пробег автомобиля
-  double? _getCurrentMileage(GarageProvider garage) {
-    final currentCar = garage.currentCar;
-    if (currentCar == null) return null;
-    // Собираем все odometer из fuel records и maintenance records
-    final fuelRecords = garage.fuelRecords
-        .where((r) => r.carNumber == currentCar.number)
+  List<MaintenanceRecord> _getScopedMaintenanceRecords(
+    GarageProvider garage, {
+    String? carNumber,
+  }) {
+    final targetCarNumber = carNumber ?? garage.currentCar?.number;
+    final records = (_showAllCars && carNumber == null)
+        ? List<MaintenanceRecord>.from(garage.maintenanceRecords)
+        : garage.maintenanceRecords
+              .where((record) => record.carNumber == targetCarNumber)
+              .toList();
+
+    records.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return records;
+  }
+
+  List<FuelRecordModel> _getScopedFuelRecords(
+    GarageProvider garage, {
+    String? carNumber,
+  }) {
+    final targetCarNumber = carNumber ?? garage.currentCar?.number;
+    if (_showAllCars && carNumber == null) {
+      return List<FuelRecordModel>.from(garage.fuelRecords);
+    }
+    return garage.fuelRecords
+        .where((record) => record.carNumber == targetCarNumber)
         .toList();
-    final maintenanceRecords = garage.maintenanceRecords
-        .where((r) => r.carNumber == currentCar.number)
-        .toList();
+  }
+
+  double? _getMileageForScope(GarageProvider garage, {String? carNumber}) {
+    final fuelRecords = _getScopedFuelRecords(garage, carNumber: carNumber);
+    final maintenanceRecords = _getScopedMaintenanceRecords(
+      garage,
+      carNumber: carNumber,
+    );
 
     double maxMileage = 0;
 
-    // Из fuel records
     for (final record in fuelRecords) {
       final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
       if (mileage > maxMileage) maxMileage = mileage;
     }
 
-    // Из maintenance records
     for (final record in maintenanceRecords) {
-      final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
+      final mileage = double.tryParse(record.odometer) ?? 0;
       if (mileage > maxMileage) maxMileage = mileage;
     }
 
     return maxMileage > 0 ? maxMileage : null;
   }
 
-  // Получить рекомендации
-  List<String> _getRecommendations(GarageProvider garage) {
-    final mileage = _getCurrentMileage(garage);
-    if (mileage == null)
-      return ['Добавьте записи о заправках для расчета пробега'];
+  _ScopedMaintenanceStatus? _buildStatusForCar(
+    GarageProvider garage,
+    Map<String, int> typeIntervals,
+    CarModel car,
+  ) {
+    final carRecords = _getScopedMaintenanceRecords(
+      garage,
+      carNumber: car.number,
+    );
+    final mileage = _getMileageForScope(garage, carNumber: car.number);
+    if (mileage == null) return null;
 
-    final recommendations = <String>[];
-    String? nextTO;
-    int? nextKm;
+    final mileageRecommendations = _buildMileageRecommendations(
+      mileage.toInt(),
+      typeIntervals,
+      carRecords,
+    );
+    if (mileageRecommendations.isEmpty) return null;
 
+    var nextServices = const <String>[];
     for (final entry in _maintenanceSchedule.entries) {
       final km = entry.value['km'] as int;
-      if (mileage >= km) {
-        // Уже пора было делать это ТО
-        nextTO = entry.key;
-        nextKm = km;
-      } else {
-        // Следующее ТО
-        if (nextTO == null) {
-          nextTO = entry.key;
-          nextKm = km;
-        }
+      if (mileage <= km) {
+        nextServices = List<String>.from(entry.value['services'] as List);
         break;
       }
     }
 
-    if (nextTO != null && nextKm != null) {
-      final remainingKm = nextKm - mileage.toInt();
-      recommendations.add('Следующее $nextTO через $remainingKm км');
-      final services =
-          _maintenanceSchedule[nextTO]!['services'] as List<String>;
-      recommendations.addAll(services);
-    } else {
-      recommendations.add('Все регламентные ТО пройдены');
-    }
+    return _ScopedMaintenanceStatus(
+      carTitle: car.title.isNotEmpty ? car.title : car.number,
+      mileage: mileage,
+      lastRecord: carRecords.isNotEmpty ? carRecords.first : null,
+      nearestRecommendation: mileageRecommendations.first,
+      nextServices: nextServices,
+    );
+  }
 
-    return recommendations;
+  Widget _buildScopeToggle(ThemeData theme) {
+    final tr = LocaleService.tr;
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            label: Text(tr('maintenanceScopeCurrentCar')),
+            selected: !_showAllCars,
+            onSelected: (_) => _setShowAllCars(false),
+          ),
+          ChoiceChip(
+            label: Text(tr('maintenanceScopeAllCars')),
+            selected: _showAllCars,
+            onSelected: (_) => _setShowAllCars(true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<_RecommendationDisplayItem> _buildRecommendationDisplayItems(
+    List<_MileageRecommendation> recommendations,
+  ) {
+    return recommendations
+        .take(4)
+        .map(
+          (item) => _RecommendationDisplayItem(
+            recommendation: item,
+            serviceLabel: _trType(item.type),
+          ),
+        )
+        .toList();
+  }
+
+  List<_RecommendationDisplayItem> _buildScopedRecommendationDisplayItems(
+    List<_ScopedMaintenanceStatus> statuses,
+  ) {
+    final tr = LocaleService.tr;
+    return statuses
+        .take(4)
+        .map(
+          (item) => _RecommendationDisplayItem(
+            recommendation: item.nearestRecommendation,
+            serviceLabel: tr('maintenanceRecommendForCar')
+                .replaceAll(
+                  '{service}',
+                  _trType(item.nearestRecommendation.type),
+                )
+                .replaceAll('{car}', item.carTitle),
+          ),
+        )
+        .toList();
+  }
+
+  String _planStatusKey(_MileageRecommendation recommendation) {
+    if (recommendation.remainingKm < 0) return 'maintenancePlanOverdue';
+    if (recommendation.remainingKm == 0) return 'maintenancePlanNow';
+    if (recommendation.remainingKm <= 2000) return 'maintenancePlanSoon';
+    return 'maintenancePlanPlanned';
+  }
+
+  Color _planStatusColor(
+    ThemeData theme,
+    _MileageRecommendation recommendation,
+  ) {
+    if (recommendation.remainingKm < 0) return Colors.red;
+    if (recommendation.remainingKm == 0) return Colors.deepOrange;
+    if (recommendation.remainingKm <= 2000) return Colors.orange;
+    return theme.colorScheme.primary;
+  }
+
+  String _planStatusHint(_RecommendationDisplayItem item) {
+    final tr = LocaleService.tr;
+    final remainingKm = item.recommendation.remainingKm;
+    if (remainingKm < 0) {
+      return tr(
+        'maintenancePlanOverdueByKmShort',
+      ).replaceAll('{km}', '${remainingKm.abs()}');
+    }
+    if (remainingKm == 0) {
+      return tr('maintenancePlanNowHint');
+    }
+    return tr('maintenancePlanInKm').replaceAll('{km}', '$remainingKm');
+  }
+
+  Widget _buildPlanRow(
+    ThemeData theme,
+    _RecommendationDisplayItem item, {
+    IconData icon = Icons.check_circle_outline,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: _planStatusColor(theme, item.recommendation),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.serviceLabel,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _planStatusHint(item),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.75),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showEditDialog(MaintenanceRecord existingRecord) {
@@ -278,8 +508,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
-                    // Тип работ — dropdown
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       decoration: BoxDecoration(
@@ -314,7 +542,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                       ),
                     ),
                     const SizedBox(height: 14),
-
                     _field(
                       theme,
                       costCtrl,
@@ -323,7 +550,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                       isNumber: true,
                     ),
                     const SizedBox(height: 14),
-
                     _field(
                       theme,
                       odometerCtrl,
@@ -332,7 +558,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                       isNumber: true,
                     ),
                     const SizedBox(height: 14),
-
                     _field(
                       theme,
                       notesCtrl,
@@ -340,7 +565,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                       Icons.notes,
                     ),
                     const SizedBox(height: 24),
-
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -353,7 +577,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                         ),
                         onPressed: () async {
                           final garage = context.read<GarageProvider>();
-                          final now = DateTime.now();
                           final updatedRecord = existingRecord.copyWith(
                             type: selectedType,
                             cost: costCtrl.text.trim().isEmpty
@@ -361,9 +584,6 @@ class _MaintenancePageState extends State<MaintenancePage> {
                                 : costCtrl.text.trim(),
                             odometer: odometerCtrl.text.trim(),
                             notes: notesCtrl.text.trim(),
-                            timestamp: now.millisecondsSinceEpoch,
-                            date:
-                                '${now.day.toString().padLeft(2, '0')}.${now.month.toString().padLeft(2, '0')}.${now.year}',
                           );
                           await garage.updateMaintenanceRecord(updatedRecord);
                           if (!context.mounted) return;
@@ -561,57 +781,64 @@ class _MaintenancePageState extends State<MaintenancePage> {
     final auth = context.watch<AuthProvider>();
     final tr = LocaleService.tr;
     final typeIntervals = _serviceIntervalsFromSettings(auth.user?.settings);
-    final mileage = _getCurrentMileage(garage);
-    final currentCar = garage.currentCar;
-    final carRecords =
-        garage.maintenanceRecords
-            .where((r) => r.carNumber == currentCar?.number)
-            .toList()
-          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
-
+    final carRecords = _getScopedMaintenanceRecords(garage);
     final lastRecord = carRecords.isNotEmpty ? carRecords.first : null;
+    final fallbackMileage = _getMileageForScope(garage);
+    final fallbackRecommendations = fallbackMileage == null
+        ? const <_MileageRecommendation>[]
+        : _buildMileageRecommendations(
+            fallbackMileage.toInt(),
+            typeIntervals,
+            carRecords,
+          );
+    final status = _showAllCars
+        ? (garage.cars
+              .map((car) => _buildStatusForCar(garage, typeIntervals, car))
+              .whereType<_ScopedMaintenanceStatus>()
+              .toList()
+            ..sort(
+              (a, b) => a.nearestRecommendation.remainingKm.compareTo(
+                b.nearestRecommendation.remainingKm,
+              ),
+            ))
+        : [
+            if (garage.currentCar != null)
+              _buildStatusForCar(garage, typeIntervals, garage.currentCar!),
+          ].whereType<_ScopedMaintenanceStatus>().toList();
 
-    int previousKm = 0;
-    String? nextLabel;
-    int? nextKm;
-    List<String> nextServices = const [];
-
-    if (mileage != null) {
-      for (final entry in _maintenanceSchedule.entries) {
-        final km = entry.value['km'] as int;
-        if (mileage <= km) {
-          nextLabel = entry.key;
-          nextKm = km;
-          nextServices = List<String>.from(entry.value['services'] as List);
-          break;
-        }
-        previousKm = km;
-      }
-    }
+    final activeStatus = status.isNotEmpty ? status.first : null;
+    final mileage = activeStatus?.mileage ?? fallbackMileage;
+    final nearestRecommendation =
+        activeStatus?.nearestRecommendation ??
+        (fallbackRecommendations.isNotEmpty
+            ? fallbackRecommendations.first
+            : null);
+    final nextServices = activeStatus?.nextServices ?? const <String>[];
+    final statusCarTitle = activeStatus?.carTitle;
+    final displayedLastRecord = _showAllCars
+        ? activeStatus?.lastRecord ?? lastRecord
+        : lastRecord;
+    final recommendationItems = _showAllCars
+        ? _buildScopedRecommendationDisplayItems(status)
+        : _buildRecommendationDisplayItems(fallbackRecommendations);
 
     int? distanceToService;
     int? overdueBy;
-    final serviceIntervalKm = typeIntervals[lastRecord?.type] ?? 10000;
-    if (mileage != null) {
-      final lastMaintenanceMileage = lastRecord != null
-          ? double.tryParse(lastRecord.odometer)
-          : null;
-      final baseMileage =
-          lastMaintenanceMileage != null && lastMaintenanceMileage > 0
-          ? lastMaintenanceMileage
-          : 0;
-      final dueMileage = baseMileage + serviceIntervalKm;
-      final delta = (dueMileage - mileage).round();
-      if (delta >= 0) {
-        distanceToService = delta;
+    final serviceIntervalKm = nearestRecommendation?.intervalKm ?? 10000;
+    if (nearestRecommendation != null) {
+      if (nearestRecommendation.remainingKm >= 0) {
+        distanceToService = nearestRecommendation.remainingKm;
       } else {
-        overdueBy = delta.abs();
+        overdueBy = nearestRecommendation.remainingKm.abs();
       }
     }
 
     final progress = () {
-      if (mileage == null || nextKm == null || nextKm == previousKm) return 0.0;
-      final value = (mileage - previousKm) / (nextKm - previousKm);
+      if (mileage == null || nearestRecommendation == null) return 0.0;
+      final span =
+          nearestRecommendation.dueMileage - nearestRecommendation.startMileage;
+      if (span <= 0) return 0.0;
+      final value = (mileage - nearestRecommendation.startMileage) / span;
       return value.clamp(0.0, 1.0);
     }();
 
@@ -631,6 +858,15 @@ class _MaintenancePageState extends State<MaintenancePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          if (_showAllCars && statusCarTitle != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              tr('maintenanceForCar').replaceAll('{car}', statusCarTitle),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+              ),
+            ),
+          ],
           const SizedBox(height: 10),
           if (mileage == null) ...[
             Text(
@@ -651,7 +887,7 @@ class _MaintenancePageState extends State<MaintenancePage> {
                     overdueBy != null
                         ? tr(
                             'maintenanceOverdueByKm',
-                          ).replaceAll('{km}', '${overdueBy ?? 0}')
+                          ).replaceAll('{km}', '$overdueBy')
                         : tr(
                             'maintenanceDueInKm',
                           ).replaceAll('{km}', '${distanceToService ?? 0}'),
@@ -673,11 +909,17 @@ class _MaintenancePageState extends State<MaintenancePage> {
             ),
             const SizedBox(height: 6),
             Text(
-              nextLabel != null
+              nearestRecommendation != null
                   ? tr('maintenanceRegulationProgress')
-                        .replaceAll('{label}', nextLabel)
+                        .replaceAll(
+                          '{label}',
+                          _trType(nearestRecommendation.type),
+                        )
                         .replaceAll('{current}', '${mileage.toInt()}')
-                        .replaceAll('{target}', '${nextKm ?? 0}')
+                        .replaceAll(
+                          '{target}',
+                          '${nearestRecommendation.dueMileage}',
+                        )
                   : tr('maintenanceRegulationFallback'),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
@@ -694,77 +936,158 @@ class _MaintenancePageState extends State<MaintenancePage> {
             ),
             const SizedBox(height: 12),
             Text(
-              tr('maintenanceMileageRecommendationsTitle'),
+              tr('maintenanceServicePlanTitle'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 8),
-            ..._buildMileageRecommendations(
-                  mileage.toInt(),
-                  typeIntervals,
-                  carRecords,
-                )
-                .take(4)
-                .map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          item.value <= 0
-                              ? Icons.notification_important
-                              : Icons.schedule,
-                          size: 15,
-                          color: item.value <= 0
-                              ? Colors.red
-                              : theme.colorScheme.primary,
+            if (recommendationItems.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Builder(
+                builder: (context) {
+                  final primaryItem = recommendationItems.first;
+                  final secondaryItems = recommendationItems.skip(1).toList();
+                  final combineItems = secondaryItems
+                      .where((item) => item.recommendation.remainingKm <= 3000)
+                      .take(2)
+                      .toList();
+                  final laterItems = secondaryItems
+                      .where((item) => !combineItems.contains(item))
+                      .take(2)
+                      .toList();
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: theme.dividerColor.withValues(alpha: 0.08),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            item.value < 0
-                                ? tr('maintenanceRecommendOverdueByKm')
-                                      .replaceAll(
-                                        '{service}',
-                                        _trType(item.key),
-                                      )
-                                      .replaceAll('{km}', '${item.value.abs()}')
-                                : item.value == 0
-                                ? tr(
-                                    'maintenanceRecommendNow',
-                                  ).replaceAll('{service}', _trType(item.key))
-                                : tr('maintenanceRecommendInKm')
-                                      .replaceAll(
-                                        '{service}',
-                                        _trType(item.key),
-                                      )
-                                      .replaceAll('{km}', '${item.value}'),
-                            style: theme.textTheme.bodySmall,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr('maintenancePrimaryActionTitle'),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: theme.textTheme.bodySmall?.color
+                                    ?.withOpacity(0.75),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _planStatusColor(
+                                      theme,
+                                      primaryItem.recommendation,
+                                    ).withValues(alpha: 0.14),
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                  child: Text(
+                                    tr(
+                                      _planStatusKey(
+                                        primaryItem.recommendation,
+                                      ),
+                                    ),
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: _planStatusColor(
+                                        theme,
+                                        primaryItem.recommendation,
+                                      ),
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    primaryItem.serviceLabel,
+                                    style: theme.textTheme.bodyLarge?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              _planStatusHint(primaryItem),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.textTheme.bodySmall?.color
+                                    ?.withOpacity(0.75),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (combineItems.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          tr('maintenanceCombineWithTitle'),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...combineItems.map(
+                          (item) => _buildPlanRow(
+                            theme,
+                            item,
+                            icon: Icons.merge_type,
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ),
+                      if (laterItems.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          tr('maintenanceLaterTitle'),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...laterItems.map(
+                          (item) =>
+                              _buildPlanRow(theme, item, icon: Icons.schedule),
+                        ),
+                      ],
+                    ],
+                  );
+                },
+              ),
+            ],
           ],
           const SizedBox(height: 14),
-          if (lastRecord != null)
+          if (displayedLastRecord != null)
             Text(
-              tr('maintenanceLastService')
-                  .replaceAll('{type}', _trType(lastRecord.type))
-                  .replaceAll(
-                    '{odometer}',
-                    lastRecord.odometer.isEmpty
-                        ? tr('maintenanceNoOdometerMark')
-                        : '${lastRecord.odometer} ${tr('km')}',
-                  )
-                  .replaceAll('{date}', lastRecord.date),
+              (_showAllCars && displayedLastRecord.carTitle.isNotEmpty
+                      ? '${tr('maintenanceForCar').replaceAll('{car}', displayedLastRecord.carTitle)}\n'
+                      : '') +
+                  tr('maintenanceLastService')
+                      .replaceAll('{type}', _trType(displayedLastRecord.type))
+                      .replaceAll(
+                        '{odometer}',
+                        displayedLastRecord.odometer.isEmpty
+                            ? tr('maintenanceNoOdometerMark')
+                            : '${displayedLastRecord.odometer} ${tr('km')}',
+                      )
+                      .replaceAll('{date}', displayedLastRecord.date),
               style: theme.textTheme.bodySmall,
             )
           else
             Text(
-              tr('maintenanceNoCarRecords'),
+              _showAllCars
+                  ? tr('noMaintenance')
+                  : tr('maintenanceNoCarRecords'),
               style: theme.textTheme.bodySmall,
             ),
           if (nextServices.isNotEmpty) ...[
@@ -843,14 +1166,8 @@ class _MaintenancePageState extends State<MaintenancePage> {
     final currency =
         context.watch<AuthProvider>().user?.settings['currency'] as String? ??
         '₸';
-    final records = garage.maintenanceRecords;
+    final records = _getScopedMaintenanceRecords(garage);
     final tr = LocaleService.tr;
-
-    // Считаем общие расходы на ТО
-    final totalCost = records.fold<double>(
-      0,
-      (s, r) => s + (double.tryParse(r.cost) ?? 0),
-    );
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -863,32 +1180,13 @@ class _MaintenancePageState extends State<MaintenancePage> {
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: theme.appBarTheme.iconTheme,
-        actions: [
-          if (records.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Text(
-                  CurrencyService.format(totalCost, currency),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddDialog,
-        child: const Icon(Icons.add),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
+            _buildScopeToggle(theme),
+            const SizedBox(height: 12),
             _buildMaintenanceStatusCard(theme),
             const SizedBox(height: 16),
             Expanded(
@@ -904,7 +1202,9 @@ class _MaintenancePageState extends State<MaintenancePage> {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            tr('noMaintenance'),
+                            _showAllCars
+                                ? tr('noMaintenance')
+                                : tr('maintenanceNoCarRecords'),
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: theme.textTheme.bodySmall?.color
                                   ?.withOpacity(0.5),
@@ -912,7 +1212,9 @@ class _MaintenancePageState extends State<MaintenancePage> {
                           ),
                           const SizedBox(height: 6),
                           Text(
-                            tr('noMaintenanceHint'),
+                            _showAllCars
+                                ? tr('noMaintenanceHint')
+                                : tr('maintenanceCurrentCarHint'),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.textTheme.bodySmall?.color
                                   ?.withOpacity(0.35),

@@ -34,7 +34,9 @@ class AuthProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final lastLogin = prefs.getString('last_user');
       if (lastLogin != null && lastLogin.isNotEmpty) {
-        _user = await DatabaseService.getUserByLogin(lastLogin.trim().toLowerCase());
+        _user = await DatabaseService.getUserByLogin(
+          lastLogin.trim().toLowerCase(),
+        );
       }
     } catch (e) {
       debugPrint('Auto-login error: $e');
@@ -103,7 +105,11 @@ class AuthProvider extends ChangeNotifier {
   }
 
   /// Обновление профиля (login, email, фото).
-  Future<void> updateProfile({String? login, String? email, String? photoPath}) async {
+  Future<void> updateProfile({
+    String? login,
+    String? email,
+    String? photoPath,
+  }) async {
     if (_user == null) return;
     try {
       _user = _user!.copyWith(
@@ -122,7 +128,9 @@ class AuthProvider extends ChangeNotifier {
   Future<void> updateSettings(Map<String, dynamic> settings) async {
     if (_user == null) return;
     try {
-      _user = _user!.copyWith(settings: settings);
+      final mergedSettings = Map<String, dynamic>.from(_user!.settings)
+        ..addAll(settings);
+      _user = _user!.copyWith(settings: mergedSettings);
       await DatabaseService.updateUser(_user!);
       notifyListeners();
     } catch (e) {
