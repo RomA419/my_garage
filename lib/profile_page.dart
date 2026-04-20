@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,7 +43,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _showPhotoOptions() {
     final auth = context.read<AuthProvider>();
-    final hasPhoto = auth.user?.photoPath != null && File(auth.user!.photoPath!).existsSync();
+    final tr = LocaleService.tr;
+    final hasPhoto =
+        auth.user?.photoPath != null &&
+        File(auth.user!.photoPath!).existsSync();
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -54,7 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: const Text('Выбрать из галереи'),
+              title: Text(tr('profileChooseFromGallery')),
               onTap: () {
                 Navigator.pop(ctx);
                 _pickPhoto(ImageSource.gallery);
@@ -62,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Сделать фото'),
+              title: Text(tr('profileTakePhoto')),
               onTap: () {
                 Navigator.pop(ctx);
                 _pickPhoto(ImageSource.camera);
@@ -71,7 +75,10 @@ class _ProfilePageState extends State<ProfilePage> {
             if (hasPhoto)
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text('Удалить фото', style: TextStyle(color: Colors.red)),
+                title: Text(
+                  tr('profileDeletePhoto'),
+                  style: const TextStyle(color: Colors.red),
+                ),
                 onTap: () {
                   Navigator.pop(ctx);
                   auth.updateProfile(photoPath: '');
@@ -154,12 +161,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   String _formatDate(String? iso) {
-    if (iso == null || iso.isEmpty) return 'Неизвестно';
+    if (iso == null || iso.isEmpty) return LocaleService.tr('unknown');
     try {
       final date = DateTime.parse(iso);
-      const months = ['', 'янв', 'фев', 'мар', 'апр', 'май', 'июн',
-                       'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-      return '${date.day} ${months[date.month]} ${date.year}';
+      final localeCode = LocaleService.locale.value.languageCode;
+      return DateFormat('d MMM yyyy', localeCode).format(date);
     } catch (_) {
       return iso.split('T').first;
     }
@@ -176,7 +182,10 @@ class _ProfilePageState extends State<ProfilePage> {
     final email = user?.email ?? '';
     final photoPath = user?.photoPath;
     final registeredAt = user?.registeredAt;
-    final hasPhoto = photoPath != null && photoPath.isNotEmpty && File(photoPath).existsSync();
+    final hasPhoto =
+        photoPath != null &&
+        photoPath.isNotEmpty &&
+        File(photoPath).existsSync();
     final tr = LocaleService.tr;
 
     return Scaffold(
@@ -200,11 +209,17 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 CircleAvatar(
                   radius: 55,
-                  backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade200,
+                  backgroundColor: isDark
+                      ? const Color(0xFF1E1E1E)
+                      : Colors.grey.shade200,
                   backgroundImage: hasPhoto ? FileImage(File(photoPath)) : null,
                   child: hasPhoto
                       ? null
-                      : Icon(Icons.person, size: 60, color: theme.colorScheme.primary),
+                      : Icon(
+                          Icons.person,
+                          size: 60,
+                          color: theme.colorScheme.primary,
+                        ),
                 ),
                 Positioned(
                   bottom: 0,
@@ -214,9 +229,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       shape: BoxShape.circle,
-                      border: Border.all(color: theme.scaffoldBackgroundColor, width: 2),
+                      border: Border.all(
+                        color: theme.scaffoldBackgroundColor,
+                        width: 2,
+                      ),
                     ),
-                    child: Icon(Icons.camera_alt, size: 18, color: theme.colorScheme.onPrimary),
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 18,
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                 ),
               ],
@@ -238,7 +260,11 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(width: 6),
               GestureDetector(
                 onTap: _editName,
-                child: Icon(Icons.edit, size: 18, color: theme.colorScheme.primary),
+                child: Icon(
+                  Icons.edit,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
               ),
             ],
           ),
@@ -250,7 +276,11 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.email_outlined, size: 16, color: theme.textTheme.bodySmall?.color?.withOpacity(0.6)),
+                Icon(
+                  Icons.email_outlined,
+                  size: 16,
+                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.6),
+                ),
                 const SizedBox(width: 6),
                 Text(
                   email.isNotEmpty ? email : tr('addEmail'),
@@ -269,7 +299,11 @@ class _ProfilePageState extends State<ProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.calendar_today, size: 14, color: theme.textTheme.bodySmall?.color?.withOpacity(0.5)),
+              Icon(
+                Icons.calendar_today,
+                size: 14,
+                color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+              ),
               const SizedBox(width: 6),
               Text(
                 '${tr('since')} ${_formatDate(registeredAt)}',
@@ -295,15 +329,24 @@ class _ProfilePageState extends State<ProfilePage> {
               child: ListView(
                 padding: const EdgeInsets.only(top: 20),
                 children: [
-                  _buildListTile(Icons.settings, tr('settings'), Colors.blue, theme,
+                  _buildListTile(
+                    Icons.settings,
+                    tr('settings'),
+                    Colors.blue,
+                    theme,
                     onTap: () => Navigator.push(
                       context,
                       AppPageRoute.slide(const SettingsPage()),
                     ),
                   ),
-                  _buildListTile(Icons.history, tr('fuelHistory'), Colors.green, theme,
+                  _buildListTile(
+                    Icons.history,
+                    tr('fuelHistory'),
+                    Colors.green,
+                    theme,
                     onTap: () {
-                      final mainState = context.findAncestorStateOfType<MainScreenState>();
+                      final mainState = context
+                          .findAncestorStateOfType<MainScreenState>();
                       mainState?.switchTab(1);
                     },
                   ),
@@ -339,7 +382,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             TextButton(
                               onPressed: () => Navigator.pop(ctx, true),
-                              child: Text(LocaleService.tr('logout'), style: const TextStyle(color: Colors.red)),
+                              child: Text(
+                                LocaleService.tr('logout'),
+                                style: const TextStyle(color: Colors.red),
+                              ),
                             ),
                           ],
                         ),
@@ -360,9 +406,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: Colors.red.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.logout, color: Colors.red, size: 20),
+                      child: const Icon(
+                        Icons.logout,
+                        color: Colors.red,
+                        size: 20,
+                      ),
                     ),
-                    title: Text(tr('logout'), style: const TextStyle(color: Colors.redAccent)),
+                    title: Text(
+                      tr('logout'),
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
                   ),
                 ],
               ),
@@ -389,8 +442,15 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         child: Icon(icon, color: color, size: 20),
       ),
-      title: Text(title, style: TextStyle(color: theme.textTheme.bodyLarge?.color, fontSize: 16)),
-      trailing: Icon(Icons.arrow_forward_ios, color: theme.iconTheme.color?.withOpacity(0.6), size: 14),
+      title: Text(
+        title,
+        style: TextStyle(color: theme.textTheme.bodyLarge?.color, fontSize: 16),
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        color: theme.iconTheme.color?.withOpacity(0.6),
+        size: 14,
+      ),
       onTap: onTap,
     );
   }

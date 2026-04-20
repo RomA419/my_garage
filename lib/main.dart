@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_provider.dart';
@@ -12,6 +13,8 @@ import 'theme_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('ru');
+  await initializeDateFormatting('en');
   await DatabaseService.init();
   runApp(const MyGarageApp());
 }
@@ -39,13 +42,14 @@ class MyGarageApp extends StatelessWidget {
                 theme: ThemeData(
                   brightness: Brightness.light,
                   useMaterial3: true,
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color(0xFF6C5CE7),
-                    brightness: Brightness.light,
-                  ).copyWith(
-                    surface: const Color(0xFFF8F7FC),
-                    primary: const Color(0xFF6C5CE7),
-                  ),
+                  colorScheme:
+                      ColorScheme.fromSeed(
+                        seedColor: const Color(0xFF6C5CE7),
+                        brightness: Brightness.light,
+                      ).copyWith(
+                        surface: const Color(0xFFF8F7FC),
+                        primary: const Color(0xFF6C5CE7),
+                      ),
                   appBarTheme: const AppBarTheme(
                     backgroundColor: Color(0xFFF8F7FC),
                     foregroundColor: Color(0xFF2D3436),
@@ -60,13 +64,14 @@ class MyGarageApp extends StatelessWidget {
                 darkTheme: ThemeData(
                   brightness: Brightness.dark,
                   useMaterial3: true,
-                  colorScheme: ColorScheme.fromSeed(
-                    seedColor: const Color(0xFF6C5CE7),
-                    brightness: Brightness.dark,
-                  ).copyWith(
-                    surface: const Color(0xFF0D0D12),
-                    primary: const Color(0xFFA29BFE),
-                  ),
+                  colorScheme:
+                      ColorScheme.fromSeed(
+                        seedColor: const Color(0xFF6C5CE7),
+                        brightness: Brightness.dark,
+                      ).copyWith(
+                        surface: const Color(0xFF0D0D12),
+                        primary: const Color(0xFFA29BFE),
+                      ),
                   appBarTheme: const AppBarTheme(
                     backgroundColor: Color(0xFF0D0D12),
                     foregroundColor: Color(0xFFF0F0F5),

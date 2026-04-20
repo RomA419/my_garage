@@ -24,7 +24,8 @@ const _modelPhotoAssets = <String, String>{
   'Toyota Camry': 'assets/cars/catalog/toyota_camry.webp',
   'Toyota RAV4': 'assets/cars/catalog/toyota_rav4.webp',
   'Toyota Land Cruiser 200': 'assets/cars/catalog/toyota_land_cruiser_200.webp',
-  'Toyota Land Cruiser Prado': 'assets/cars/catalog/toyota_land_cruiser_prado.webp',
+  'Toyota Land Cruiser Prado':
+      'assets/cars/catalog/toyota_land_cruiser_prado.webp',
   'Kia K5': 'assets/cars/catalog/kia_k5.webp',
   'Kia Sportage': 'assets/cars/catalog/kia_sportage.webp',
   'Hyundai Tucson': 'assets/cars/catalog/hyundai_tucson.webp',
@@ -48,6 +49,148 @@ const _modelPhotoAssets = <String, String>{
   'BYD Seal': 'assets/cars/catalog/byd_seal.webp',
 };
 
+const _catalogDescriptionsEn = <String, String>{
+  'Toyota Camry':
+      'The most popular business sedan in the CIS. Comfortable, reliable, and highly valued on the used market.',
+  'Toyota RAV4':
+      'A reliable crossover with all-wheel drive and a roomy trunk. One of the leaders in its segment.',
+  'Toyota Land Cruiser 200':
+      'A legendary SUV with a flawless reputation. Built for off-road driving and harsh conditions.',
+  'Toyota Land Cruiser Prado':
+      'A comfortable body-on-frame SUV. A balance between city comfort and serious off-road capability.',
+  'Kia K5':
+      'A stylish Korean sedan with strong equipment. A Camry rival in value for money.',
+  'Kia Sportage':
+      'A popular urban crossover with a modern interior and a rich technology package.',
+  'Hyundai Tucson':
+      'A family crossover with bold styling. It competes with the Sportage and shares the same platform.',
+  'Hyundai Sonata':
+      'A Korean business sedan with bold styling and solid equipment at a lower price than Japanese rivals.',
+  'Chevrolet Onix':
+      'An affordable budget sedan built in Uzbekistan. One of the most popular cars below 10 million tenge.',
+  'Chevrolet Cobalt':
+      'One of the most affordable new cars in Kazakhstan. A great fit as a first car.',
+  'Lada Vesta':
+      'A Russian budget sedan with modern styling, good ground clearance, and affordable maintenance.',
+  'BMW 3 Series':
+      'A benchmark sports sedan with rear-wheel drive and class-leading handling.',
+  'Mercedes-Benz C-Class':
+      'A premium midsize sedan combining luxury, technology, and status.',
+  'Lexus RX 350':
+      'A premium Japanese crossover that combines Toyota reliability with Lexus comfort.',
+  'Nissan Qashqai':
+      'A compact urban crossover that helped define the class. Agile, efficient, and practical.',
+  'Honda CR-V':
+      'A practical family crossover with a turbo engine. Spacious, reliable, and efficient.',
+  'Volkswagen Polo':
+      'A German budget sedan with sharp handling and solid build quality.',
+  'Škoda Octavia':
+      'A practical Czech sedan with some of the best cabin and trunk space in its class.',
+  'Mitsubishi Outlander':
+      'A family crossover with a third row of seats. A good option for larger families.',
+  'Subaru Forester':
+      'A Japanese crossover with symmetrical AWD, strong clearance, and excellent rough-road ability.',
+  'Ford Explorer':
+      'An American midsize SUV with a powerful turbo engine and seating for seven.',
+  'Kia Carnival':
+      'One of the most popular minivans in the CIS with seating for eight and business-class comfort.',
+  'Toyota Hilux':
+      'A legendary pickup known for reliability. Popular for farm work, hunting, and travel.',
+  'Hyundai IONIQ 6':
+      'A flagship electric sedan with over 600 km of range and a World Car of the Year 2023 title.',
+  'BYD Seal':
+      'A Chinese electric sports sedan with 0-100 km/h in 3.8 seconds and up to 570 km of range.',
+};
+
+const _catalogProsEn = <String, List<String>>{
+  'Toyota Camry': [
+    'High engine lifespan',
+    'Spacious cabin',
+    'Strong resale value',
+  ],
+  'Toyota RAV4': ['All-wheel drive', 'Efficient fuel use', 'Large trunk'],
+  'Toyota Land Cruiser 200': [
+    'Body-on-frame construction',
+    'Powerful diesel engine',
+    'Excellent reliability',
+    'Prestige vehicle',
+  ],
+  'Toyota Land Cruiser Prado': [
+    'Body-on-frame chassis',
+    'Differential locks',
+    'High ground clearance',
+  ],
+  'Kia K5': ['Modern design', 'Rich equipment', 'Spacious cabin'],
+  'Kia Sportage': [
+    'Wide trim selection',
+    'Modern driver assists',
+    'AWD available from base trims',
+  ],
+  'Hyundai Tucson': [
+    'Bold styling',
+    'Good sound insulation',
+    'Large multimedia screen',
+  ],
+  'Hyundai Sonata': [
+    'Dynamic design',
+    'Spacious cabin',
+    'Affordable maintenance',
+  ],
+  'Chevrolet Onix': [
+    'Low price',
+    'Cheap maintenance',
+    'Parts widely available',
+  ],
+  'Chevrolet Cobalt': [
+    'Very affordable price',
+    'Simple maintenance',
+    'Good ground clearance',
+  ],
+  'Lada Vesta': [
+    'Low ownership cost',
+    'High clearance for a sedan',
+    'Affordable spare parts',
+  ],
+  'BMW 3 Series': ['Sporty handling', 'Powerful engines', 'Premium interior'],
+  'Mercedes-Benz C-Class': [
+    'Luxurious cabin',
+    'Advanced technology',
+    'Strong status appeal',
+  ],
+  'Lexus RX 350': [
+    'Outstanding reliability',
+    'Luxury interior',
+    'Quiet and smooth ride',
+  ],
+  'Nissan Qashqai': [
+    'Compact dimensions',
+    'Efficient fuel use',
+    'Easy in the city',
+  ],
+  'Honda CR-V': ['Roomy interior', '1.5 turbo engine', 'Efficient consumption'],
+  'Volkswagen Polo': ['German quality', 'Sharp handling', 'Efficient engine'],
+  'Škoda Octavia': ['Huge trunk', 'Quality build', 'Rich equipment'],
+  'Mitsubishi Outlander': [
+    '7 seats',
+    'Reliable 4WD transmission',
+    'Low maintenance cost',
+  ],
+  'Subaru Forester': ['Permanent AWD', 'High ground clearance', 'Boxer engine'],
+  'Ford Explorer': ['300 hp engine', '7 seats', 'Bold design'],
+  'Kia Carnival': [
+    '8 passenger seats',
+    'Efficient diesel engine',
+    'VIP-level comfort',
+  ],
+  'Toyota Hilux': [
+    'Exceptional reliability',
+    'High payload capacity',
+    'Body-on-frame construction',
+  ],
+  'Hyundai IONIQ 6': ['614 km range', '800V fast charging', 'Zero fuel costs'],
+  'BYD Seal': ['0-100 in 3.8 sec', '570 km range', 'Rich standard equipment'],
+};
+
 // ──────────────────────────────────────────────
 //  Модель автомобиля для каталога
 // ──────────────────────────────────────────────
@@ -55,13 +198,13 @@ class _Car {
   final String brand;
   final String model;
   final String years;
-  final String body;        // sedan / crossover / suv / hatchback / minivan / pickup
-  final double engine;      // объём, л
-  final String fuel;        // бензин / дизель / гибрид / электро
+  final String body; // sedan / crossover / suv / hatchback / minivan / pickup
+  final double engine; // объём, л
+  final String fuel; // бензин / дизель / гибрид / электро
   final int hp;
-  final String transmission;// АКПП / МКПП / вариатор
-  final String drive;       // передний / полный / задний
-  final double priceFrom;   // млн ₸
+  final String transmission; // АКПП / МКПП / вариатор
+  final String drive; // передний / полный / задний
+  final double priceFrom; // млн ₸
   final double priceTo;
   final Color color;
   final String description;
@@ -86,11 +229,27 @@ class _Car {
 
   String get title => '$brand $model';
 
+  String get localizedDescription {
+    if (LocaleService.isRu) return description;
+    return _catalogDescriptionsEn[title] ?? description;
+  }
+
+  List<String> get localizedPros {
+    if (LocaleService.isRu) return pros;
+    return _catalogProsEn[title] ?? pros;
+  }
+
   String get priceLabel {
     if (priceFrom == priceTo) {
-      return 'от ${priceFrom.toStringAsFixed(1)} млн ₸';
+      if (LocaleService.isRu) {
+        return 'от ${priceFrom.toStringAsFixed(1)} млн ₸';
+      }
+      return 'from ${priceFrom.toStringAsFixed(1)} mln ₸';
     }
-    return '${priceFrom.toStringAsFixed(1)}–${priceTo.toStringAsFixed(1)} млн ₸';
+    if (LocaleService.isRu) {
+      return '${priceFrom.toStringAsFixed(1)}–${priceTo.toStringAsFixed(1)} млн ₸';
+    }
+    return '${priceFrom.toStringAsFixed(1)}–${priceTo.toStringAsFixed(1)} mln ₸';
   }
 
   String get bodyLabel => LocaleService.tr(body);
@@ -127,10 +286,7 @@ Widget _assetCarPhoto(_Car car) {
     errorBuilder: (_, __, ___) => Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            car.color.withOpacity(0.85),
-            car.color.withOpacity(0.35),
-          ],
+          colors: [car.color.withOpacity(0.85), car.color.withOpacity(0.35)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -168,254 +324,482 @@ IconData _fallbackBodyIcon(String body) {
 // ──────────────────────────────────────────────
 const _catalog = <_Car>[
   _Car(
-    brand: 'Toyota', model: 'Camry',
-    years: '2018–2024', body: 'sedan',
-    engine: 2.5, fuel: 'бензин', hp: 181,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 12.5, priceTo: 19.0,
+    brand: 'Toyota',
+    model: 'Camry',
+    years: '2018–2024',
+    body: 'sedan',
+    engine: 2.5,
+    fuel: 'бензин',
+    hp: 181,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 12.5,
+    priceTo: 19.0,
     color: Color(0xFFE53935),
-    description: 'Самый популярный бизнес-седан в СНГ. Комфортный, надёжный, с отличной репутацией на вторичном рынке.',
-    pros: ['Высокий ресурс двигателя', 'Просторный салон', 'Хорошая ликвидность при продаже'],
+    description:
+        'Самый популярный бизнес-седан в СНГ. Комфортный, надёжный, с отличной репутацией на вторичном рынке.',
+    pros: [
+      'Высокий ресурс двигателя',
+      'Просторный салон',
+      'Хорошая ликвидность при продаже',
+    ],
   ),
   _Car(
-    brand: 'Toyota', model: 'RAV4',
-    years: '2019–2024', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 149,
-    transmission: 'вариатор', drive: 'полный',
-    priceFrom: 14.0, priceTo: 21.0,
+    brand: 'Toyota',
+    model: 'RAV4',
+    years: '2019–2024',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 149,
+    transmission: 'вариатор',
+    drive: 'полный',
+    priceFrom: 14.0,
+    priceTo: 21.0,
     color: Color(0xFF1E88E5),
-    description: 'Надёжный кроссовер с полным приводом и вместительным багажником. Один из лидеров продаж в классе.',
+    description:
+        'Надёжный кроссовер с полным приводом и вместительным багажником. Один из лидеров продаж в классе.',
     pros: ['Полный привод', 'Экономичный расход', 'Большой багажник'],
   ),
   _Car(
-    brand: 'Toyota', model: 'Land Cruiser 200',
-    years: '2015–2021', body: 'suv',
-    engine: 4.5, fuel: 'дизель', hp: 235,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 28.0, priceTo: 55.0,
+    brand: 'Toyota',
+    model: 'Land Cruiser 200',
+    years: '2015–2021',
+    body: 'suv',
+    engine: 4.5,
+    fuel: 'дизель',
+    hp: 235,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 28.0,
+    priceTo: 55.0,
     color: Color(0xFF37474F),
-    description: 'Легендарный внедорожник с безупречной репутацией. Незаменим на бездорожье и в суровых условиях.',
-    pros: ['Рамная конструкция', 'Мощный дизель', 'Высокая надёжность', 'Статусный автомобиль'],
+    description:
+        'Легендарный внедорожник с безупречной репутацией. Незаменим на бездорожье и в суровых условиях.',
+    pros: [
+      'Рамная конструкция',
+      'Мощный дизель',
+      'Высокая надёжность',
+      'Статусный автомобиль',
+    ],
   ),
   _Car(
-    brand: 'Toyota', model: 'Land Cruiser Prado',
-    years: '2017–2024', body: 'suv',
-    engine: 2.7, fuel: 'бензин', hp: 163,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 20.0, priceTo: 35.0,
+    brand: 'Toyota',
+    model: 'Land Cruiser Prado',
+    years: '2017–2024',
+    body: 'suv',
+    engine: 2.7,
+    fuel: 'бензин',
+    hp: 163,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 20.0,
+    priceTo: 35.0,
     color: Color(0xFF6D4C41),
-    description: 'Комфортный рамный внедорожник. Баланс между городским использованием и серьёзным бездорожьем.',
+    description:
+        'Комфортный рамный внедорожник. Баланс между городским использованием и серьёзным бездорожьем.',
     pros: ['Рамный кузов', 'Блокировки дифференциалов', 'Высокий клиренс'],
   ),
   _Car(
-    brand: 'Kia', model: 'K5',
-    years: '2020–2024', body: 'sedan',
-    engine: 2.0, fuel: 'бензин', hp: 150,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 10.5, priceTo: 15.0,
+    brand: 'Kia',
+    model: 'K5',
+    years: '2020–2024',
+    body: 'sedan',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 150,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 10.5,
+    priceTo: 15.0,
     color: Color(0xFF8E24AA),
-    description: 'Стильный корейский седан с отличным оснащением. Конкурент Camry по соотношению цена/качество.',
+    description:
+        'Стильный корейский седан с отличным оснащением. Конкурент Camry по соотношению цена/качество.',
     pros: ['Современный дизайн', 'Богатое оснащение', 'Просторный салон'],
   ),
   _Car(
-    brand: 'Kia', model: 'Sportage',
-    years: '2021–2024', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 150,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 12.0, priceTo: 18.0,
+    brand: 'Kia',
+    model: 'Sportage',
+    years: '2021–2024',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 150,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 12.0,
+    priceTo: 18.0,
     color: Color(0xFF00ACC1),
-    description: 'Популярный городской кроссовер с современным интерьером и богатым набором технологий.',
-    pros: ['Широкий выбор комплектаций', 'Современные ассистенты', 'Полный привод в базе'],
+    description:
+        'Популярный городской кроссовер с современным интерьером и богатым набором технологий.',
+    pros: [
+      'Широкий выбор комплектаций',
+      'Современные ассистенты',
+      'Полный привод в базе',
+    ],
   ),
   _Car(
-    brand: 'Hyundai', model: 'Tucson',
-    years: '2021–2024', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 150,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 11.5, priceTo: 17.0,
+    brand: 'Hyundai',
+    model: 'Tucson',
+    years: '2021–2024',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 150,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 11.5,
+    priceTo: 17.0,
     color: Color(0xFF43A047),
-    description: 'Семейный кроссовер с агрессивным дизайном. Конкурирует с Sportage — они построены на одной платформе.',
-    pros: ['Дерзкий внешний вид', 'Хорошая шумоизоляция', 'Большой экран мультимедиа'],
+    description:
+        'Семейный кроссовер с агрессивным дизайном. Конкурирует с Sportage — они построены на одной платформе.',
+    pros: [
+      'Дерзкий внешний вид',
+      'Хорошая шумоизоляция',
+      'Большой экран мультимедиа',
+    ],
   ),
   _Car(
-    brand: 'Hyundai', model: 'Sonata',
-    years: '2019–2024', body: 'sedan',
-    engine: 2.0, fuel: 'бензин', hp: 150,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 10.0, priceTo: 14.5,
+    brand: 'Hyundai',
+    model: 'Sonata',
+    years: '2019–2024',
+    body: 'sedan',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 150,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 10.0,
+    priceTo: 14.5,
     color: Color(0xFF039BE5),
-    description: 'Корейский бизнес-седан с авангардным дизайном и хорошим оснащением по цене ниже японских аналогов.',
-    pros: ['Динамичный дизайн', 'Просторный салон', 'Доступная цена обслуживания'],
+    description:
+        'Корейский бизнес-седан с авангардным дизайном и хорошим оснащением по цене ниже японских аналогов.',
+    pros: [
+      'Динамичный дизайн',
+      'Просторный салон',
+      'Доступная цена обслуживания',
+    ],
   ),
   _Car(
-    brand: 'Chevrolet', model: 'Onix',
-    years: '2022–2024', body: 'sedan',
-    engine: 1.5, fuel: 'бензин', hp: 113,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 6.5, priceTo: 9.0,
+    brand: 'Chevrolet',
+    model: 'Onix',
+    years: '2022–2024',
+    body: 'sedan',
+    engine: 1.5,
+    fuel: 'бензин',
+    hp: 113,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 6.5,
+    priceTo: 9.0,
     color: Color(0xFFFDD835),
-    description: 'Доступный бюджетный седан производства Узбекистана. Самый популярный автомобиль в ценовой категории до 10 млн ₸.',
+    description:
+        'Доступный бюджетный седан производства Узбекистана. Самый популярный автомобиль в ценовой категории до 10 млн ₸.',
     pros: ['Низкая цена', 'Дешёвое обслуживание', 'Запчасти в наличии'],
   ),
   _Car(
-    brand: 'Chevrolet', model: 'Cobalt',
-    years: '2020–2024', body: 'sedan',
-    engine: 1.5, fuel: 'бензин', hp: 106,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 5.5, priceTo: 7.5,
+    brand: 'Chevrolet',
+    model: 'Cobalt',
+    years: '2020–2024',
+    body: 'sedan',
+    engine: 1.5,
+    fuel: 'бензин',
+    hp: 106,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 5.5,
+    priceTo: 7.5,
     color: Color(0xFFF4511E),
-    description: 'Самый доступный новый автомобиль на рынке Казахстана. Идеален для первой машины.',
-    pros: ['Очень доступная цена', 'Простота в обслуживании', 'Хороший дорожный просвет'],
+    description:
+        'Самый доступный новый автомобиль на рынке Казахстана. Идеален для первой машины.',
+    pros: [
+      'Очень доступная цена',
+      'Простота в обслуживании',
+      'Хороший дорожный просвет',
+    ],
   ),
   _Car(
-    brand: 'Lada', model: 'Vesta',
-    years: '2018–2024', body: 'sedan',
-    engine: 1.6, fuel: 'бензин', hp: 106,
-    transmission: 'МКПП', drive: 'передний',
-    priceFrom: 4.5, priceTo: 7.0,
+    brand: 'Lada',
+    model: 'Vesta',
+    years: '2018–2024',
+    body: 'sedan',
+    engine: 1.6,
+    fuel: 'бензин',
+    hp: 106,
+    transmission: 'МКПП',
+    drive: 'передний',
+    priceFrom: 4.5,
+    priceTo: 7.0,
     color: Color(0xFFFFB300),
-    description: 'Российский бюджетный седан. Современный дизайн, высокий клиренс и доступное обслуживание.',
-    pros: ['Низкая стоимость', 'Высокий клиренс для седана', 'Доступные запчасти'],
+    description:
+        'Российский бюджетный седан. Современный дизайн, высокий клиренс и доступное обслуживание.',
+    pros: [
+      'Низкая стоимость',
+      'Высокий клиренс для седана',
+      'Доступные запчасти',
+    ],
   ),
   _Car(
-    brand: 'BMW', model: '3 Series',
-    years: '2019–2024', body: 'sedan',
-    engine: 2.0, fuel: 'бензин', hp: 184,
-    transmission: 'АКПП', drive: 'задний',
-    priceFrom: 22.0, priceTo: 35.0,
+    brand: 'BMW',
+    model: '3 Series',
+    years: '2019–2024',
+    body: 'sedan',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 184,
+    transmission: 'АКПП',
+    drive: 'задний',
+    priceFrom: 22.0,
+    priceTo: 35.0,
     color: Color(0xFF1565C0),
-    description: 'Эталонный спортивный седан с задним приводом. Непревзойдённая управляемость в своём классе.',
-    pros: ['Спортивная управляемость', 'Мощные двигатели', 'Премиальный интерьер'],
+    description:
+        'Эталонный спортивный седан с задним приводом. Непревзойдённая управляемость в своём классе.',
+    pros: [
+      'Спортивная управляемость',
+      'Мощные двигатели',
+      'Премиальный интерьер',
+    ],
   ),
   _Car(
-    brand: 'Mercedes-Benz', model: 'C-Class',
-    years: '2019–2024', body: 'sedan',
-    engine: 2.0, fuel: 'бензин', hp: 204,
-    transmission: 'АКПП', drive: 'задний',
-    priceFrom: 25.0, priceTo: 40.0,
+    brand: 'Mercedes-Benz',
+    model: 'C-Class',
+    years: '2019–2024',
+    body: 'sedan',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 204,
+    transmission: 'АКПП',
+    drive: 'задний',
+    priceFrom: 25.0,
+    priceTo: 40.0,
     color: Color(0xFF212121),
-    description: 'Флагманский представительский седан среднего класса. Роскошь, технологии и статус в одном автомобиле.',
+    description:
+        'Флагманский представительский седан среднего класса. Роскошь, технологии и статус в одном автомобиле.',
     pros: ['Роскошный салон', 'Передовые технологии', 'Высокий статус'],
   ),
   _Car(
-    brand: 'Lexus', model: 'RX 350',
-    years: '2016–2023', body: 'crossover',
-    engine: 3.5, fuel: 'бензин', hp: 249,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 22.0, priceTo: 40.0,
+    brand: 'Lexus',
+    model: 'RX 350',
+    years: '2016–2023',
+    body: 'crossover',
+    engine: 3.5,
+    fuel: 'бензин',
+    hp: 249,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 22.0,
+    priceTo: 40.0,
     color: Color(0xFFC62828),
-    description: 'Премиальный японский кроссовер. Сочетает надёжность Toyota с роскошью Lexus.',
-    pros: ['Высочайшая надёжность', 'Роскошный интерьер', 'Тихий и плавный ход'],
+    description:
+        'Премиальный японский кроссовер. Сочетает надёжность Toyota с роскошью Lexus.',
+    pros: [
+      'Высочайшая надёжность',
+      'Роскошный интерьер',
+      'Тихий и плавный ход',
+    ],
   ),
   _Car(
-    brand: 'Nissan', model: 'Qashqai',
-    years: '2019–2024', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 144,
-    transmission: 'вариатор', drive: 'передний',
-    priceFrom: 9.5, priceTo: 14.0,
+    brand: 'Nissan',
+    model: 'Qashqai',
+    years: '2019–2024',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 144,
+    transmission: 'вариатор',
+    drive: 'передний',
+    priceFrom: 9.5,
+    priceTo: 14.0,
     color: Color(0xFF00897B),
-    description: 'Компактный городской кроссовер — родоначальник класса. Манёвренный, экономичный, практичный.',
+    description:
+        'Компактный городской кроссовер — родоначальник класса. Манёвренный, экономичный, практичный.',
     pros: ['Компактные габариты', 'Экономичный расход', 'Удобен в городе'],
   ),
   _Car(
-    brand: 'Honda', model: 'CR-V',
-    years: '2017–2023', body: 'crossover',
-    engine: 1.5, fuel: 'бензин', hp: 190,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 13.0, priceTo: 20.0,
+    brand: 'Honda',
+    model: 'CR-V',
+    years: '2017–2023',
+    body: 'crossover',
+    engine: 1.5,
+    fuel: 'бензин',
+    hp: 190,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 13.0,
+    priceTo: 20.0,
     color: Color(0xFF6A1B9A),
-    description: 'Практичный семейный кроссовер с турбомотором. Просторный, надёжный, с отличной экономичностью.',
+    description:
+        'Практичный семейный кроссовер с турбомотором. Просторный, надёжный, с отличной экономичностью.',
     pros: ['Вместительный салон', 'Турбодвигатель 1.5', 'Экономичный расход'],
   ),
   _Car(
-    brand: 'Volkswagen', model: 'Polo',
-    years: '2020–2024', body: 'sedan',
-    engine: 1.6, fuel: 'бензин', hp: 110,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 7.5, priceTo: 11.0,
+    brand: 'Volkswagen',
+    model: 'Polo',
+    years: '2020–2024',
+    body: 'sedan',
+    engine: 1.6,
+    fuel: 'бензин',
+    hp: 110,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 7.5,
+    priceTo: 11.0,
     color: Color(0xFF1976D2),
-    description: 'Немецкий бюджетный седан с отличной управляемостью и качественной сборкой.',
+    description:
+        'Немецкий бюджетный седан с отличной управляемостью и качественной сборкой.',
     pros: ['Немецкое качество', 'Отличная управляемость', 'Экономичный мотор'],
   ),
   _Car(
-    brand: 'Škoda', model: 'Octavia',
-    years: '2020–2024', body: 'sedan',
-    engine: 1.6, fuel: 'бензин', hp: 110,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 9.0, priceTo: 14.5,
+    brand: 'Škoda',
+    model: 'Octavia',
+    years: '2020–2024',
+    body: 'sedan',
+    engine: 1.6,
+    fuel: 'бензин',
+    hp: 110,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 9.0,
+    priceTo: 14.5,
     color: Color(0xFF388E3C),
-    description: 'Практичный чешский седан — один из лучших в классе по объёму салона и багажника.',
+    description:
+        'Практичный чешский седан — один из лучших в классе по объёму салона и багажника.',
     pros: ['Огромный багажник', 'Качественная сборка', 'Богатое оснащение'],
   ),
   _Car(
-    brand: 'Mitsubishi', model: 'Outlander',
-    years: '2018–2023', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 146,
-    transmission: 'вариатор', drive: 'полный',
-    priceFrom: 11.0, priceTo: 17.0,
+    brand: 'Mitsubishi',
+    model: 'Outlander',
+    years: '2018–2023',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 146,
+    transmission: 'вариатор',
+    drive: 'полный',
+    priceFrom: 11.0,
+    priceTo: 17.0,
     color: Color(0xFFD84315),
-    description: 'Семейный кроссовер с третьим рядом сидений. Отличный вариант для большой семьи.',
-    pros: ['7 мест', 'Надёжная трансмиссия 4WD', 'Низкая стоимость обслуживания'],
+    description:
+        'Семейный кроссовер с третьим рядом сидений. Отличный вариант для большой семьи.',
+    pros: [
+      '7 мест',
+      'Надёжная трансмиссия 4WD',
+      'Низкая стоимость обслуживания',
+    ],
   ),
   _Car(
-    brand: 'Subaru', model: 'Forester',
-    years: '2018–2024', body: 'crossover',
-    engine: 2.0, fuel: 'бензин', hp: 150,
-    transmission: 'вариатор', drive: 'полный',
-    priceFrom: 14.0, priceTo: 20.0,
+    brand: 'Subaru',
+    model: 'Forester',
+    years: '2018–2024',
+    body: 'crossover',
+    engine: 2.0,
+    fuel: 'бензин',
+    hp: 150,
+    transmission: 'вариатор',
+    drive: 'полный',
+    priceFrom: 14.0,
+    priceTo: 20.0,
     color: Color(0xFF004D40),
-    description: 'Японский кроссовер с симметричным полным приводом AWD. Высокий клиренс и отличная проходимость.',
+    description:
+        'Японский кроссовер с симметричным полным приводом AWD. Высокий клиренс и отличная проходимость.',
     pros: ['Постоянный AWD', 'Высокий клиренс', 'Боксёрский двигатель'],
   ),
   _Car(
-    brand: 'Ford', model: 'Explorer',
-    years: '2019–2024', body: 'suv',
-    engine: 2.3, fuel: 'бензин', hp: 300,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 24.0, priceTo: 38.0,
+    brand: 'Ford',
+    model: 'Explorer',
+    years: '2019–2024',
+    body: 'suv',
+    engine: 2.3,
+    fuel: 'бензин',
+    hp: 300,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 24.0,
+    priceTo: 38.0,
     color: Color(0xFF0277BD),
-    description: 'Американский среднеразмерный внедорожник с мощным турбодвигателем на 7 мест.',
+    description:
+        'Американский среднеразмерный внедорожник с мощным турбодвигателем на 7 мест.',
     pros: ['Мощный мотор 300 л.с.', '7 мест', 'Харизматичный дизайн'],
   ),
   _Car(
-    brand: 'Kia', model: 'Carnival',
-    years: '2021–2024', body: 'minivan',
-    engine: 2.2, fuel: 'дизель', hp: 199,
-    transmission: 'АКПП', drive: 'передний',
-    priceFrom: 18.0, priceTo: 26.0,
+    brand: 'Kia',
+    model: 'Carnival',
+    years: '2021–2024',
+    body: 'minivan',
+    engine: 2.2,
+    fuel: 'дизель',
+    hp: 199,
+    transmission: 'АКПП',
+    drive: 'передний',
+    priceFrom: 18.0,
+    priceTo: 26.0,
     color: Color(0xFF5C6BC0),
-    description: 'Самый популярный минивэн в СНГ на 8 мест. Уровень комфорта как в бизнес-авто.',
+    description:
+        'Самый популярный минивэн в СНГ на 8 мест. Уровень комфорта как в бизнес-авто.',
     pros: ['8 пассажирских мест', 'Дизельный экономичный мотор', 'VIP-комфорт'],
   ),
   _Car(
-    brand: 'Toyota', model: 'Hilux',
-    years: '2018–2024', body: 'pickup',
-    engine: 2.8, fuel: 'дизель', hp: 204,
-    transmission: 'АКПП', drive: 'полный',
-    priceFrom: 18.0, priceTo: 30.0,
+    brand: 'Toyota',
+    model: 'Hilux',
+    years: '2018–2024',
+    body: 'pickup',
+    engine: 2.8,
+    fuel: 'дизель',
+    hp: 204,
+    transmission: 'АКПП',
+    drive: 'полный',
+    priceFrom: 18.0,
+    priceTo: 30.0,
     color: Color(0xFF558B2F),
-    description: 'Легендарный пикап — символ надёжности. Используется в сельском хозяйстве, охоте и путешествиях.',
-    pros: ['Непревзойдённая надёжность', 'Высокая грузоподъёмность', 'Рамная конструкция'],
+    description:
+        'Легендарный пикап — символ надёжности. Используется в сельском хозяйстве, охоте и путешествиях.',
+    pros: [
+      'Непревзойдённая надёжность',
+      'Высокая грузоподъёмность',
+      'Рамная конструкция',
+    ],
   ),
   _Car(
-    brand: 'Hyundai', model: 'IONIQ 6',
-    years: '2023–2024', body: 'sedan',
-    engine: 0.0, fuel: 'электро', hp: 229,
-    transmission: 'авто', drive: 'задний',
-    priceFrom: 22.0, priceTo: 30.0,
+    brand: 'Hyundai',
+    model: 'IONIQ 6',
+    years: '2023–2024',
+    body: 'sedan',
+    engine: 0.0,
+    fuel: 'электро',
+    hp: 229,
+    transmission: 'авто',
+    drive: 'задний',
+    priceFrom: 22.0,
+    priceTo: 30.0,
     color: Color(0xFF00838F),
-    description: 'Флагманский электрический седан с запасом хода 600+ км. Победитель World Car of the Year 2023.',
-    pros: ['Запас хода 614 км', 'Быстрая зарядка 800V', 'Нулевые расходы на топливо'],
+    description:
+        'Флагманский электрический седан с запасом хода 600+ км. Победитель World Car of the Year 2023.',
+    pros: [
+      'Запас хода 614 км',
+      'Быстрая зарядка 800V',
+      'Нулевые расходы на топливо',
+    ],
   ),
   _Car(
-    brand: 'BYD', model: 'Seal',
-    years: '2023–2024', body: 'sedan',
-    engine: 0.0, fuel: 'электро', hp: 313,
-    transmission: 'авто', drive: 'полный',
-    priceFrom: 18.0, priceTo: 25.0,
+    brand: 'BYD',
+    model: 'Seal',
+    years: '2023–2024',
+    body: 'sedan',
+    engine: 0.0,
+    fuel: 'электро',
+    hp: 313,
+    transmission: 'авто',
+    drive: 'полный',
+    priceFrom: 18.0,
+    priceTo: 25.0,
     color: Color(0xFF37474F),
-    description: 'Китайский спортивный электрический седан. Набирает 0-100 км/ч за 3.8 сек, запас хода 570 км.',
-    pros: ['0-100 за 3.8 с', 'Запас хода 570 км', 'Богатая комплектация в базе'],
+    description:
+        'Китайский спортивный электрический седан. Набирает 0-100 км/ч за 3.8 сек, запас хода 570 км.',
+    pros: [
+      '0-100 за 3.8 с',
+      'Запас хода 570 км',
+      'Богатая комплектация в базе',
+    ],
   ),
 ];
 
@@ -446,14 +830,22 @@ class _CatalogPageState extends State<CatalogPage> {
 
   static IconData _bodyIconFor(String body) {
     switch (body) {
-      case 'all': return Icons.apps;
-      case 'sedan': return Icons.directions_car;
-      case 'crossover': return Icons.directions_car_filled;
-      case 'suv': return Icons.terrain;
-      case 'hatchback': return Icons.electric_car;
-      case 'minivan': return Icons.airport_shuttle;
-      case 'pickup': return Icons.local_shipping;
-      default: return Icons.apps;
+      case 'all':
+        return Icons.apps;
+      case 'sedan':
+        return Icons.directions_car;
+      case 'crossover':
+        return Icons.directions_car_filled;
+      case 'suv':
+        return Icons.terrain;
+      case 'hatchback':
+        return Icons.electric_car;
+      case 'minivan':
+        return Icons.airport_shuttle;
+      case 'pickup':
+        return Icons.local_shipping;
+      default:
+        return Icons.apps;
     }
   }
 
@@ -464,11 +856,14 @@ class _CatalogPageState extends State<CatalogPage> {
     }
     if (_search.isNotEmpty) {
       final q = _search.toLowerCase();
-      list = list.where((c) =>
-        c.brand.toLowerCase().contains(q) ||
-        c.model.toLowerCase().contains(q) ||
-        c.bodyLabel.toLowerCase().contains(q),
-      ).toList();
+      list = list
+          .where(
+            (c) =>
+                c.brand.toLowerCase().contains(q) ||
+                c.model.toLowerCase().contains(q) ||
+                c.bodyLabel.toLowerCase().contains(q),
+          )
+          .toList();
     }
     switch (_sortMode) {
       case 'price_asc':
@@ -504,18 +899,29 @@ class _CatalogPageState extends State<CatalogPage> {
       appBar: AppBar(
         title: Text(
           LocaleService.tr('catalogTitle'),
-          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: theme.appBarTheme.backgroundColor,
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort),
-            tooltip: 'Сортировка',
+            tooltip: LocaleService.tr('sortName'),
             onSelected: (v) => setState(() => _sortMode = v),
             itemBuilder: (_) => [
-              PopupMenuItem(value: 'price_asc', child: Text(LocaleService.tr('sortPriceAsc'))),
-              PopupMenuItem(value: 'price_desc', child: Text(LocaleService.tr('sortPriceDesc'))),
-              PopupMenuItem(value: 'name', child: Text(LocaleService.tr('sortName'))),
+              PopupMenuItem(
+                value: 'price_asc',
+                child: Text(LocaleService.tr('sortPriceAsc')),
+              ),
+              PopupMenuItem(
+                value: 'price_desc',
+                child: Text(LocaleService.tr('sortPriceDesc')),
+              ),
+              PopupMenuItem(
+                value: 'name',
+                child: Text(LocaleService.tr('sortName')),
+              ),
             ],
           ),
         ],
@@ -532,10 +938,15 @@ class _CatalogPageState extends State<CatalogPage> {
                 hintStyle: theme.textTheme.bodySmall?.copyWith(
                   color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
                 ),
-                prefixIcon: Icon(Icons.search, size: 20,
-                    color: theme.iconTheme.color?.withOpacity(0.5)),
+                prefixIcon: Icon(
+                  Icons.search,
+                  size: 20,
+                  color: theme.iconTheme.color?.withOpacity(0.5),
+                ),
                 filled: true,
-                fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
+                fillColor: isDark
+                    ? const Color(0xFF1E1E1E)
+                    : Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
@@ -564,7 +975,9 @@ class _CatalogPageState extends State<CatalogPage> {
                     decoration: BoxDecoration(
                       color: selected
                           ? theme.colorScheme.primary.withOpacity(0.15)
-                          : (isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100),
+                          : (isDark
+                                ? const Color(0xFF1E1E1E)
+                                : Colors.grey.shade100),
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
                         color: selected
@@ -581,17 +994,23 @@ class _CatalogPageState extends State<CatalogPage> {
                           size: 24,
                           color: selected
                               ? theme.colorScheme.primary
-                              : theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+                              : theme.textTheme.bodySmall?.color?.withOpacity(
+                                  0.5,
+                                ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           LocaleService.tr(entry.$1),
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: selected ? FontWeight.w700 : FontWeight.normal,
+                            fontWeight: selected
+                                ? FontWeight.w700
+                                : FontWeight.normal,
                             color: selected
                                 ? theme.colorScheme.primary
-                                : theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                                : theme.textTheme.bodySmall?.color?.withOpacity(
+                                    0.7,
+                                  ),
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
@@ -627,13 +1046,19 @@ class _CatalogPageState extends State<CatalogPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.search_off, size: 64,
-                            color: theme.iconTheme.color?.withOpacity(0.2)),
+                        Icon(
+                          Icons.search_off,
+                          size: 64,
+                          color: theme.iconTheme.color?.withOpacity(0.2),
+                        ),
                         const SizedBox(height: 12),
-                        Text(LocaleService.tr('noCarsFound'),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                            )),
+                        Text(
+                          LocaleService.tr('noCarsFound'),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withOpacity(0.5),
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -680,7 +1105,9 @@ class _CarCard extends StatelessWidget {
           children: [
             // ── Photo area ──
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               child: SizedBox(
                 height: 140,
                 width: double.infinity,
@@ -693,9 +1120,13 @@ class _CarCard extends StatelessWidget {
                     ),
                     Container(color: Colors.black.withOpacity(0.16)),
                     Positioned(
-                      top: 10, left: 10,
+                      top: 10,
+                      left: 10,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.28),
                           borderRadius: BorderRadius.circular(10),
@@ -711,9 +1142,13 @@ class _CarCard extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      bottom: 10, right: 10,
+                      bottom: 10,
+                      right: 10,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 9,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.38),
                           borderRadius: BorderRadius.circular(10),
@@ -745,7 +1180,11 @@ class _CarCard extends StatelessWidget {
                           },
                           child: const Padding(
                             padding: EdgeInsets.all(8),
-                            child: Icon(Icons.fullscreen, size: 18, color: Colors.white),
+                            child: Icon(
+                              Icons.fullscreen,
+                              size: 18,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -774,15 +1213,18 @@ class _CarCard extends StatelessWidget {
                         Text(
                           '${car.years} • ${_engineLabel(car)}',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color?.withOpacity(0.65),
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withOpacity(0.65),
                             fontSize: 11,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Icon(Icons.chevron_right,
-                      color: theme.textTheme.bodySmall?.color?.withOpacity(0.3)),
+                  Icon(
+                    Icons.chevron_right,
+                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.3),
+                  ),
                 ],
               ),
             ),
@@ -794,7 +1236,8 @@ class _CarCard extends StatelessWidget {
 
   static String _engineLabel(_Car car) {
     final hpUnit = LocaleService.isRu ? 'л.с.' : 'hp';
-    if (car.fuel == 'электро') return '${car.hp} $hpUnit • ${_translateSpec('электро')}';
+    if (car.fuel == 'электро')
+      return '${car.hp} $hpUnit • ${_translateSpec('электро')}';
     return '${car.engine} л • ${car.hp} $hpUnit • ${_translateSpec(car.fuel)}';
   }
 }
@@ -850,7 +1293,9 @@ class _CarDetailSheet extends StatelessWidget {
                   ),
                   Container(color: Colors.black.withOpacity(0.22)),
                   Positioned(
-                    bottom: 14, left: 20, right: 90,
+                    bottom: 14,
+                    left: 20,
+                    right: 90,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -861,20 +1306,29 @@ class _CarDetailSheet extends StatelessWidget {
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            shadows: [Shadow(blurRadius: 8, color: Colors.black38)],
+                            shadows: [
+                              Shadow(blurRadius: 8, color: Colors.black38),
+                            ],
                           ),
                         ),
                         Text(
                           '${car.bodyLabel} • ${car.years}',
-                          style: const TextStyle(fontSize: 13, color: Colors.white70),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.white70,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Positioned(
-                    top: 10, right: 10,
+                    top: 10,
+                    right: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.35),
                         borderRadius: BorderRadius.circular(12),
@@ -893,17 +1347,30 @@ class _CarDetailSheet extends StatelessWidget {
                     top: 10,
                     left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.35),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.zoom_in, size: 14, color: Colors.white),
-                          SizedBox(width: 4),
-                          Text('Открыть фото', style: TextStyle(fontSize: 11, color: Colors.white)),
+                          const Icon(
+                            Icons.zoom_in,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            LocaleService.tr('catalogOpenPhoto'),
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -922,7 +1389,7 @@ class _CarDetailSheet extends StatelessWidget {
 
                   // Описание
                   Text(
-                    car.description,
+                    car.localizedDescription,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.textTheme.bodySmall?.color?.withOpacity(0.8),
                       height: 1.5,
@@ -933,7 +1400,9 @@ class _CarDetailSheet extends StatelessWidget {
                   // Характеристики
                   Text(
                     LocaleService.tr('catalogSpecs'),
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   _buildSpecsGrid(theme, isDark),
@@ -943,22 +1412,30 @@ class _CarDetailSheet extends StatelessWidget {
                   // Плюсы
                   Text(
                     LocaleService.tr('catalogPros'),
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  ...car.pros.map((p) => Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.check_circle, size: 18, color: Colors.green),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(p, style: theme.textTheme.bodyMedium),
-                        ),
-                      ],
+                  ...car.localizedPros.map(
+                    (p) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            size: 18,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(p, style: theme.textTheme.bodyMedium),
+                          ),
+                        ],
+                      ),
                     ),
-                  )),
+                  ),
                   const SizedBox(height: 24),
 
                   // Кнопка закрыть
@@ -990,9 +1467,21 @@ class _CarDetailSheet extends StatelessWidget {
     final hpUnit = LocaleService.isRu ? 'л.с.' : 'hp';
     final specs = [
       (Icons.speed, LocaleService.tr('catalogHp'), '${car.hp} $hpUnit'),
-      (Icons.local_gas_station, LocaleService.tr('catalogFuel'), _translateSpec(car.fuel)),
-      (Icons.settings, LocaleService.tr('catalogTransmission'), _translateSpec(car.transmission)),
-      (Icons.swap_horiz, LocaleService.tr('catalogDrive'), _translateSpec(car.drive)),
+      (
+        Icons.local_gas_station,
+        LocaleService.tr('catalogFuel'),
+        _translateSpec(car.fuel),
+      ),
+      (
+        Icons.settings,
+        LocaleService.tr('catalogTransmission'),
+        _translateSpec(car.transmission),
+      ),
+      (
+        Icons.swap_horiz,
+        LocaleService.tr('catalogDrive'),
+        _translateSpec(car.drive),
+      ),
       if (car.fuel != 'электро')
         (Icons.opacity, LocaleService.tr('catalogEngine'), '${car.engine} л'),
     ];
@@ -1004,37 +1493,46 @@ class _CarDetailSheet extends StatelessWidget {
       mainAxisSpacing: 10,
       crossAxisSpacing: 10,
       childAspectRatio: 3.2,
-      children: specs.map((s) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(s.$1, size: 16, color: theme.colorScheme.primary),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+      children: specs
+          .map(
+            (s) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
                 children: [
-                  Text(s.$2,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                        fontSize: 9,
-                      )),
-                  Text(s.$3,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11,
-                      )),
+                  Icon(s.$1, size: 16, color: theme.colorScheme.primary),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          s.$2,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withOpacity(0.5),
+                            fontSize: 9,
+                          ),
+                        ),
+                        Text(
+                          s.$3,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      )).toList(),
+          )
+          .toList(),
     );
   }
 }

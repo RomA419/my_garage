@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'locale_service.dart';
+
 class SplashPage extends StatefulWidget {
   final Widget nextPage;
   const SplashPage({super.key, required this.nextPage});
@@ -85,7 +87,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'My Garage',
+                  LocaleService.tr('appName'),
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,

@@ -11,6 +11,24 @@ import 'locale_service.dart';
 import 'maintenance_page.dart';
 import 'models.dart';
 
+String _trAnalyticsServiceType(String type) {
+  if (LocaleService.isRu) return type;
+  const en = {
+    'Замена масла': 'Oil change',
+    'Замена фильтра': 'Filter replacement',
+    'Замена тормозной жидкости': 'Brake fluid replacement',
+    'Замена тормозных колодок': 'Brake pad replacement',
+    'Замена свечей зажигания': 'Spark plug replacement',
+    'Замена ремня ГРМ': 'Timing belt replacement',
+    'Замена шин': 'Tire change',
+    'Плановое ТО': 'Scheduled service',
+    'Промывка инжектора': 'Injector flush',
+    'Диагностика': 'Diagnostics',
+    'Другое': 'Other',
+  };
+  return en[type] ?? type;
+}
+
 class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({super.key});
 
@@ -212,15 +230,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     return recommendations.take(3).map((entry) {
       if (entry.value < 0) {
         return tr('passportServiceOverdue')
-            .replaceAll('{service}', entry.key)
+            .replaceAll('{service}', _trAnalyticsServiceType(entry.key))
             .replaceAll('{km}', '${entry.value.abs()}');
       }
       if (entry.value == 0) {
-        return tr('passportServiceNow').replaceAll('{service}', entry.key);
+        return tr(
+          'passportServiceNow',
+        ).replaceAll('{service}', _trAnalyticsServiceType(entry.key));
       }
-      return tr(
-        'passportServiceInKm',
-      ).replaceAll('{service}', entry.key).replaceAll('{km}', '${entry.value}');
+      return tr('passportServiceInKm')
+          .replaceAll('{service}', _trAnalyticsServiceType(entry.key))
+          .replaceAll('{km}', '${entry.value}');
     }).toList();
   }
 

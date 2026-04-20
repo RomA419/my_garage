@@ -39,12 +39,19 @@ class FuelPage extends StatefulWidget {
 
 class _FuelPageState extends State<FuelPage> {
   final _stationController = TextEditingController(); // Название заправки
-  final _quantityController = TextEditingController(); // Кол-во (литры, кг, шт и т.д.)
+  final _quantityController =
+      TextEditingController(); // Кол-во (литры, кг, шт и т.д.)
   final _customPriceController = TextEditingController(); // Цена для "Другое"
   final _odometerController = TextEditingController();
 
   // Категории услуг
-  final List<String> categories = ['Топливо', 'Масло', 'Шины', 'Мойка', 'Другое'];
+  final List<String> categories = [
+    'Топливо',
+    'Масло',
+    'Шины',
+    'Мойка',
+    'Другое',
+  ];
 
   // Виды топлива и их средние цены
   final Map<String, double> fuelPrices = {
@@ -98,15 +105,15 @@ class _FuelPageState extends State<FuelPage> {
     final String odometerText = _odometerController.text.trim();
 
     if (station.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(LocaleService.tr('fillStation'))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(LocaleService.tr('fillStation'))));
       return;
     }
     if (quantityText.isEmpty || double.tryParse(quantityText) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(LocaleService.tr('fillLiters'))),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(LocaleService.tr('fillLiters'))));
       return;
     }
 
@@ -153,7 +160,11 @@ class _FuelPageState extends State<FuelPage> {
         odometer: odometerText,
         category: _selectedCategory,
         subType: _selectedSubType,
-        quantity: quantity.toStringAsFixed(_selectedCategory == 'Топливо' || _selectedCategory == 'Масло' ? 1 : 0),
+        quantity: quantity.toStringAsFixed(
+          _selectedCategory == 'Топливо' || _selectedCategory == 'Масло'
+              ? 1
+              : 0,
+        ),
         unit: unit,
         total: totalAmount.toStringAsFixed(0),
       );
@@ -216,9 +227,11 @@ class _FuelPageState extends State<FuelPage> {
       final cutoff = _selectedPeriod == 'month'
           ? DateTime(now.year, now.month - 1, now.day)
           : _selectedPeriod == '3months'
-              ? DateTime(now.year, now.month - 3, now.day)
-              : DateTime(now.year - 1, now.month, now.day);
-      list = list.where((r) => r.timestamp >= cutoff.millisecondsSinceEpoch).toList();
+          ? DateTime(now.year, now.month - 3, now.day)
+          : DateTime(now.year - 1, now.month, now.day);
+      list = list
+          .where((r) => r.timestamp >= cutoff.millisecondsSinceEpoch)
+          .toList();
     }
     return list;
   }
@@ -227,12 +240,19 @@ class _FuelPageState extends State<FuelPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bool isDark = theme.brightness == Brightness.dark;
-    final currency = context.watch<AuthProvider>().user?.settings['currency'] as String? ?? '₸';
+    final currency =
+        context.watch<AuthProvider>().user?.settings['currency'] as String? ??
+        '₸';
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(LocaleService.tr('refueling'), style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          LocaleService.tr('refueling'),
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: theme.appBarTheme.iconTheme,
         actions: [
@@ -255,23 +275,29 @@ class _FuelPageState extends State<FuelPage> {
               ),
               child: Column(
                 children: [
-                  Builder(builder: (context) {
-                    final garage = context.watch<GarageProvider>();
-                    final car = garage.currentCar;
-                    if (car == null) return const SizedBox.shrink();
-                    final label = car.title.isNotEmpty ? car.title : car.number;
-                    if (label.isEmpty) return const SizedBox.shrink();
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '${LocaleService.tr('carLabel')}: $label',
-                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  Builder(
+                    builder: (context) {
+                      final garage = context.watch<GarageProvider>();
+                      final car = garage.currentCar;
+                      if (car == null) return const SizedBox.shrink();
+                      final label = car.title.isNotEmpty
+                          ? car.title
+                          : car.number;
+                      if (label.isEmpty) return const SizedBox.shrink();
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${LocaleService.tr('carLabel')}: $label',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  ),
 
                   // ВЫБОР ТИПА ТОПЛИВА
                   Container(
@@ -284,38 +310,66 @@ class _FuelPageState extends State<FuelPage> {
                       child: DropdownButton<String>(
                         value: _selectedSubType,
                         dropdownColor: isDark ? Colors.black : Colors.white,
-                        style: TextStyle(color: theme.colorScheme.primary, fontSize: 16),
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontSize: 16,
+                        ),
                         isExpanded: true,
                         items: fuelPrices.keys.map((String key) {
                           return DropdownMenuItem<String>(
                             value: key,
-                            child: Text("${_trFuel(key)} — ${CurrencyService.format(fuelPrices[key]!, currency)}/л"),
+                            child: Text(
+                              "${_trFuel(key)} — ${CurrencyService.format(fuelPrices[key]!, currency)}/${LocaleService.tr('tripLiters')}",
+                            ),
                           );
                         }).toList(),
-                        onChanged: (val) => setState(() => _selectedSubType = val!),
+                        onChanged: (val) =>
+                            setState(() => _selectedSubType = val!),
                       ),
                     ),
                   ),
                   const SizedBox(height: 15),
-                  
-                  _buildInput(theme, _stationController, LocaleService.tr('stationName'), Icons.edit_location_alt),
+
+                  _buildInput(
+                    theme,
+                    _stationController,
+                    LocaleService.tr('stationName'),
+                    Icons.edit_location_alt,
+                  ),
                   const SizedBox(height: 15),
-                  
-                  _buildInput(theme, _quantityController, LocaleService.tr('howManyLiters'), Icons.local_gas_station, isNumber: true),
+
+                  _buildInput(
+                    theme,
+                    _quantityController,
+                    LocaleService.tr('howManyLiters'),
+                    Icons.local_gas_station,
+                    isNumber: true,
+                  ),
                   const SizedBox(height: 15),
-                  _buildInput(theme, _odometerController, LocaleService.tr('odometerKm'), Icons.speed, isNumber: true),
+                  _buildInput(
+                    theme,
+                    _odometerController,
+                    LocaleService.tr('odometerKm'),
+                    Icons.speed,
+                    isNumber: true,
+                  ),
                   const SizedBox(height: 20),
-                  
+
                   ElevatedButton(
                     onPressed: _addRecord,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: theme.colorScheme.primary,
                       minimumSize: const Size(double.infinity, 55),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
                     child: Text(
                       LocaleService.tr('calculateAndSave'),
-                      style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -338,11 +392,20 @@ class _FuelPageState extends State<FuelPage> {
                 DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: _filterType,
-                    style: TextStyle(color: theme.colorScheme.primary, fontSize: 12),
+                    style: TextStyle(
+                      color: theme.colorScheme.primary,
+                      fontSize: 12,
+                    ),
                     isDense: true,
                     items: [
-                      DropdownMenuItem(value: '', child: Text(LocaleService.tr('all'))),
-                      ...fuelPrices.keys.map((k) => DropdownMenuItem(value: k, child: Text(_trFuel(k)))),
+                      DropdownMenuItem(
+                        value: '',
+                        child: Text(LocaleService.tr('all')),
+                      ),
+                      ...fuelPrices.keys.map(
+                        (k) =>
+                            DropdownMenuItem(value: k, child: Text(_trFuel(k))),
+                      ),
                     ],
                     onChanged: (v) => setState(() => _filterType = v ?? ''),
                   ),
@@ -366,10 +429,16 @@ class _FuelPageState extends State<FuelPage> {
                     Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text(entry.$2, style: const TextStyle(fontSize: 12)),
+                        label: Text(
+                          entry.$2,
+                          style: const TextStyle(fontSize: 12),
+                        ),
                         selected: _selectedPeriod == entry.$1,
-                        onSelected: (_) => setState(() => _selectedPeriod = entry.$1),
-                        selectedColor: theme.colorScheme.primary.withOpacity(0.2),
+                        onSelected: (_) =>
+                            setState(() => _selectedPeriod = entry.$1),
+                        selectedColor: theme.colorScheme.primary.withOpacity(
+                          0.2,
+                        ),
                         labelStyle: TextStyle(
                           color: _selectedPeriod == entry.$1
                               ? theme.colorScheme.primary
@@ -388,11 +457,22 @@ class _FuelPageState extends State<FuelPage> {
               style: theme.textTheme.bodyMedium,
               decoration: InputDecoration(
                 hintText: LocaleService.tr('searchHint'),
-                hintStyle: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.5)),
-                prefixIcon: Icon(Icons.search, size: 20, color: theme.iconTheme.color?.withOpacity(0.5)),
+                hintStyle: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
+                ),
+                prefixIcon: Icon(
+                  Icons.search,
+                  size: 20,
+                  color: theme.iconTheme.color?.withOpacity(0.5),
+                ),
                 filled: true,
-                fillColor: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                fillColor: isDark
+                    ? const Color(0xFF1E1E1E)
+                    : Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide.none,
+                ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 10),
                 isDense: true,
               ),
@@ -407,16 +487,26 @@ class _FuelPageState extends State<FuelPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.local_gas_station_outlined, size: 64, color: theme.iconTheme.color?.withOpacity(0.2)),
+                        Icon(
+                          Icons.local_gas_station_outlined,
+                          size: 64,
+                          color: theme.iconTheme.color?.withOpacity(0.2),
+                        ),
                         const SizedBox(height: 12),
                         Text(
                           LocaleService.tr('noRecords'),
-                          style: theme.textTheme.titleMedium?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.5)),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withOpacity(0.5),
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           LocaleService.tr('noRecordsHint'),
-                          style: theme.textTheme.bodySmall?.copyWith(color: theme.textTheme.bodySmall?.color?.withOpacity(0.4)),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withOpacity(0.4),
+                          ),
                         ),
                       ],
                     ),
@@ -428,7 +518,9 @@ class _FuelPageState extends State<FuelPage> {
                       return TweenAnimationBuilder<double>(
                         key: ValueKey(item.timestamp),
                         tween: Tween(begin: 0.0, end: 1.0),
-                        duration: Duration(milliseconds: 400 + (80 * index).clamp(0, 400)),
+                        duration: Duration(
+                          milliseconds: 400 + (80 * index).clamp(0, 400),
+                        ),
                         curve: Curves.easeOutCubic,
                         builder: (context, value, child) {
                           return Opacity(
@@ -445,19 +537,30 @@ class _FuelPageState extends State<FuelPage> {
                           background: Container(
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 24),
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.red.shade400,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Icon(Icons.delete, color: Colors.white),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
                           ),
                           onDismissed: (_) => _deleteRecord(item),
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF1E1E1E) : Colors.grey.shade100,
+                              color: isDark
+                                  ? const Color(0xFF1E1E1E)
+                                  : Colors.grey.shade100,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Column(
@@ -466,16 +569,27 @@ class _FuelPageState extends State<FuelPage> {
                                 Row(
                                   children: [
                                     Text(
-                                      CurrencyService.format(double.tryParse(item.total) ?? 0, currency),
-                                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                                      CurrencyService.format(
+                                        double.tryParse(item.total) ?? 0,
+                                        currency,
+                                      ),
+                                      style: theme.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                     const Spacer(),
                                     Text(
                                       item.date,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                                        fontSize: 11,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: theme
+                                                .textTheme
+                                                .bodySmall
+                                                ?.color
+                                                ?.withOpacity(0.5),
+                                            fontSize: 11,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -483,21 +597,32 @@ class _FuelPageState extends State<FuelPage> {
                                 Text(
                                   "${item.station} • ${_trFuel(item.subType)} • ${item.quantity} ${item.unit}",
                                   style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                                    color: theme.textTheme.bodySmall?.color
+                                        ?.withOpacity(0.7),
                                   ),
                                 ),
                                 if ((item.odometer ?? '').isNotEmpty) ...[
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      Icon(Icons.speed, size: 14, color: theme.textTheme.bodySmall?.color?.withOpacity(0.4)),
+                                      Icon(
+                                        Icons.speed,
+                                        size: 14,
+                                        color: theme.textTheme.bodySmall?.color
+                                            ?.withOpacity(0.4),
+                                      ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${item.odometer} ${LocaleService.tr('km')}',
-                                        style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                                          fontSize: 11,
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: theme
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.color
+                                                  ?.withOpacity(0.5),
+                                              fontSize: 11,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -506,14 +631,24 @@ class _FuelPageState extends State<FuelPage> {
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      Icon(Icons.directions_car, size: 14, color: theme.textTheme.bodySmall?.color?.withOpacity(0.4)),
+                                      Icon(
+                                        Icons.directions_car,
+                                        size: 14,
+                                        color: theme.textTheme.bodySmall?.color
+                                            ?.withOpacity(0.4),
+                                      ),
                                       const SizedBox(width: 4),
                                       Text(
                                         item.carTitle,
-                                        style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.5),
-                                          fontSize: 11,
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: theme
+                                                  .textTheme
+                                                  .bodySmall
+                                                  ?.color
+                                                  ?.withOpacity(0.5),
+                                              fontSize: 11,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -531,7 +666,13 @@ class _FuelPageState extends State<FuelPage> {
     );
   }
 
-  Widget _buildInput(ThemeData theme, TextEditingController controller, String label, IconData icon, {bool isNumber = false}) {
+  Widget _buildInput(
+    ThemeData theme,
+    TextEditingController controller,
+    String label,
+    IconData icon, {
+    bool isNumber = false,
+  }) {
     final bool isDark = theme.brightness == Brightness.dark;
     return TextField(
       controller: controller,
@@ -540,10 +681,15 @@ class _FuelPageState extends State<FuelPage> {
       decoration: InputDecoration(
         prefixIcon: Icon(icon, color: theme.colorScheme.primary, size: 22),
         labelText: label,
-        labelStyle: TextStyle(color: theme.textTheme.bodySmall?.color?.withOpacity(0.7)),
+        labelStyle: TextStyle(
+          color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+        ),
         filled: true,
         fillColor: isDark ? Colors.black : Colors.grey.shade200,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }
