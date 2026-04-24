@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final ImagePicker _picker = ImagePicker();
+  bool _isExporting = false;
 
   // ---------- Фото профиля ----------
   Future<void> _pickPhoto(ImageSource source) async {
@@ -171,6 +173,59 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _exportData() async {
+    final tr = LocaleService.tr;
+    final auth = context.read<AuthProvider>();
+    final garage = context.read<GarageProvider>();
+    final user = auth.user;
+
+    if (user == null || _isExporting) return;
+
+    setState(() => _isExporting = true);
+    try {
+      final exportMap = <String, dynamic>{
+        'meta': {
+          'app': 'my_garage',
+          'exportedAt': DateTime.now().toIso8601String(),
+          'version': '1',
+        },
+        'user': {
+          'id': user.id,
+          'login': user.login,
+          'email': user.email,
+          'photoPath': user.photoPath,
+          'registeredAt': user.registeredAt,
+          'settings': user.settings,
+        },
+        'cars': garage.cars.map((c) => c.toMap()).toList(),
+        'fuelRecords': garage.fuelRecords.map((r) => r.toMap()).toList(),
+        'maintenanceRecords': garage.maintenanceRecords
+            .map((r) => r.toMap())
+            .toList(),
+      };
+
+      final dir = await getApplicationDocumentsDirectory();
+      final stamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      final file = File('${dir.path}/my_garage_export_$stamp.json');
+      final content = jsonEncode(exportMap);
+      await file.writeAsString(content);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${tr('exported')}: ${file.path}')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr('exportFailed'))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isExporting = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -313,7 +368,48 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
+
+          // ---------- Статистика гаража ----------
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Consumer<GarageProvider>(
+              builder: (context, garage, _) {
+                final totalFuel = garage.fuelRecords.length;
+                final totalMaintenance = garage.maintenanceRecords.length;
+                final carsCount = garage.cars.length;
+                
+                double totalMileage = 0;
+                for (final record in garage.fuelRecords) {
+                  final mileage = double.tryParse(record.odometer ?? '0') ?? 0;
+                  if (mileage > totalMileage) totalMileage = mileage;
+                }
+                for (final record in garage.maintenanceRecords) {
+                  final mileage = double.tryParse(record.odometer) ?? 0;
+                  if (mileage > totalMileage) totalMileage = mileage;
+                }
+
+                return Container(
+                  decoration: BoxDecoration(
+                    color: theme.cardColor,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _statItem(theme, Icons.directions_car, carsCount.toString(), tr('cars')),
+                      _statItem(theme, Icons.speed, totalMileage.toInt().toString(), tr('km')),
+                      _statItem(theme, Icons.local_gas_station, totalFuel.toString(), tr('fills')),
+                      _statItem(theme, Icons.build_circle, totalMaintenance.toString(), tr('services')),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
 
           // ---------- Список меню ----------
           Expanded(
@@ -349,6 +445,24 @@ class _ProfilePageState extends State<ProfilePage> {
                           .findAncestorStateOfType<MainScreenState>();
                       mainState?.switchTab(1);
                     },
+                  ),
+
+                  _buildListTile(
+                    Icons.download_rounded,
+                    tr('exportData'),
+                    Colors.teal,
+                    theme,
+                    trailing: _isExporting
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.primary,
+                            ),
+                          )
+                        : null,
+                    onTap: _isExporting ? null : _exportData,
                   ),
 
                   _buildListTile(
@@ -431,6 +545,7 @@ class _ProfilePageState extends State<ProfilePage> {
     String title,
     Color color,
     ThemeData theme, {
+    Widget? trailing,
     VoidCallback? onTap,
   }) {
     return ListTile(
@@ -446,12 +561,45 @@ class _ProfilePageState extends State<ProfilePage> {
         title,
         style: TextStyle(color: theme.textTheme.bodyLarge?.color, fontSize: 16),
       ),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        color: theme.iconTheme.color?.withOpacity(0.6),
-        size: 14,
-      ),
+      trailing:
+          trailing ??
+          Icon(
+            Icons.arrow_forward_ios,
+            color: theme.iconTheme.color?.withOpacity(0.6),
+            size: 14,
+          ),
       onTap: onTap,
+    );
+  }
+
+  Widget _statItem(ThemeData theme, IconData icon, String value, String label) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withOpacity(0.12),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: theme.colorScheme.primary,
+            size: 22,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+          ),
+        ),
+      ],
     );
   }
 }

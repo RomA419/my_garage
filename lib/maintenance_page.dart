@@ -149,14 +149,11 @@ class _MaintenancePageState extends State<MaintenancePage> {
     Map<String, int> typeIntervals,
     List<MaintenanceRecord> carRecords,
   ) {
-    final recommendationIntervals = <String, int>{
-      'Замена масла': typeIntervals['Замена масла'] ?? 10000,
-      'Замена тормозной жидкости':
-          typeIntervals['Замена тормозной жидкости'] ?? 40000,
-      'Замена тормозных колодок':
-          typeIntervals['Замена тормозных колодок'] ?? 20000,
-      'Замена фильтра': typeIntervals['Замена фильтра'] ?? 15000,
-    };
+    final recommendationIntervals = Map<String, int>.fromEntries(
+      typeIntervals.entries.where(
+        (entry) => entry.key.trim().isNotEmpty && entry.value > 0,
+      ),
+    );
 
     final lastMileageByType = <String, int>{};
     for (final record in carRecords) {

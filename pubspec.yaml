@@ -33,25 +33,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/cars/car_sedan.svg
-    - assets/cars/car_wagon.svg
-    - assets/cars/car_cabriolet.svg
-    - assets/cars/car_coupe.svg
-    - assets/cars/car_hatchback.svg
-    - assets/cars/car_minivan.svg
-    - assets/cars/car_suv.svg
-    - assets/cars/car_truck.svg
-    - assets/cars/car_van.svg
-    - assets/cars/car_sedan.png
-    - assets/cars/car_wagon.png
-    - assets/cars/car_cabriolet.png
-    - assets/cars/car_coupe.png
-    - assets/cars/car_hatchback.png
-    - assets/cars/car_minivan.png
-    - assets/cars/car_suv.png
-    - assets/cars/car_truck.png
-    - assets/cars/car_van.png
-    - assets/cars/lada_vesta.webp
+    - assets/
+    - assets/cars/
     - assets/cars/catalog/
 
 flutter_launcher_icons:

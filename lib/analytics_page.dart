@@ -196,12 +196,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     Map<String, int> intervals,
     String Function(String) tr,
   ) {
-    const trackedTypes = [
-      'Замена масла',
-      'Замена тормозной жидкости',
-      'Замена тормозных колодок',
-      'Замена фильтра',
-    ];
+    final trackedTypes = intervals.keys.where((type) => type.trim().isNotEmpty);
 
     final lastMileageByType = <String, int>{};
     for (final record in maintenanceRecords) {

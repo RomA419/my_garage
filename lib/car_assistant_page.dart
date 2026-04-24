@@ -4958,7 +4958,7 @@ class _CarAssistantPageState extends State<CarAssistantPage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final localeCode = Localizations.localeOf(context).languageCode;
+    final localeCode = LocaleService.locale.value.languageCode;
     final garage = context.watch<GarageProvider>();
     final cars = garage.cars;
 

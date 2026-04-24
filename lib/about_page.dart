@@ -49,11 +49,12 @@ class _AboutPageState extends State<AboutPage> {
           final version = info != null ? '${info.version}+${info.buildNumber}' : '---';
           final packageName = info?.packageName ?? '';
 
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                 Center(
                   child: Icon(
                     Icons.info_outline,
@@ -137,6 +138,7 @@ class _AboutPageState extends State<AboutPage> {
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
+            ),
             ),
           );
         },
