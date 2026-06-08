@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Пикап: двойная кабина + открытый кузов -->
+  <!-- Кабина -->
+  <path d="M62,60 L62,42 L68,30 L80,14 L88,10 L132,10 L140,14 L146,28 L150,40 L150,60 L48,60 C46,48 28,48 26,60 Z" fill="currentColor"/>
+  <!-- Нижняя часть кабины + крылья -->
+  <path d="M26,60 L20,60 L18,56 L18,50 L26,46 L48,44 L62,42 L62,60 Z" fill="currentColor"/>
+  <!-- Кузов (борта) -->
+  <path d="M150,40 L152,36 L188,36 L192,40 L192,60 L178,60 C176,48 158,48 156,60 L150,60 Z" fill="currentColor"/>
+  <!-- Окно кабины -->
+  <path d="M84,14 L92,12 L128,12 L136,14 L142,26 L146,36 L72,36 L74,28 Z" fill="currentColor" opacity="0.18"/>
+  <line x1="110" y1="12" x2="108" y2="36" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+  <!-- Внутренняя линия кузова -->
+  <path d="M154,38 L154,54 L188,54 L188,38" fill="none" stroke="currentColor" stroke-width="1" opacity="0.18"/>
+  <!-- Фара -->
+  <ellipse cx="190" cy="44" rx="3" ry="3" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь -->
+  <rect x="18" y="48" width="5" height="6" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="37" cy="64" r="14" fill="currentColor"/>
+  <circle cx="37" cy="64" r="8" fill="currentColor" opacity="0.25"/>
+  <circle cx="37" cy="64" r="3.5" fill="currentColor" opacity="0.45"/>
+  <circle cx="167" cy="64" r="14" fill="currentColor"/>
+  <circle cx="167" cy="64" r="8" fill="currentColor" opacity="0.25"/>
+  <circle cx="167" cy="64" r="3.5" fill="currentColor" opacity="0.45"/>
+</svg>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Седан: ретро-бокс, угловатые окна, чёткий багажник -->
+  <path d="M16,58 L16,50 L22,46 L38,44 L56,42 L64,22 L70,18 L78,16 L120,16 L128,18 L132,22 L136,34 L138,40 L160,40 L168,42 L176,46 L182,50 L186,56 L186,58 L176,58 C174,46 156,46 154,58 L52,58 C50,46 32,46 30,58 Z" fill="currentColor"/>
+  <!-- Окна -->
+  <path d="M68,24 L74,18 L96,17 L96,36 L66,36 Z" fill="currentColor" opacity="0.18"/>
+  <path d="M100,17 L122,17 L130,22 L134,34 L134,36 L100,36 Z" fill="currentColor" opacity="0.18"/>
+  <!-- Фара передняя -->
+  <ellipse cx="182" cy="50" rx="3" ry="3" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь задний -->
+  <rect x="16" y="46" width="5" height="6" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="41" cy="62" r="13" fill="currentColor"/>
+  <circle cx="41" cy="62" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="41" cy="62" r="3" fill="currentColor" opacity="0.45"/>
+  <circle cx="165" cy="62" r="13" fill="currentColor"/>
+  <circle cx="165" cy="62" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="165" cy="62" r="3" fill="currentColor" opacity="0.45"/>
+</svg>

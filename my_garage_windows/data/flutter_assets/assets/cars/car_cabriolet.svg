@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Кабриолет: открытый верх, лобовое стекло, низкий профиль -->
+  <!-- Кузов -->
+  <path d="M12,60 L12,50 L18,46 L40,42 L80,40 L100,40 L138,40 L168,42 L178,46 L186,50 L192,56 L192,60 L178,60 C176,48 158,48 156,60 L50,60 C48,48 30,48 28,60 Z" fill="currentColor"/>
+  <!-- Лобовое стекло с рамкой -->
+  <path d="M114,40 L122,22 L130,18 L138,18 L140,20 L136,40" fill="none" stroke="currentColor" stroke-width="3" opacity="0.8"/>
+  <!-- Подголовники -->
+  <ellipse cx="106" cy="36" rx="7" ry="6" fill="currentColor" opacity="0.5"/>
+  <ellipse cx="90" cy="37" rx="6" ry="5" fill="currentColor" opacity="0.45"/>
+  <!-- Линия капота -->
+  <line x1="140" y1="40" x2="180" y2="44" stroke="currentColor" stroke-width="0.8" opacity="0.2"/>
+  <!-- Линия двери -->
+  <line x1="78" y1="38" x2="76" y2="56" stroke="currentColor" stroke-width="1" opacity="0.15"/>
+  <!-- Фара -->
+  <ellipse cx="190" cy="52" rx="3" ry="3" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь -->
+  <rect x="12" y="46" width="5" height="6" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="39" cy="64" r="13" fill="currentColor"/>
+  <circle cx="39" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="39" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+  <circle cx="167" cy="64" r="13" fill="currentColor"/>
+  <circle cx="167" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="167" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+</svg>
+</svg>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" fill="none">
+  <!-- Универсал: высокий, плоская крыша до самого зада, вертикальный зад -->
+  <path d="M10,60 L10,18 L14,14 L20,12 L150,10 L158,10 L168,14 L176,28 L180,40 L186,44 L192,50 L192,60 L178,60 C176,48 158,48 156,60 L48,60 C46,48 28,48 26,60 Z" fill="currentColor"/>
+  <!-- Окна -->
+  <path d="M14,18 L14,38 L84,38 L84,14 L20,14 Z" fill="currentColor" opacity="0.18"/>
+  <path d="M88,14 L88,38 L150,38 L150,12 L92,12 Z" fill="currentColor" opacity="0.18"/>
+  <path d="M154,12 L154,38 L170,38 L172,30 L166,16 L158,12 Z" fill="currentColor" opacity="0.18"/>
+  <!-- Рейлинг -->
+  <rect x="16" y="9" width="146" height="2" rx="1" fill="currentColor" opacity="0.25"/>
+  <!-- Фара -->
+  <ellipse cx="190" cy="48" rx="3" ry="3" fill="currentColor" opacity="0.3"/>
+  <!-- Фонарь -->
+  <rect x="10" y="18" width="4" height="8" rx="1" fill="currentColor" opacity="0.3"/>
+  <!-- Колёса -->
+  <circle cx="37" cy="64" r="13" fill="currentColor"/>
+  <circle cx="37" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="37" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+  <circle cx="167" cy="64" r="13" fill="currentColor"/>
+  <circle cx="167" cy="64" r="7" fill="currentColor" opacity="0.25"/>
+  <circle cx="167" cy="64" r="3" fill="currentColor" opacity="0.45"/>
+</svg>
